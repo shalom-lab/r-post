@@ -79,9 +79,18 @@ a {
   font-size: 0.85rem;
 }
 
+.topbar-right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.85rem;
+  align-items: center;
+  margin-left: auto;
+}
+
 .nav {
   display: flex;
   gap: 0.35rem;
+  flex-wrap: wrap;
 }
 
 .nav a {
@@ -93,6 +102,23 @@ a {
 .nav a.active {
   background: var(--accent);
   color: var(--accent-ink);
+}
+
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  color: var(--ink);
+  font-size: 0.9rem;
+  background: var(--panel);
+}
+
+.github-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .panel {
