@@ -35,7 +35,9 @@ export default function SettingsPage() {
           <h1>设置</h1>
           <p className="muted">
             flat localStorage：<code>{LS_GH_REPO}</code> /{" "}
-            <code>{LS_GH_TOKEN}</code>。workflow 写死为{" "}
+            <code>{LS_GH_TOKEN}</code>。勿用 <code>VITE_*</code>{" "}
+            注入 Token（会进浏览器包）。推荐 fine-grained PAT：Contents
+            Read/Write + Actions Write。workflow 写死为{" "}
             <code>{WORKFLOWS.topic}</code> / <code>{WORKFLOWS.post}</code>
             。提示词见 <Link to="/prompts">提示词</Link>。
           </p>

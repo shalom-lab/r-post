@@ -4,7 +4,7 @@
       "id": "mtcars-scatter",
       "title": "用 mtcars 看一眼相关与散点",
       "categoryId": "stats",
-      "styleId": "wechat-short",
+      "promptId": "wechat-short",
       "topicId": null,
       "qmd": "drafts/mtcars-scatter.qmd",
       "md": "published/mtcars-scatter.md",

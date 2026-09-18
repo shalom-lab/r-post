@@ -31,14 +31,17 @@ export default function TopicsPage() {
   const [filter, setFilter] = useState<"all" | "open" | "scheduled" | "done">(
     "all",
   );
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [ideateCategoryId, setIdeateCategoryId] = useState("");
   const [quota, setQuota] = useState("5");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [runUrl, setRunUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState({ title: "", blurb: "", categoryId: "" });
 
-  async function reload() {
+  async function reloadStatic() {
     const [t, c, prompts] = await Promise.all([
       fetchTopics(),
       fetchCategories(),
@@ -53,19 +56,41 @@ export default function TopicsPage() {
     );
   }
 
+  async function pullFromRepo() {
+    setBusy(true);
+    setMsg(null);
+    setError(null);
+    try {
+      const settings = loadSettings();
+      const live = await readRepoJson<TopicsFile>(settings, "topics/index.json");
+      if (!live) throw new Error("仓库中没有 topics/index.json");
+      setStore(live);
+      setQuota(String(live.meta?.dailyQuota ?? 5));
+      if (live.meta?.topicPromptId) setTopicPromptId(live.meta.topicPromptId);
+      setMsg("已从仓库拉取最新选题（绕过 Pages 静态缓存）");
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   useEffect(() => {
-    reload().catch((e: Error) => setError(e.message));
+    reloadStatic().catch((e: Error) => setError(e.message));
   }, []);
 
   const items = useMemo(() => {
-    const list = store?.items || [];
+    let list = store?.items || [];
+    if (categoryFilter) {
+      list = list.filter((i) => i.categoryId === categoryFilter);
+    }
     if (filter === "open") {
       return list.filter((i) => !i.scheduled && !i.articleId);
     }
     if (filter === "scheduled") return list.filter((i) => i.scheduled);
     if (filter === "done") return list.filter((i) => i.articleId);
     return list;
-  }, [store, filter]);
+  }, [store, filter, categoryFilter]);
 
   const scheduleRank = useMemo(() => {
     const map = new Map<string, number>();
@@ -89,6 +114,7 @@ export default function TopicsPage() {
   ) {
     setBusy(true);
     setMsg(null);
+    setRunUrl(null);
     setError(null);
     try {
       const settings = loadSettings();
@@ -128,7 +154,6 @@ export default function TopicsPage() {
     }, `topics: edit ${id}`);
   }
 
-  /** Pass / 删除：从 JSON 硬删 */
   function onPass(item: TopicItem) {
     if (!window.confirm(`Pass 并删除「${item.title}」？将从 JSON 移除，不可恢复。`)) {
       return;
@@ -146,7 +171,6 @@ export default function TopicsPage() {
       if (!row) return;
       row.scheduled = !row.scheduled;
       row.updatedAt = new Date().toISOString();
-      // 勾选排期时移到列表中「已排期段」末尾，保证生成顺序可控
       if (row.scheduled) {
         live.items = [
           ...live.items.filter((i) => i.id !== item.id),
@@ -179,7 +203,7 @@ export default function TopicsPage() {
           id: newId(),
           title: title.trim(),
           blurb: "",
-          categoryId: null,
+          categoryId: ideateCategoryId || null,
           angle: null,
           scheduled: false,
           outline: null,
@@ -196,12 +220,15 @@ export default function TopicsPage() {
   async function onIdeate() {
     setBusy(true);
     setMsg(null);
+    setRunUrl(null);
     setError(null);
     try {
-      await dispatchIdeate(loadSettings(), {
+      const url = await dispatchIdeate(loadSettings(), {
         quota,
         promptId: topicPromptId,
+        categoryId: ideateCategoryId,
       });
+      setRunUrl(url);
       setMsg("已触发 AI 选题（每条附带大纲）");
     } catch (e) {
       setError((e as Error).message);
@@ -221,9 +248,11 @@ export default function TopicsPage() {
   async function onOutlineScheduled() {
     setBusy(true);
     setMsg(null);
+    setRunUrl(null);
     setError(null);
     try {
-      await dispatchOutline(loadSettings(), "", topicPromptId);
+      const url = await dispatchOutline(loadSettings(), "", topicPromptId);
+      setRunUrl(url);
       setMsg("已触发：仅为缺大纲的排期项补大纲（兜底）");
     } catch (e) {
       setError((e as Error).message);
@@ -235,9 +264,11 @@ export default function TopicsPage() {
   async function onGenerateNext() {
     setBusy(true);
     setMsg(null);
+    setRunUrl(null);
     setError(null);
     try {
-      await dispatchGenerate(loadSettings(), { fromScheduled: true });
+      const url = await dispatchGenerate(loadSettings(), { fromScheduled: true });
+      setRunUrl(url);
       setMsg("已触发写作：按排期生成下一条稿件");
     } catch (e) {
       setError((e as Error).message);
@@ -264,6 +295,9 @@ export default function TopicsPage() {
             <Link to="/prompts">选题 / 写作</Link>。
           </p>
         </div>
+        <button type="button" className="btn" disabled={busy} onClick={pullFromRepo}>
+          从仓库拉取
+        </button>
       </div>
 
       <div className="toolbar">
@@ -284,6 +318,20 @@ export default function TopicsPage() {
             {topicPacks.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.title}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="inline">
+          风暴分类
+          <select
+            value={ideateCategoryId}
+            onChange={(e) => setIdeateCategoryId(e.target.value)}
+          >
+            <option value="">不限</option>
+            {cats.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
               </option>
             ))}
           </select>
@@ -328,9 +376,29 @@ export default function TopicsPage() {
             {label}
           </button>
         ))}
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          aria-label="按分类筛选"
+        >
+          <option value="">全部分类</option>
+          {cats.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       {msg && <p className="ok">{msg}</p>}
+      {runUrl && (
+        <p className="ok">
+          Actions：{" "}
+          <a href={runUrl} target="_blank" rel="noreferrer">
+            查看运行
+          </a>
+        </p>
+      )}
       {error && <p className="error">{error}</p>}
 
       <ul className="todo-list">

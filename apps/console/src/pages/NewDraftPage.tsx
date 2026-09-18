@@ -78,7 +78,7 @@ export default function NewDraftPage() {
         id,
         title: title.trim(),
         categoryId: categoryId || null,
-        styleId: null,
+        promptId: null,
         topicId: null,
         qmd: `drafts/${id}.qmd`,
         md: null,

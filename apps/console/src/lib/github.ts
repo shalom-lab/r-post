@@ -175,7 +175,7 @@ export type ContentIndexPayload = {
     id: string;
     title: string;
     categoryId?: string | null;
-    styleId?: string | null;
+    promptId?: string | null;
     topicId?: string | null;
     qmd: string | null;
     md: string | null;
@@ -210,11 +210,21 @@ export async function upsertArticleInIndex(
   });
 }
 
+export function actionsWorkflowUrl(
+  settings: AppSettings,
+  workflowFile: string,
+): string {
+  const { owner, repo } = parseRepoFull(
+    settings.repoFull || localStorage.getItem(LS_GH_REPO) || "",
+  );
+  return `https://github.com/${owner}/${repo}/actions/workflows/${workflowFile}`;
+}
+
 async function dispatchWorkflow(
   settings: AppSettings,
   workflowFile: string,
   inputs: Record<string, string>,
-): Promise<void> {
+): Promise<string> {
   const { owner, repo, pat } = requireRepo(settings);
   const branch = await resolveDefaultBranch(settings);
   const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflowFile}/dispatches`;
@@ -223,7 +233,9 @@ async function dispatchWorkflow(
     headers: ghHeaders(pat),
     body: JSON.stringify({ ref: branch, inputs }),
   });
-  if (res.status === 204 || res.ok) return;
+  if (res.status === 204 || res.ok) {
+    return actionsWorkflowUrl(settings, workflowFile);
+  }
   throw new Error(`触发失败 ${res.status}: ${await res.text()}`);
 }
 
@@ -234,23 +246,21 @@ export async function dispatchGenerate(
     slug?: string;
     note?: string;
     promptId?: string;
-    /** @deprecated 用 promptId */
-    styleId?: string;
     topicId?: string;
     categoryId?: string;
     fromScheduled?: boolean;
   },
-): Promise<void> {
+): Promise<string> {
   const fromScheduled = Boolean(inputs.fromScheduled);
   if (!fromScheduled && !inputs.topic?.trim() && !inputs.topicId?.trim()) {
     throw new Error("需要主题、选题 id，或勾选从已排期队列生成");
   }
-  await dispatchWorkflow(settings, settings.postWorkflow, {
+  return dispatchWorkflow(settings, settings.postWorkflow, {
     fromScheduled: fromScheduled ? "true" : "false",
     topic: inputs.topic?.trim() || "",
     slug: inputs.slug?.trim() || "",
     note: inputs.note?.trim() || "",
-    promptId: inputs.promptId?.trim() || inputs.styleId?.trim() || "",
+    promptId: inputs.promptId?.trim() || "",
     topicId: inputs.topicId?.trim() || "",
     categoryId: inputs.categoryId?.trim() || "",
   });
@@ -259,8 +269,8 @@ export async function dispatchGenerate(
 export async function dispatchIdeate(
   settings: AppSettings,
   inputs: { quota?: string; categoryId?: string; promptId?: string } = {},
-): Promise<void> {
-  await dispatchWorkflow(settings, settings.topicWorkflow, {
+): Promise<string> {
+  return dispatchWorkflow(settings, settings.topicWorkflow, {
     mode: "ideate",
     quota: inputs.quota?.trim() || "",
     topicId: "",
@@ -273,8 +283,8 @@ export async function dispatchOutline(
   settings: AppSettings,
   topicId = "",
   promptId = "",
-): Promise<void> {
-  await dispatchWorkflow(settings, settings.topicWorkflow, {
+): Promise<string> {
+  return dispatchWorkflow(settings, settings.topicWorkflow, {
     mode: "outline",
     quota: "",
     topicId: topicId.trim(),
@@ -287,8 +297,6 @@ export type TopicsPayload = {
   meta: {
     dailyQuota: number;
     topicPromptId?: string;
-    ideationPromptId?: string;
-    outlinePromptId?: string;
     lastIdeatedAt?: string | null;
   };
   items: Array<Record<string, unknown>>;

@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import {
   type Category,
   type PromptPack,
-  fetchBodyRulesIndex,
   fetchCategories,
+  fetchPostRulesIndex,
 } from "../lib/content";
 import { dispatchGenerate, loadSettings } from "../lib/github";
 
@@ -20,10 +20,11 @@ export default function GeneratePage() {
   const [cats, setCats] = useState<Category[]>([]);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+  const [runUrl, setRunUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([fetchBodyRulesIndex(), fetchCategories()])
+    Promise.all([fetchPostRulesIndex(), fetchCategories()])
       .then(([rules, c]) => {
         setPacks((rules.packs || []).filter((p) => p.active !== false));
         setPromptId(rules.defaultPromptId || "");
@@ -36,9 +37,10 @@ export default function GeneratePage() {
     e.preventDefault();
     setBusy(true);
     setStatus(null);
+    setRunUrl(null);
     setError(null);
     try {
-      await dispatchGenerate(loadSettings(), {
+      const url = await dispatchGenerate(loadSettings(), {
         fromScheduled,
         topic,
         slug,
@@ -47,6 +49,7 @@ export default function GeneratePage() {
         topicId,
         categoryId,
       });
+      setRunUrl(url);
       setStatus(
         fromScheduled
           ? "已触发：按已排期顺序生成下一条。"
@@ -148,6 +151,14 @@ export default function GeneratePage() {
       </form>
 
       {status && <p className="ok">{status}</p>}
+      {runUrl && (
+        <p className="ok">
+          Actions：{" "}
+          <a href={runUrl} target="_blank" rel="noreferrer">
+            查看运行
+          </a>
+        </p>
+      )}
       {error && <p className="error">{error}</p>}
     </section>
   );

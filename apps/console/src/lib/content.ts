@@ -2,8 +2,9 @@ export type Article = {
   id: string;
   title: string;
   categoryId?: string | null;
-  styleId?: string | null;
   promptId?: string | null;
+  /** @deprecated 读作 promptId */
+  styleId?: string | null;
   topicId?: string | null;
   qmd: string | null;
   md: string | null;
@@ -116,13 +117,17 @@ export async function fetchPromptFile(fileName: string): Promise<string> {
   return res.text();
 }
 
-/** 兼容旧调用名 */
 export async function fetchTopicRulesIndex(): Promise<PromptSection> {
   const idx = await fetchPromptRulesIndex();
   return idx.topic;
 }
 
-export async function fetchBodyRulesIndex(): Promise<PromptSection> {
+export async function fetchPostRulesIndex(): Promise<PromptSection> {
   const idx = await fetchPromptRulesIndex();
   return idx.post;
+}
+
+/** @deprecated 用 fetchPostRulesIndex */
+export async function fetchBodyRulesIndex(): Promise<PromptSection> {
+  return fetchPostRulesIndex();
 }

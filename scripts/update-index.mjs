@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * 扫描 content/drafts/*.qmd 与 content/published/*.md，更新 content/index.json
- * 保留 categoryId / promptId / styleId / topicId；可读 content/.last-generate.json
+ * 若 .last-generate.json 含 topicId，则在索引更新后标记选题已成稿
  */
 
 import fs from "node:fs";
@@ -14,6 +14,7 @@ const indexPath = path.join(root, "content", "index.json");
 const draftsDir = path.join(root, "content", "drafts");
 const publishedDir = path.join(root, "content", "published");
 const lastPath = path.join(root, "content", ".last-generate.json");
+const topicsPath = path.join(root, "topics", "index.json");
 
 function parseArgs(argv) {
   const out = {};
@@ -50,6 +51,19 @@ function loadIndex() {
   return JSON.parse(fs.readFileSync(indexPath, "utf8"));
 }
 
+function markTopicDone(slug, topicId) {
+  if (!topicId || !fs.existsSync(topicsPath)) return;
+  const store = JSON.parse(fs.readFileSync(topicsPath, "utf8"));
+  const item = (store.items || []).find((i) => i.id === topicId);
+  if (!item) return;
+  item.articleId = slug;
+  item.scheduled = false;
+  item.updatedAt = new Date().toISOString();
+  store.updatedAt = item.updatedAt;
+  fs.writeFileSync(topicsPath, `${JSON.stringify(store, null, 2)}\n`, "utf8");
+  console.log(`选题已标记成稿: ${topicId} → ${slug}`);
+}
+
 function main() {
   const { slug: focus } = parseArgs(process.argv);
   const prev = loadIndex();
@@ -75,12 +89,17 @@ function main() {
       if (t) title = t;
     }
     const fromLast = last.slug === id ? last : {};
+    const promptId =
+      fromLast.promptId ||
+      fromLast.styleId ||
+      old.promptId ||
+      old.styleId ||
+      null;
     return {
       id,
       title,
       categoryId: fromLast.categoryId || old.categoryId || null,
-      promptId: fromLast.promptId || fromLast.styleId || old.promptId || old.styleId || null,
-      styleId: fromLast.styleId || fromLast.promptId || old.styleId || old.promptId || null,
+      promptId,
       topicId: fromLast.topicId || old.topicId || null,
       qmd: fs.existsSync(qmdPath) ? `drafts/${id}.qmd` : null,
       md: fs.existsSync(mdPath) ? `published/${id}.md` : null,
@@ -94,7 +113,6 @@ function main() {
       title: focus,
       categoryId: last.categoryId || null,
       promptId: last.promptId || last.styleId || null,
-      styleId: last.styleId || last.promptId || null,
       topicId: last.topicId || null,
       qmd: `drafts/${focus}.qmd`,
       md: null,
@@ -105,8 +123,13 @@ function main() {
   articles.sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || ""));
   const out = { articles, updatedAt: now };
   fs.mkdirSync(path.dirname(indexPath), { recursive: true });
-  fs.writeFileSync(indexPath, JSON.stringify(out, null, 2) + "\n", "utf8");
+  fs.writeFileSync(indexPath, `${JSON.stringify(out, null, 2)}\n`, "utf8");
   console.log(`更新 index：${articles.length} 篇 → ${indexPath}`);
+
+  const markSlug = focus || last.slug;
+  if (markSlug && last.slug === markSlug && last.topicId) {
+    markTopicDone(markSlug, last.topicId);
+  }
 }
 
 main();

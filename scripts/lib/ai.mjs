@@ -106,7 +106,7 @@ export function resolvePromptPath(kind, promptId) {
   return full;
 }
 
-/** @deprecated */
+/** @deprecated 用 resolvePromptPath("post", id) */
 export function resolveStylePath(styleId) {
   return resolvePromptPath("post", styleId);
 }

@@ -3,26 +3,55 @@ import { Link } from "react-router-dom";
 import {
   type Article,
   type Category,
+  type ContentIndex,
   fetchCategories,
   fetchIndex,
 } from "../lib/content";
+import { loadSettings, readRepoJson } from "../lib/github";
 
 export default function HomePage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [cats, setCats] = useState<Category[]>([]);
   const [categoryId, setCategoryId] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(false);
+
+  function applyIndex(idx: ContentIndex, c: { categories?: Category[] }) {
+    setArticles(idx.articles || []);
+    setCats(c.categories || []);
+  }
 
   useEffect(() => {
     Promise.all([fetchIndex(), fetchCategories()])
-      .then(([idx, c]) => {
-        setArticles(idx.articles || []);
-        setCats(c.categories || []);
-      })
+      .then(([idx, c]) => applyIndex(idx, c))
       .catch((e: Error) => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
+
+  async function pullFromRepo() {
+    setBusy(true);
+    setMsg(null);
+    setError(null);
+    try {
+      const settings = loadSettings();
+      const [idx, catsFile] = await Promise.all([
+        readRepoJson<ContentIndex>(settings, "content/index.json"),
+        readRepoJson<{ categories?: Category[] }>(
+          settings,
+          "content/categories.json",
+        ),
+      ]);
+      if (!idx) throw new Error("仓库中没有 content/index.json");
+      applyIndex(idx, catsFile || { categories: cats });
+      setMsg("已从仓库拉取最新稿件索引");
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
 
   const catName = useMemo(() => {
     const m = new Map(cats.map((c) => [c.id, c.name]));
@@ -42,6 +71,9 @@ export default function HomePage() {
           <p className="muted">QMD + 渲染 MD；可按分类筛选。</p>
         </div>
         <div className="row">
+          <button type="button" className="btn" disabled={busy} onClick={pullFromRepo}>
+            从仓库拉取
+          </button>
           <Link className="btn" to="/categories">
             稿件分类
           </Link>
@@ -66,6 +98,7 @@ export default function HomePage() {
       </div>
 
       {loading && <p className="muted">加载中…</p>}
+      {msg && <p className="ok">{msg}</p>}
       {error && <p className="error">{error}</p>}
 
       {!loading && !error && filtered.length === 0 && (

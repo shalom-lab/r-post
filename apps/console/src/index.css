@@ -11,8 +11,9 @@
   --ok: #1b6b3a;
   --code: #eef3ef;
   font-family: "IBM Plex Sans", "Source Han Sans SC", "Noto Sans SC", sans-serif;
-  line-height: 1.5;
+  line-height: 1.45;
   font-weight: 400;
+  font-size: 14px;
   color: var(--ink);
   background:
     radial-gradient(1200px 600px at 10% -10%, #dceee4 0%, transparent 55%),
@@ -35,68 +36,75 @@ a {
 }
 
 .app-shell {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 1.25rem 1rem 3rem;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0.65rem 1rem 1.5rem;
 }
 
 .topbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.5rem 0.75rem;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--line);
 }
 
 .brand {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
   align-items: center;
 }
 
 .brand-mark {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 0.55rem;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 0.35rem;
   display: grid;
   place-items: center;
   background: var(--accent);
   color: var(--accent-ink);
   font-family: "IBM Plex Serif", Georgia, serif;
   font-weight: 700;
+  font-size: 0.95rem;
 }
 
 .brand strong {
   display: block;
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   letter-spacing: 0.02em;
+  line-height: 1.2;
 }
 
 .brand p {
   margin: 0;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  line-height: 1.2;
 }
 
 .topbar-right {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 0.85rem;
+  gap: 0.35rem 0.5rem;
   align-items: center;
   margin-left: auto;
 }
 
 .nav {
   display: flex;
-  gap: 0.35rem;
+  gap: 0.15rem;
   flex-wrap: wrap;
 }
 
 .nav a {
-  padding: 0.45rem 0.75rem;
+  padding: 0.25rem 0.5rem;
   color: var(--ink);
-  border-radius: 0.4rem;
+  border-radius: 0.3rem;
+  font-size: 0.88rem;
 }
 
 .nav a.active {
@@ -107,12 +115,12 @@ a {
 .github-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.7rem;
+  gap: 0.25rem;
+  padding: 0.22rem 0.45rem;
   border: 1px solid var(--line);
-  border-radius: 0.4rem;
+  border-radius: 0.3rem;
   color: var(--ink);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   background: var(--panel);
 }
 
@@ -121,54 +129,64 @@ a {
   color: var(--accent);
 }
 
+.github-link svg {
+  width: 14px;
+  height: 14px;
+}
+
 .panel {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 0.75rem;
-  padding: 1.25rem 1.35rem 1.5rem;
+  border-radius: 0.5rem;
+  padding: 0.85rem 1rem 1rem;
 }
 
 .panel-head {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.5rem 0.75rem;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
+  align-items: center;
+  margin-bottom: 0.65rem;
 }
 
 .panel h1 {
-  margin: 0.15rem 0 0.25rem;
-  font-size: 1.55rem;
+  margin: 0;
+  font-size: 1.2rem;
   font-family: "IBM Plex Serif", Georgia, "Source Han Serif SC", serif;
 }
 
 .panel h2 {
-  margin: 1.5rem 0 0.5rem;
-  font-size: 1.1rem;
+  margin: 1rem 0 0.4rem;
+  font-size: 1rem;
 }
 
 .muted {
   color: var(--muted);
-  margin: 0.25rem 0;
+  margin: 0.15rem 0;
+  font-size: 0.85rem;
 }
 
 .error {
   color: var(--danger);
+  font-size: 0.88rem;
 }
 
 .ok {
   color: var(--ok);
+  font-size: 0.88rem;
 }
 
 .btn {
   border: 1px solid var(--line);
   background: #fff;
   color: var(--ink);
-  border-radius: 0.45rem;
-  padding: 0.5rem 0.9rem;
+  border-radius: 0.3rem;
+  padding: 0.22rem 0.5rem;
   cursor: pointer;
   font: inherit;
+  font-size: 0.82rem;
+  line-height: 1.3;
 }
 
 .btn.primary {
@@ -180,6 +198,11 @@ a {
 .btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+
+.btn.danger {
+  color: var(--danger);
+  border-color: #e2b4b4;
 }
 
 .article-list {
@@ -194,54 +217,57 @@ a {
 
 .article-list a {
   display: block;
-  padding: 0.85rem 0.15rem;
+  padding: 0.45rem 0.1rem;
   color: inherit;
 }
 
 .article-list strong {
   display: block;
+  font-size: 0.95rem;
 }
 
 .article-list .meta {
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
 }
 
 .form {
   display: grid;
-  gap: 0.85rem;
-  max-width: 560px;
+  gap: 0.55rem;
+  max-width: min(640px, 100%);
 }
 
 .form label {
   display: grid;
-  gap: 0.35rem;
-  font-size: 0.92rem;
+  gap: 0.2rem;
+  font-size: 0.85rem;
 }
 
 .form input,
 .form textarea {
   font: inherit;
-  padding: 0.55rem 0.65rem;
+  padding: 0.35rem 0.5rem;
   border: 1px solid var(--line);
-  border-radius: 0.4rem;
+  border-radius: 0.3rem;
   background: #fff;
   color: var(--ink);
+  font-size: 0.88rem;
 }
 
 .tabs {
   display: flex;
-  gap: 0.35rem;
-  margin: 0.75rem 0 1rem;
+  gap: 0.25rem;
+  margin: 0.4rem 0 0.65rem;
 }
 
 .tabs button {
   border: 1px solid var(--line);
   background: #fff;
-  border-radius: 0.4rem;
-  padding: 0.4rem 0.75rem;
+  border-radius: 0.3rem;
+  padding: 0.22rem 0.55rem;
   cursor: pointer;
   font: inherit;
+  font-size: 0.82rem;
 }
 
 .tabs button.active {
@@ -257,17 +283,17 @@ a {
 .code-block {
   background: var(--code);
   border: 1px solid var(--line);
-  border-radius: 0.5rem;
-  padding: 1rem;
+  border-radius: 0.4rem;
+  padding: 0.65rem 0.75rem;
   overflow: auto;
   white-space: pre-wrap;
   word-break: break-word;
   font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
-  font-size: 0.86rem;
+  font-size: 0.8rem;
 }
 
 .md-body {
-  line-height: 1.65;
+  line-height: 1.55;
 }
 
 .md-body h1,
@@ -278,40 +304,41 @@ a {
 
 .md-body pre {
   background: var(--code);
-  padding: 0.75rem;
-  border-radius: 0.4rem;
+  padding: 0.55rem;
+  border-radius: 0.3rem;
   overflow: auto;
 }
 
 .md-body img {
   max-width: 100%;
   height: auto;
-  border-radius: 0.35rem;
+  border-radius: 0.3rem;
 }
 
 .back {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .row {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.35rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .form-wide {
-  max-width: 720px;
+  max-width: min(900px, 100%);
 }
 
 .form textarea.mono {
   font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
 }
 
 .dual-pane {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.75rem;
   align-items: start;
 }
 
@@ -326,8 +353,8 @@ a {
 }
 
 .pane-title {
-  margin: 0 0 0.5rem;
-  font-size: 0.95rem;
+  margin: 0 0 0.35rem;
+  font-size: 0.85rem;
   color: var(--muted);
   font-weight: 600;
 }
@@ -339,31 +366,32 @@ a {
 }
 
 .rules-box {
-  margin-top: 1.75rem;
+  margin-top: 1rem;
 }
 
 .toolbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.35rem;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.65rem;
 }
 
 .toolbar select,
 .form select {
   font: inherit;
-  padding: 0.45rem 0.55rem;
+  padding: 0.22rem 0.4rem;
   border: 1px solid var(--line);
-  border-radius: 0.4rem;
+  border-radius: 0.3rem;
   background: #fff;
+  font-size: 0.82rem;
 }
 
 .inline {
   display: inline-flex;
-  gap: 0.35rem;
+  gap: 0.25rem;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 
 .topic-list {
@@ -371,16 +399,16 @@ a {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.75rem;
+  gap: 0.45rem;
 }
 
 .topic-card {
   border: 1px solid var(--line);
-  border-radius: 0.55rem;
-  padding: 0.85rem 1rem;
+  border-radius: 0.4rem;
+  padding: 0.55rem 0.7rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
   justify-content: space-between;
   background: #fff;
 }
@@ -401,21 +429,21 @@ a {
 .topic-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: 0.25rem;
   align-items: flex-start;
 }
 
 .code-block.compact {
-  max-height: 12rem;
-  font-size: 0.8rem;
-  margin-top: 0.5rem;
+  max-height: 10rem;
+  font-size: 0.75rem;
+  margin-top: 0.35rem;
 }
 
 .badge {
   display: inline-block;
-  font-size: 0.75rem;
-  padding: 0.1rem 0.4rem;
-  border-radius: 0.3rem;
+  font-size: 0.7rem;
+  padding: 0.05rem 0.3rem;
+  border-radius: 0.25rem;
   background: var(--accent);
   color: var(--accent-ink);
   vertical-align: middle;
@@ -431,18 +459,11 @@ textarea.full,
 .full {
   width: 100%;
   font: inherit;
-  padding: 0.55rem 0.65rem;
+  padding: 0.35rem 0.5rem;
   border: 1px solid var(--line);
-  border-radius: 0.4rem;
+  border-radius: 0.3rem;
   background: #fff;
-}
-
-.nav {
-  flex-wrap: wrap;
-}
-
-.app-shell {
-  max-width: 1100px;
+  font-size: 0.88rem;
 }
 
 .todo-list {
@@ -450,17 +471,17 @@ textarea.full,
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 .todo-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 0.75rem;
+  gap: 0.5rem;
   align-items: start;
-  padding: 0.75rem 0.85rem;
+  padding: 0.45rem 0.55rem;
   border: 1px solid var(--line);
-  border-radius: 0.5rem;
+  border-radius: 0.35rem;
   background: #fff;
 }
 
@@ -475,20 +496,28 @@ textarea.full,
 
 .todo-check {
   display: grid;
-  gap: 0.2rem;
+  gap: 0.1rem;
   justify-items: center;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--muted);
-  padding-top: 0.2rem;
+  padding-top: 0.15rem;
 }
 
 .todo-body {
   min-width: 0;
 }
 
+.todo-body strong {
+  font-size: 0.92rem;
+}
+
+.todo-body .meta {
+  font-size: 0.78rem;
+}
+
 .todo-edit {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.3rem;
 }
 
 .todo-edit input,
@@ -496,30 +525,30 @@ textarea.full,
 .todo-edit select {
   font: inherit;
   width: 100%;
-  padding: 0.45rem 0.55rem;
+  padding: 0.3rem 0.4rem;
   border: 1px solid var(--line);
-  border-radius: 0.35rem;
+  border-radius: 0.3rem;
+  font-size: 0.85rem;
 }
 
 .todo-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
-}
-
-.btn.danger {
-  color: var(--danger);
-  border-color: #e2b4b4;
+  gap: 0.2rem;
 }
 
 .check-row {
   display: flex !important;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 @media (max-width: 700px) {
   .todo-row {
     grid-template-columns: 1fr;
+  }
+
+  .app-shell {
+    padding: 0.5rem 0.65rem 1.25rem;
   }
 }

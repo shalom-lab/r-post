@@ -55,7 +55,6 @@ export default function App() {
           <Route path="/article/:id" element={<ArticlePage />} />
           <Route path="/topics" element={<TopicsPage />} />
           <Route path="/prompts" element={<PromptsPage />} />
-          <Route path="/styles" element={<PromptsPage />} />
           <Route path="/categories" element={<CategoriesPage />} />
           <Route path="/new" element={<NewDraftPage />} />
           <Route path="/generate" element={<GeneratePage />} />

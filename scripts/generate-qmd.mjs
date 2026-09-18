@@ -128,7 +128,6 @@ async function main() {
       {
         slug,
         topic,
-        styleId: promptId || null,
         promptId: promptId || null,
         topicId: topicId || null,
         categoryId: categoryId || null,
@@ -140,17 +139,11 @@ async function main() {
     "utf8",
   );
 
+  // 选题 articleId 在 render + update-index 成功后再标记，避免渲染失败吃掉排期
   if (topicId) {
-    const topicsPath = path.join(root, "topics", "index.json");
-    const store = JSON.parse(fs.readFileSync(topicsPath, "utf8"));
-    const item = (store.items || []).find((i) => i.id === topicId);
-    if (item) {
-      item.articleId = slug;
-      item.scheduled = false;
-      item.updatedAt = new Date().toISOString();
-      store.updatedAt = item.updatedAt;
-      fs.writeFileSync(topicsPath, JSON.stringify(store, null, 2) + "\n", "utf8");
-    }
+    console.log(
+      `选题 ${topicId} 待成稿标记；请在渲染后运行 update-index.mjs --slug ${slug}`,
+    );
   }
 
   console.log(`已写入 ${outPath}`);
