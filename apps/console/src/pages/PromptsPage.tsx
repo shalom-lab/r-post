@@ -251,72 +251,88 @@ export default function PromptsPage() {
       {msg && <p className="ok">{msg}</p>}
       {error && <p className="error">{error}</p>}
 
-      <ul className="article-list">
-        {packs.map((p) => (
-          <li key={p.id}>
-            <div className="row between">
-              <div>
-                <strong>
-                  {p.title}{" "}
-                  {defaultId === p.id && <span className="badge">默认</span>}
-                </strong>
-                <span className="meta">
-                  <code>{p.file}</code>
-                  {p.active === false ? " · 停用" : " · 启用"}
-                  {p.description ? ` · ${p.description}` : ""}
+      {packs.length > 0 && (
+        <div className="data-list">
+          <div className="data-list-head prompt-cols">
+            <span>提示词</span>
+            <span>说明</span>
+            <span>状态</span>
+            <span>操作</span>
+          </div>
+          <ul className="data-list-body">
+            {packs.map((p) => (
+              <li key={p.id} className="data-row prompt-cols">
+                <div className="data-title">
+                  <strong>
+                    {p.title}{" "}
+                    {defaultId === p.id && <span className="badge">默认</span>}
+                  </strong>
+                  <code className="data-id">{p.file}</code>
+                </div>
+                <span className="data-cell muted">
+                  {p.description || "—"}
                 </span>
-              </div>
-              <div className="row">
-                <button type="button" className="btn" onClick={() => openPack(p)}>
-                  编辑
-                </button>
-                <button
-                  type="button"
-                  className="btn"
-                  disabled={busy}
-                  onClick={() => setDefault(p.id)}
-                >
-                  设默认
-                </button>
-                <button
-                  type="button"
-                  className="btn"
-                  disabled={busy}
-                  onClick={() => toggleActive(p)}
-                >
-                  {p.active === false ? "启用" : "停用"}
-                </button>
-                <button
-                  type="button"
-                  className="btn danger"
-                  disabled={busy}
-                  onClick={() => onDelete(p)}
-                >
-                  删除
-                </button>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+                <span className="data-cell">
+                  {p.active === false ? (
+                    <span className="chip chip-off">停用</span>
+                  ) : (
+                    <span className="chip chip-ok">启用</span>
+                  )}
+                </span>
+                <div className="data-actions">
+                  <button type="button" className="btn" onClick={() => openPack(p)}>
+                    编辑
+                  </button>
+                  <button
+                    type="button"
+                    className="btn"
+                    disabled={busy}
+                    onClick={() => setDefault(p.id)}
+                  >
+                    设默认
+                  </button>
+                  <button
+                    type="button"
+                    className="btn"
+                    disabled={busy}
+                    onClick={() => toggleActive(p)}
+                  >
+                    {p.active === false ? "启用" : "停用"}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn danger"
+                    disabled={busy}
+                    onClick={() => onDelete(p)}
+                  >
+                    删除
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {previewId && (
         <div className="rules-box">
           <h2>编辑：{previewId}</h2>
           <textarea
             className="mono full"
-            rows={16}
+            rows={14}
             value={preview}
             onChange={(e) => setPreview(e.target.value)}
           />
-          <button
-            type="button"
-            className="btn primary"
-            disabled={busy}
-            onClick={onSavePreview}
-          >
-            保存到仓库
-          </button>
+          <div className="row" style={{ marginTop: "0.5rem" }}>
+            <button
+              type="button"
+              className="btn primary"
+              disabled={busy}
+              onClick={onSavePreview}
+            >
+              保存到仓库
+            </button>
+          </div>
         </div>
       )}
 

@@ -37,9 +37,9 @@ a {
 
 .app-shell {
   width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 0.65rem 1rem 1.5rem;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0.75rem 1.1rem 2rem;
 }
 
 .topbar {
@@ -205,36 +205,133 @@ a {
   border-color: #e2b4b4;
 }
 
-.article-list {
+/* —— 稿件 / 提示词 数据表式列表 —— */
+.data-list {
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: #fff;
+  overflow: hidden;
+}
+
+.data-list-head {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background: #f7f3eb;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.data-list-body {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.article-list li + li {
+.data-list-body > li + li,
+.data-list-body > li + li .data-row {
   border-top: 1px solid var(--line);
 }
 
-.article-list a {
-  display: block;
-  padding: 0.45rem 0.1rem;
+.data-row {
+  display: grid;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
   color: inherit;
+  transition: background 0.12s ease;
 }
 
-.article-list strong {
-  display: block;
-  font-size: 0.95rem;
+a.data-row:hover {
+  background: #f6faf7;
 }
 
-.article-list .meta {
+.article-cols {
+  grid-template-columns: minmax(0, 2.2fr) 0.9fr 0.9fr 0.7fr 0.75fr;
+}
+
+.prompt-cols {
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.2fr) 0.55fr auto;
+}
+
+.data-title {
+  min-width: 0;
+  display: grid;
+  gap: 0.12rem;
+}
+
+.data-title strong {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.data-id {
+  font-size: 0.72rem;
   color: var(--muted);
-  font-size: 0.78rem;
+  background: transparent;
+  padding: 0;
+  font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+
+.data-cell {
+  font-size: 0.8rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.data-date {
+  font-variant-numeric: tabular-nums;
+  font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  font-size: 0.75rem;
+}
+
+.data-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  justify-content: flex-end;
+}
+
+.chip-row {
+  display: inline-flex;
+  gap: 0.2rem;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-block;
+  font-size: 0.68rem;
+  padding: 0.08rem 0.32rem;
+  border-radius: 0.2rem;
+  border: 1px solid var(--line);
+  background: #faf8f4;
+  color: var(--muted);
+  line-height: 1.2;
+}
+
+.chip-ok {
+  border-color: #b5d4c4;
+  background: #eef7f1;
+  color: var(--ok);
+}
+
+.chip-off {
+  border-color: #e0d6c8;
+  background: #f3efe8;
+  color: var(--muted);
 }
 
 .form {
   display: grid;
   gap: 0.55rem;
-  max-width: min(640px, 100%);
+  max-width: min(560px, 100%);
 }
 
 .form label {
@@ -327,7 +424,7 @@ a {
 }
 
 .form-wide {
-  max-width: min(900px, 100%);
+  max-width: min(640px, 100%);
 }
 
 .form textarea.mono {
@@ -471,27 +568,38 @@ textarea.full,
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.35rem;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  overflow: hidden;
+  background: #fff;
 }
 
 .todo-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 0.5rem;
+  gap: 0.55rem;
   align-items: start;
-  padding: 0.45rem 0.55rem;
-  border: 1px solid var(--line);
-  border-radius: 0.35rem;
-  background: #fff;
+  padding: 0.55rem 0.7rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  border-bottom: 1px solid var(--line);
+}
+
+.todo-row:last-child {
+  border-bottom: none;
 }
 
 .todo-row.is-scheduled {
-  border-color: #8bbbb0;
+  border-color: transparent;
+  border-bottom-color: var(--line);
   background: #f3faf7;
 }
 
 .todo-row.is-done {
   opacity: 0.65;
+  background: #faf8f4;
 }
 
 .todo-check {
@@ -549,6 +657,24 @@ textarea.full,
   }
 
   .app-shell {
-    padding: 0.5rem 0.65rem 1.25rem;
+    padding: 0.5rem 0.75rem 1.5rem;
+  }
+
+  .data-list-head {
+    display: none;
+  }
+
+  .article-cols,
+  .prompt-cols {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .data-actions {
+    justify-content: flex-start;
+  }
+
+  .data-cell {
+    white-space: normal;
   }
 }
