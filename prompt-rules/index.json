@@ -1,6 +1,6 @@
 {
   "topic": {
-    "defaultPromptId": "default",
+    "defaultPromptId": "series-friendly",
     "packs": [
       {
         "id": "default",
@@ -41,5 +41,5 @@
       }
     ]
   },
-  "updatedAt": "2026-03-18T00:00:00.000Z"
+  "updatedAt": "2026-09-18T11:09:38.715Z"
 }
