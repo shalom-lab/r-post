@@ -67,21 +67,21 @@ export default function HomePage() {
     <section className="panel">
       <div className="panel-head">
         <div>
-          <h1>稿件列表</h1>
-          <p className="muted">QMD + 渲染 MD；可按分类筛选。</p>
+          <h1>稿件</h1>
+          <p className="muted">按分类筛选；点标题打开预览。</p>
         </div>
         <div className="row">
           <button type="button" className="btn" disabled={busy} onClick={pullFromRepo}>
-            从仓库拉取
+            拉取
           </button>
           <Link className="btn" to="/categories">
-            稿件分类
+            分类
           </Link>
           <Link className="btn" to="/new">
-            手动新建
+            新建
           </Link>
           <Link className="btn primary" to="/generate">
-            AI 生成
+            写作
           </Link>
         </div>
       </div>
@@ -102,47 +102,33 @@ export default function HomePage() {
       {error && <p className="error">{error}</p>}
 
       {!loading && !error && filtered.length === 0 && (
-        <p className="muted">暂无稿件。先去选题风暴或 AI 生成。</p>
+        <p className="muted">暂无稿件。先去选题或写作。</p>
       )}
 
       {filtered.length > 0 && (
-        <div className="data-list">
-          <div className="data-list-head article-cols">
-            <span>标题</span>
-            <span>分类</span>
-            <span>Prompt</span>
-            <span>状态</span>
-            <span>日期</span>
-          </div>
-          <ul className="data-list-body">
-            {filtered.map((a) => (
-              <li key={a.id}>
-                <Link to={`/article/${a.id}`} className="data-row article-cols">
-                  <span className="data-title">
-                    <strong>{a.title}</strong>
-                    <code className="data-id">{a.id}</code>
+        <ul className="simple-list">
+          {filtered.map((a) => (
+            <li key={a.id}>
+              <Link to={`/article/${a.id}`} className="simple-row">
+                <div className="simple-main">
+                  <strong>{a.title}</strong>
+                  <span className="meta">
+                    <code>{a.id}</code>
+                    {a.categoryId ? ` · ${catName(a.categoryId)}` : ""}
+                    {a.promptId || a.styleId
+                      ? ` · ${a.promptId || a.styleId}`
+                      : ""}
+                    {a.updatedAt ? ` · ${a.updatedAt.slice(0, 10)}` : ""}
                   </span>
-                  <span className="data-cell muted">
-                    {a.categoryId ? catName(a.categoryId) : "—"}
-                  </span>
-                  <span className="data-cell muted">
-                    {a.promptId || a.styleId || "—"}
-                  </span>
-                  <span className="data-cell">
-                    <span className="chip-row">
-                      {a.qmd && <span className="chip">QMD</span>}
-                      {a.md && <span className="chip chip-ok">MD</span>}
-                      {!a.qmd && !a.md && <span className="muted">—</span>}
-                    </span>
-                  </span>
-                  <span className="data-cell muted data-date">
-                    {a.updatedAt ? a.updatedAt.slice(0, 10) : "—"}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+                </div>
+                <span className="chip-row">
+                  {a.qmd && <span className="chip">QMD</span>}
+                  {a.md && <span className="chip chip-ok">MD</span>}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       )}
     </section>
   );

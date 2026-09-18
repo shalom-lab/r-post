@@ -252,66 +252,52 @@ export default function PromptsPage() {
       {error && <p className="error">{error}</p>}
 
       {packs.length > 0 && (
-        <div className="data-list">
-          <div className="data-list-head prompt-cols">
-            <span>提示词</span>
-            <span>说明</span>
-            <span>状态</span>
-            <span>操作</span>
-          </div>
-          <ul className="data-list-body">
-            {packs.map((p) => (
-              <li key={p.id} className="data-row prompt-cols">
-                <div className="data-title">
-                  <strong>
-                    {p.title}{" "}
-                    {defaultId === p.id && <span className="badge">默认</span>}
-                  </strong>
-                  <code className="data-id">{p.file}</code>
-                </div>
-                <span className="data-cell muted">
-                  {p.description || "—"}
+        <ul className="simple-list">
+          {packs.map((p) => (
+            <li key={p.id} className="simple-row prompt-row">
+              <div className="simple-main">
+                <strong>
+                  {p.title}{" "}
+                  {defaultId === p.id && <span className="badge">默认</span>}
+                </strong>
+                <span className="meta">
+                  <code>{p.file}</code>
+                  {p.active === false ? " · 停用" : " · 启用"}
+                  {p.description ? ` · ${p.description}` : ""}
                 </span>
-                <span className="data-cell">
-                  {p.active === false ? (
-                    <span className="chip chip-off">停用</span>
-                  ) : (
-                    <span className="chip chip-ok">启用</span>
-                  )}
-                </span>
-                <div className="data-actions">
-                  <button type="button" className="btn" onClick={() => openPack(p)}>
-                    编辑
-                  </button>
-                  <button
-                    type="button"
-                    className="btn"
-                    disabled={busy}
-                    onClick={() => setDefault(p.id)}
-                  >
-                    设默认
-                  </button>
-                  <button
-                    type="button"
-                    className="btn"
-                    disabled={busy}
-                    onClick={() => toggleActive(p)}
-                  >
-                    {p.active === false ? "启用" : "停用"}
-                  </button>
-                  <button
-                    type="button"
-                    className="btn danger"
-                    disabled={busy}
-                    onClick={() => onDelete(p)}
-                  >
-                    删除
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+              </div>
+              <div className="data-actions">
+                <button type="button" className="btn" onClick={() => openPack(p)}>
+                  编辑
+                </button>
+                <button
+                  type="button"
+                  className="btn"
+                  disabled={busy}
+                  onClick={() => setDefault(p.id)}
+                >
+                  默认
+                </button>
+                <button
+                  type="button"
+                  className="btn"
+                  disabled={busy}
+                  onClick={() => toggleActive(p)}
+                >
+                  {p.active === false ? "启用" : "停用"}
+                </button>
+                <button
+                  type="button"
+                  className="btn danger"
+                  disabled={busy}
+                  onClick={() => onDelete(p)}
+                >
+                  删
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
 
       {previewId && (
