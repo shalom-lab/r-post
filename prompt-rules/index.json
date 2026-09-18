@@ -1,0 +1,45 @@
+{
+  "topic": {
+    "defaultPromptId": "default",
+    "packs": [
+      {
+        "id": "default",
+        "title": "常规选题助手",
+        "file": "topic_prompt_default.md",
+        "description": "题目+大纲一次出",
+        "active": true,
+        "updatedAt": "2026-03-18T00:00:00.000Z"
+      },
+      {
+        "id": "series-friendly",
+        "title": "系列友好助手",
+        "file": "topic_prompt_series-friendly.md",
+        "description": "偏可连载切口",
+        "active": true,
+        "updatedAt": "2026-03-18T00:00:00.000Z"
+      }
+    ]
+  },
+  "post": {
+    "defaultPromptId": "wechat-short",
+    "packs": [
+      {
+        "id": "wechat-short",
+        "title": "公众号短文",
+        "file": "post_prompt_wechat-short.md",
+        "description": "简单易学、真实数据、不啰嗦",
+        "active": true,
+        "updatedAt": "2026-03-18T00:00:00.000Z"
+      },
+      {
+        "id": "classroom",
+        "title": "课堂讲义风",
+        "file": "post_prompt_classroom.md",
+        "description": "步骤更清楚",
+        "active": true,
+        "updatedAt": "2026-03-18T00:00:00.000Z"
+      }
+    ]
+  },
+  "updatedAt": "2026-03-18T00:00:00.000Z"
+}

@@ -1,0 +1,15 @@
+{
+  "articles": [
+    {
+      "id": "mtcars-scatter",
+      "title": "用 mtcars 看一眼相关与散点",
+      "categoryId": "stats",
+      "styleId": "wechat-short",
+      "topicId": null,
+      "qmd": "drafts/mtcars-scatter.qmd",
+      "md": "published/mtcars-scatter.md",
+      "updatedAt": "2026-03-18T00:00:00.000Z"
+    }
+  ],
+  "updatedAt": "2026-03-18T00:00:00.000Z"
+}

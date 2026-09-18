@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+.quarto/
+*_files/
+.Rproj.user/
+.Rhistory
+.RData
+apps/console/dist/
+content/.last-generate.json
+content/.last-pick.json

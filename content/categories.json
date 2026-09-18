@@ -1,0 +1,25 @@
+{
+  "categories": [
+    {
+      "id": "r-basics",
+      "name": "R 基础",
+      "order": 1
+    },
+    {
+      "id": "viz",
+      "name": "可视化",
+      "order": 2
+    },
+    {
+      "id": "stats",
+      "name": "统计入门",
+      "order": 3
+    },
+    {
+      "id": "data-wrangle",
+      "name": "数据整理",
+      "order": 4
+    }
+  ],
+  "updatedAt": "2026-03-18T00:00:00.000Z"
+}

@@ -1,0 +1,78 @@
+name: Topic (ideate / outline)
+
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "ideate=刷选题 | outline=写大纲"
+        required: false
+        type: choice
+        options:
+          - ideate
+          - outline
+        default: ideate
+      quota:
+        description: "ideate 条数（可空）"
+        required: false
+        type: string
+        default: ""
+      topicId:
+        description: "outline 时指定选题 id；空则已排期且无大纲"
+        required: false
+        type: string
+        default: ""
+      promptId:
+        description: "选题 Prompt id"
+        required: false
+        type: string
+        default: ""
+      categoryId:
+        description: "ideate 可选分类"
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  topic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run topic work
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          QUOTA: ${{ inputs.quota }}
+          PROMPT_ID: ${{ inputs.promptId }}
+          CATEGORY_ID: ${{ inputs.categoryId }}
+        run: |
+          MODE="${{ inputs.mode }}"
+          if [ -z "$MODE" ]; then MODE=ideate; fi
+          if [ "$MODE" = "outline" ]; then
+            if [ -n "${{ inputs.topicId }}" ]; then
+              node scripts/topic-work.mjs --mode outline --id "${{ inputs.topicId }}"
+            else
+              node scripts/topic-work.mjs --mode outline --scheduled
+            fi
+          else
+            node scripts/topic-work.mjs --mode ideate
+          fi
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add topics/
+          git diff --staged --quiet && echo "No changes" && exit 0
+          MODE="${{ inputs.mode }}"
+          if [ -z "$MODE" ]; then MODE=ideate; fi
+          git commit -m "topics: $MODE"
+          git push

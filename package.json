@@ -1,0 +1,19 @@
+{
+  "name": "rpost",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/console"
+  ],
+  "scripts": {
+    "sync": "node scripts/sync-public.mjs",
+    "dev": "node scripts/sync-public.mjs && npm run dev -w apps/console",
+    "build": "node scripts/sync-public.mjs && npm run build -w apps/console",
+    "generate": "node scripts/generate-qmd.mjs",
+    "ideate": "node scripts/topic-work.mjs --mode ideate",
+    "outline": "node scripts/topic-work.mjs --mode outline --scheduled",
+    "topic-work": "node scripts/topic-work.mjs",
+    "update-index": "node scripts/update-index.mjs",
+    "embed-images": "node scripts/embed-images.mjs"
+  }
+}
