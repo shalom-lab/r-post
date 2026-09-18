@@ -1,9 +1,8 @@
 import { NavLink, Route, Routes } from "react-router-dom";
 import ArticlePage from "./pages/ArticlePage";
 import CategoriesPage from "./pages/CategoriesPage";
-import GeneratePage from "./pages/GeneratePage";
+import DashboardPage from "./pages/DashboardPage";
 import HomePage from "./pages/HomePage";
-import NewDraftPage from "./pages/NewDraftPage";
 import PromptsPage from "./pages/PromptsPage";
 import SettingsPage from "./pages/SettingsPage";
 import TopicsPage from "./pages/TopicsPage";
@@ -16,17 +15,16 @@ export default function App() {
           <span className="brand-mark">R</span>
           <div>
             <strong>RPost</strong>
-            <p>选题 ∥ 写作</p>
+            <p>R 语言推文工作流</p>
           </div>
         </div>
         <div className="topbar-right">
           <nav className="nav">
-            <NavLink to="/topics">选题</NavLink>
             <NavLink to="/" end>
-              稿件
+              看板
             </NavLink>
-            <NavLink to="/prompts">提示词</NavLink>
-            <NavLink to="/generate">写作</NavLink>
+            <NavLink to="/articles">稿件</NavLink>
+            <NavLink to="/topics">选题</NavLink>
             <NavLink to="/settings">设置</NavLink>
           </nav>
           <a
@@ -51,13 +49,19 @@ export default function App() {
       </header>
       <main className="main">
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          {/* 主看板（新首页） */}
+          <Route path="/" element={<DashboardPage />} />
+
+          {/* 稿件列表 + 详情 */}
+          <Route path="/articles" element={<HomePage />} />
           <Route path="/article/:id" element={<ArticlePage />} />
+
+          {/* 选题管理 */}
           <Route path="/topics" element={<TopicsPage />} />
+
+          {/* 辅助页面 */}
           <Route path="/prompts" element={<PromptsPage />} />
           <Route path="/categories" element={<CategoriesPage />} />
-          <Route path="/new" element={<NewDraftPage />} />
-          <Route path="/generate" element={<GeneratePage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Routes>
       </main>

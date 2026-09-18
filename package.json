@@ -6,13 +6,20 @@
     "apps/console"
   ],
   "scripts": {
-    "sync": "node scripts/sync-public.mjs",
     "dev": "node scripts/sync-public.mjs && npm run dev -w apps/console",
     "build": "node scripts/sync-public.mjs && npm run build -w apps/console",
-    "generate": "node scripts/generate-qmd.mjs",
-    "ideate": "node scripts/topic-work.mjs --mode ideate",
-    "outline": "node scripts/topic-work.mjs --mode outline --scheduled",
-    "topic-work": "node scripts/topic-work.mjs",
+    "sync": "node scripts/sync-public.mjs",
+
+    "topic-generate": "node scripts/topic-generate.mjs",
+    "post-generate": "node scripts/post-generate.mjs",
+
+    "ideate": "node scripts/rpost.mjs ideate",
+    "outline": "node scripts/rpost.mjs outline --scheduled",
+    "write": "node scripts/rpost.mjs write --scheduled",
+    "run": "node scripts/rpost.mjs run",
+    "status": "node scripts/rpost.mjs status",
+    "list": "node scripts/rpost.mjs list",
+
     "update-index": "node scripts/update-index.mjs",
     "embed-images": "node scripts/embed-images.mjs"
   }

@@ -1,10 +1,11 @@
 export const LS_GH_REPO = "gh-repo-rpost";
 export const LS_GH_TOKEN = "gh-token-rpost";
 
-/** workflow 文件名写死 */
+/** workflow 文件名 */
 export const WORKFLOWS = {
-  topic: "topic.yml",
-  post: "post.yml",
+  topic: "topic-generate.yml",
+  post: "post-generate.yml",
+  daily: "daily-generate.yml",
 } as const;
 
 export type AppSettings = {

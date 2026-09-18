@@ -1,0 +1,84 @@
+name: Topic Generate (ideate / outline)
+
+on:
+  schedule:
+    - cron: "0 1 * * *"   # 北京时间 09:00 每天
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "ideate=生成选题+大纲 | outline=补大纲"
+        required: false
+        type: choice
+        options:
+          - ideate
+          - outline
+        default: ideate
+      quota:
+        description: "ideate 条数（留空用 meta.dailyQuota）"
+        required: false
+        type: string
+        default: ""
+      topicId:
+        description: "outline 时指定选题 id；空则处理所有排期中无大纲的"
+        required: false
+        type: string
+        default: ""
+      promptId:
+        description: "选题 Prompt id（留空用默认）"
+        required: false
+        type: string
+        default: ""
+      categoryId:
+        description: "ideate 可选分类 id"
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: topic-generate
+  cancel-in-progress: false
+
+jobs:
+  topic-generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run topic-generate
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          MODE: ${{ inputs.mode || 'ideate' }}
+          QUOTA: ${{ inputs.quota }}
+          PROMPT_ID: ${{ inputs.promptId }}
+          CATEGORY_ID: ${{ inputs.categoryId }}
+          TOPIC_ID: ${{ inputs.topicId }}
+          SCHEDULED: "1"
+        run: |
+          MODE="${{ inputs.mode }}"
+          if [ -z "$MODE" ]; then MODE=ideate; fi
+
+          if [ "$MODE" = "outline" ]; then
+            if [ -n "${{ inputs.topicId }}" ]; then
+              node scripts/topic-generate.mjs --mode outline --topicId "${{ inputs.topicId }}"
+            else
+              node scripts/topic-generate.mjs --mode outline --scheduled
+            fi
+          else
+            node scripts/topic-generate.mjs --mode ideate
+          fi
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add topics/
+          git diff --staged --quiet && echo "No changes" && exit 0
+          git commit -m "topics: ${{ inputs.mode || 'ideate' }}"
+          git push

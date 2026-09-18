@@ -10,7 +10,13 @@
   --danger: #9b2c2c;
   --ok: #1b6b3a;
   --code: #eef3ef;
-  font-family: "IBM Plex Sans", "Source Han Sans SC", "Noto Sans SC", sans-serif;
+
+  /* 工作流状态色 */
+  --color-open: #9ca3af;
+  --color-scheduled: #2563eb;
+  --color-done: #16a34a;
+
+  font-family: "Inter", "IBM Plex Sans", "Noto Sans SC", sans-serif;
   line-height: 1.45;
   font-weight: 400;
   font-size: 15px;
@@ -749,3 +755,258 @@ textarea.full,
     justify-content: flex-start;
   }
 }
+
+/* ─── Google Fonts preconnect (fallback declaration) ──────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* ─── Dashboard ───────────────────────────────────────────────── */
+
+.dashboard {
+  display: grid;
+  gap: 0.85rem;
+}
+
+/* 统计条 */
+.stat-bar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  min-width: 5rem;
+  padding: 0.55rem 0.9rem;
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  background: var(--panel);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font: inherit;
+}
+
+.stat-card:hover {
+  border-color: var(--card-color, var(--line));
+}
+
+.stat-card.is-active {
+  border-color: var(--card-color, var(--accent));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--card-color, var(--accent)) 15%, transparent);
+}
+
+.stat-count {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--card-color, var(--ink));
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.stat-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+/* Toast 消息条 */
+.toast {
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.4rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  margin: 0;
+}
+
+.toast.error,
+p.error.toast {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+/* 主体双栏 */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-panel h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-family: "IBM Plex Serif", Georgia, serif;
+}
+
+/* 排期队列 */
+.queue-empty {
+  padding: 0.5rem 0;
+}
+
+.queue-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.queue-item {
+  border-bottom: 1px solid var(--line);
+  padding: 0.6rem 0;
+}
+
+.queue-item:last-child {
+  border-bottom: none;
+}
+
+.queue-item.has-outline .queue-title::after {
+  content: " 📝";
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.queue-item-header {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.queue-rank {
+  font-variant-numeric: tabular-nums;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.8rem;
+  color: var(--color-scheduled);
+  font-weight: 600;
+  min-width: 1.5rem;
+  line-height: 1.6;
+  flex-shrink: 0;
+}
+
+.queue-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.queue-title {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.queue-blurb {
+  margin: 0.1rem 0 0;
+  font-size: 0.83rem;
+}
+
+.queue-meta {
+  display: block;
+  font-size: 0.78rem;
+  margin-top: 0.1rem;
+}
+
+.queue-actions {
+  display: flex;
+  gap: 0.2rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* 大纲展开区 */
+.outline-panel {
+  margin: 0.45rem 0 0.1rem 1.9rem;
+  padding: 0.5rem 0.65rem;
+  background: var(--code);
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  font-size: 0.82rem;
+}
+
+.outline-title {
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+
+.outline-sections {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.outline-sections ul {
+  margin: 0.15rem 0 0;
+  padding-left: 1rem;
+  color: var(--muted);
+}
+
+.outline-raw {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.75rem;
+  max-height: 12rem;
+  overflow: auto;
+}
+
+/* 最新稿件列表 */
+.recent-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.recent-list li + li {
+  border-top: 1px solid var(--line);
+}
+
+.recent-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0;
+  color: inherit;
+  transition: color 0.1s;
+}
+
+.recent-row:hover strong {
+  color: var(--accent);
+}
+
+.recent-main {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 0.08rem;
+}
+
+.recent-main strong {
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.1s;
+}
+
+.recent-main span {
+  font-size: 0.8rem;
+}
+

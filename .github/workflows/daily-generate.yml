@@ -1,0 +1,138 @@
+name: Daily Generate (全自动流水线)
+
+# 每天北京时间 09:00 自动运行
+# 也可手动触发（用于调试或补发）
+on:
+  schedule:
+    - cron: "0 1 * * *"   # UTC 01:00 = 北京 09:00
+  workflow_dispatch:
+    inputs:
+      quota:
+        description: "选题 ideate 条数（留空用 meta.dailyQuota）"
+        required: false
+        type: string
+        default: ""
+      force_write:
+        description: "即使无排期也强制写作（true/false）"
+        required: false
+        type: string
+        default: "false"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-generate
+  cancel-in-progress: false
+
+jobs:
+  topic-generate:
+    name: "① Topic Generate"
+    runs-on: ubuntu-latest
+    outputs:
+      scheduled_count: ${{ steps.check.outputs.scheduled_count }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check scheduled queue
+        id: check
+        run: |
+          COUNT=$(node -e "
+            const fs = require('fs');
+            const p = 'topics/index.json';
+            if (!fs.existsSync(p)) { process.stdout.write('0'); process.exit(0); }
+            const s = JSON.parse(fs.readFileSync(p,'utf8'));
+            const n = (s.items||[]).filter(i=>i.scheduled&&!i.articleId).length;
+            process.stdout.write(String(n));
+          ")
+          echo "scheduled_count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "[daily] 当前排期: $COUNT 条"
+
+      - name: Run topic-generate (ideate) if queue low
+        if: ${{ fromJSON(steps.check.outputs.scheduled_count) < 2 }}
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          QUOTA: ${{ inputs.quota }}
+        run: node scripts/topic-generate.mjs --mode ideate
+
+      - name: Run topic-generate (outline) for scheduled without outline
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: node scripts/topic-generate.mjs --mode outline --scheduled || echo "无需补大纲"
+
+      - name: Commit topics
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add topics/
+          git diff --staged --quiet && echo "No topic changes" && exit 0
+          git commit -m "topics: daily ideate + outline"
+          git push
+
+  post-generate:
+    name: "② Post Generate"
+    needs: topic-generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # 拉取 topic-generate job push 后的最新代码
+          ref: ${{ github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install R packages
+        run: |
+          install.packages(c("ggplot2", "knitr", "rmarkdown"), repos = "https://cloud.r-project.org")
+        shell: Rscript {0}
+
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Generate QMD (排期第一条)
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          FROM_SCHEDULED: "true"
+        run: node scripts/post-generate.mjs
+
+      - name: Resolve slug
+        id: slug
+        run: |
+          SLUG=$(node -e "const fs=require('fs'); const j=JSON.parse(fs.readFileSync('content/.last-generate.json','utf8')); process.stdout.write(j.slug)")
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+          echo "[daily] post slug=$SLUG"
+
+      - name: Render QMD to GFM
+        run: |
+          SLUG="${{ steps.slug.outputs.slug }}"
+          mkdir -p content/published
+          quarto render "content/drafts/${SLUG}.qmd" --to gfm --output-dir content/published
+          if [ ! -f "content/published/${SLUG}.md" ]; then
+            FOUND=$(find content/published -maxdepth 2 -name '*.md' | head -n 1)
+            if [ -n "$FOUND" ]; then mv "$FOUND" "content/published/${SLUG}.md"; fi
+          fi
+
+      - name: Embed images + update index
+        run: |
+          SLUG="${{ steps.slug.outputs.slug }}"
+          node scripts/embed-images.mjs "content/published/${SLUG}.md"
+          node scripts/update-index.mjs --slug "${SLUG}"
+
+      - name: Commit content
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/ topics/
+          git diff --staged --quiet && echo "No content changes" && exit 0
+          git commit -m "content: daily generate ${{ steps.slug.outputs.slug }}"
+          git push
