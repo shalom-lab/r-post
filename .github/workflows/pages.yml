@@ -43,6 +43,9 @@ jobs:
         working-directory: apps/console
         run: npm run build
 
+      - name: Ensure .nojekyll for Pages
+        run: touch apps/console/dist/.nojekyll
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
