@@ -285,32 +285,60 @@ export default function TopicsPage() {
     );
   }
 
+  const filterTabs = [
+    ["all", "全部"],
+    ["open", "待办"],
+    ["scheduled", "排期"],
+    ["done", "成稿"],
+  ] as const;
+
   return (
     <section className="panel">
       <div className="panel-head">
         <div>
           <h1>选题</h1>
           <p className="muted">
-            与写作并列。选题 = 题目+大纲（AI 一次带出）；Pass 硬删；勾选排期后进入写作。提示词：{" "}
-            <Link to="/prompts">选题 / 写作</Link>。
+            AI 出题+大纲 → 勾选排期 → 写作。提示词见{" "}
+            <Link to="/prompts">提示词</Link>。
           </p>
         </div>
-        <button type="button" className="btn" disabled={busy} onClick={pullFromRepo}>
-          从仓库拉取
-        </button>
+        <div className="row">
+          <button type="button" className="btn" disabled={busy} onClick={pullFromRepo}>
+            拉取
+          </button>
+          <button type="button" className="btn" disabled={busy} onClick={onAdd}>
+            手动加
+          </button>
+          <button
+            type="button"
+            className="btn primary"
+            disabled={busy}
+            onClick={onIdeate}
+          >
+            AI 选题
+          </button>
+          <button
+            type="button"
+            className="btn primary"
+            disabled={busy || scheduledCount === 0}
+            onClick={onGenerateNext}
+          >
+            写作下一条（{scheduledCount}）
+          </button>
+        </div>
       </div>
 
-      <div className="toolbar">
+      <div className="topics-setup">
         <label className="inline">
-          控制量
+          条数
           <input
             value={quota}
             onChange={(e) => setQuota(e.target.value)}
-            style={{ width: "4rem" }}
+            className="input-sm"
           />
         </label>
         <label className="inline">
-          选题 Prompt
+          Prompt
           <select
             value={topicPromptId}
             onChange={(e) => setTopicPromptId(e.target.value)}
@@ -323,7 +351,7 @@ export default function TopicsPage() {
           </select>
         </label>
         <label className="inline">
-          风暴分类
+          分类
           <select
             value={ideateCategoryId}
             onChange={(e) => setIdeateCategoryId(e.target.value)}
@@ -337,45 +365,34 @@ export default function TopicsPage() {
           </select>
         </label>
         <button type="button" className="btn" disabled={busy} onClick={onSaveQuota}>
-          保存设置
-        </button>
-        <button type="button" className="btn" disabled={busy} onClick={onAdd}>
-          手动添加
-        </button>
-        <button type="button" className="btn primary" disabled={busy} onClick={onIdeate}>
-          AI 选题（含大纲）
-        </button>
-        <button type="button" className="btn" disabled={busy} onClick={onOutlineScheduled}>
-          补大纲（缺漏）
+          保存
         </button>
         <button
           type="button"
-          className="btn primary"
-          disabled={busy || scheduledCount === 0}
-          onClick={onGenerateNext}
+          className="btn"
+          disabled={busy}
+          onClick={onOutlineScheduled}
+          title="仅为缺大纲的排期项补大纲"
         >
-          写作下一条排期（{scheduledCount}）
+          补大纲
         </button>
       </div>
 
-      <div className="toolbar">
-        {(
-          [
-            ["all", "全部"],
-            ["open", "未排期"],
-            ["scheduled", "已排期"],
-            ["done", "已成稿"],
-          ] as const
-        ).map(([k, label]) => (
-          <button
-            key={k}
-            type="button"
-            className={filter === k ? "btn primary" : "btn"}
-            onClick={() => setFilter(k)}
-          >
-            {label}
-          </button>
-        ))}
+      <div className="topics-filter">
+        <div className="seg" role="tablist">
+          {filterTabs.map(([k, label]) => (
+            <button
+              key={k}
+              type="button"
+              role="tab"
+              aria-selected={filter === k}
+              className={filter === k ? "is-active" : ""}
+              onClick={() => setFilter(k)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
@@ -407,14 +424,13 @@ export default function TopicsPage() {
             key={item.id}
             className={`todo-row ${item.scheduled ? "is-scheduled" : ""} ${item.articleId ? "is-done" : ""}`}
           >
-            <label className="todo-check" title="已排期">
+            <label className="todo-check" title="勾选加入排期">
               <input
                 type="checkbox"
                 checked={Boolean(item.scheduled)}
                 disabled={busy || Boolean(item.articleId)}
                 onChange={() => onToggleScheduled(item)}
               />
-              <span>排期</span>
             </label>
 
             <div className="todo-body">
@@ -440,7 +456,7 @@ export default function TopicsPage() {
                       setDraft({ ...draft, categoryId: e.target.value })
                     }
                   >
-                    <option value="">成稿分类（可选，归稿件）</option>
+                    <option value="">分类（可选）</option>
                     {cats.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -468,20 +484,20 @@ export default function TopicsPage() {
               ) : (
                 <>
                   <strong>
-                    {scheduleRank.has(item.id)
-                      ? `#${scheduleRank.get(item.id)} `
-                      : ""}
+                    {scheduleRank.has(item.id) && (
+                      <span className="rank">#{scheduleRank.get(item.id)}</span>
+                    )}
                     {item.title}
                   </strong>
-                  {item.blurb && <p className="muted">{item.blurb}</p>}
+                  {item.blurb && <p className="muted blurb">{item.blurb}</p>}
                   <span className="meta">
                     {item.categoryId ? `${item.categoryId} · ` : ""}
                     {item.articleId
-                      ? `已成稿 ${item.articleId}`
+                      ? `成稿 ${item.articleId}`
                       : item.scheduled
                         ? "已排期"
                         : "待办"}
-                    {item.outline ? " · 有大纲" : ""}
+                    {item.outline ? " · 大纲" : ""}
                   </span>
                 </>
               )}
@@ -490,16 +506,16 @@ export default function TopicsPage() {
             <div className="todo-actions">
               <button
                 type="button"
-                className="btn"
+                className="btn icon-only"
                 disabled={busy}
                 onClick={() => onMove(item, -1)}
-                title="上移（影响排期顺序）"
+                title="上移"
               >
                 ↑
               </button>
               <button
                 type="button"
-                className="btn"
+                className="btn icon-only"
                 disabled={busy}
                 onClick={() => onMove(item, 1)}
                 title="下移"
