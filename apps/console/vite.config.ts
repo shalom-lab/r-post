@@ -5,4 +5,8 @@ import { defineConfig } from "vite";
 export default defineConfig({
   base: "/r-post/",
   plugins: [react()],
+  build: {
+    outDir: "../../dist",
+    emptyOutDir: true,
+  },
 });
