@@ -43,10 +43,13 @@ jobs:
               dir=$(dirname "$qmd")
               name=$(basename "$qmd" .qmd)
               echo "::group::Render $qmd"
-              if ! quarto render "$qmd" --to gfm; then
-                echo "::error file=$qmd::Quarto render failed"
+              if ! render_log=$(quarto render "$qmd" --to gfm 2>&1); then
+                echo "$render_log"
+                detail=$(echo "$render_log" | tail -n 12 | tr '\n' ' ' | sed 's/%/%25/g; s/\r/%0D/g; s/\n/%0A/g')
+                echo "::error file=$qmd::$detail"
                 exit 1
               fi
+              echo "$render_log"
               if [ ! -f "$dir/$name.md" ]; then
                 echo "::error file=$qmd::Quarto did not create $dir/$name.md"
                 exit 1
