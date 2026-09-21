@@ -11,6 +11,7 @@ RPost is maintained through conversation. The website is a read-only article lib
 - Treat the user's theme, count, audience, and required concepts as binding.
 - Use real datasets for data analysis. Built-in character vectors or minimal literal examples are valid for regex, string, and syntax lessons.
 - Avoid duplicate topics. Status is either `候选` or `已成稿`.
+- Assign exactly one category automatically: `r-plot` (R 作图), `r-stats` (R 统计), `r-base` (R 基础), `r-tidyverse` (R tidyverse), or `r-code-management` (R 代码管理).
 
 ## Write an article
 
@@ -21,7 +22,7 @@ RPost is maintained through conversation. The website is a read-only article lib
 - Create `content/posts/NNN-ascii-slug/NNN-中文标题.qmd`.
 - Do not create an images directory. Quarto may create temporary figures; the render workflow embeds them into Markdown as data URIs.
 - Use conversational Chinese and the smallest runnable R code that teaches the operation.
-- Add title, description, author, date, category, tags, and `format: gfm` to QMD frontmatter.
+- Add title, description, author, date, category, category-slug, tags, and `format: gfm` to QMD frontmatter.
 - When writing from a candidate, add its article metadata in `topics/index.json`, then regenerate `topics/index.md`.
 
 ## Render and publish

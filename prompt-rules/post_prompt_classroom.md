@@ -33,6 +33,7 @@ execute:
 ---
 
 - R 代码用 Quarto 的 ```{r} 块；所有对象按顺序定义，可在干净会话执行。
+- 分类由工作流统一写入 frontmatter；不要自造分类名称或 slug。
 - 优先使用 base R、stats、datasets、ggplot2；任务确实需要时可使用已在执行环境安装的专用包（例如 Excel 导出使用 writexl）。不要为了方便引入 tidyverse。
 - 不在文档内 install.packages，不调用 system、shell、Sys.getenv，不读写无关文件。
 - 一段代码尽量 3–10 行，总体约 3–5 段。数据预览只展示相关列与少量行，避免整表刷屏。

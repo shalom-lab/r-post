@@ -8,6 +8,7 @@ alwaysApply: true
 - The only content stages are topic and post.
 - `topics/index.json` is the topic data source; `topics/index.md` is its generated reading view. Posts live in numbered folders under `content/posts/`.
 - Read shared prompts through `prompt-rules/index.json`.
+- Automatically choose one fixed category slug: `r-plot`, `r-stats`, `r-base`, `r-tidyverse`, or `r-code-management`.
 - Generate a post directly from a selected topic number or free-form subject.
 - Preserve explicit user-provided headings, order, examples, and output requirements; they override prompt defaults.
 - Update JSON article metadata and regenerate the Markdown view when a candidate becomes an article.

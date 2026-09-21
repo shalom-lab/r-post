@@ -4,6 +4,7 @@ description: "用简短示例比较 RDS、Excel、CSV、save() 和 save.image()�
 author: "RPost"
 date: "2026-09-21"
 category: "R 基础"
+category-slug: "r-base"
 tags: ["数据保存", "RDS", "CSV", "Excel"]
 format: gfm
 execute:

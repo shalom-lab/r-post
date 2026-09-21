@@ -1,12 +1,30 @@
 {
   "articles": [
     {
+      "id": "003",
+      "slug": "003-regex-real-world",
+      "title": "啥是正则表达式？为啥字符串处理很关键？",
+      "description": "用批量读取 Excel、识别 ICD 编码和提取固定格式字段三个场景认识正则表达式。",
+      "date": "2026-09-21",
+      "category": "R 基础",
+      "categorySlug": "r-base",
+      "tags": [
+        "正则表达式",
+        "字符串",
+        "ICD",
+        "批量读取"
+      ],
+      "qmd": "posts/003-regex-real-world/003-啥是正则表达式为啥字符串处理很关键.qmd",
+      "md": null
+    },
+    {
       "id": "002",
       "slug": "002-r-save-five-methods",
       "title": "R 语言保存数据的 5 种常见方法",
       "description": "用简短示例比较 RDS、Excel、CSV、save() 和 save.image()。",
       "date": "2026-09-21",
       "category": "R 基础",
+      "categorySlug": "r-base",
       "tags": [
         "数据保存",
         "RDS",
@@ -22,7 +40,8 @@
       "title": "用 mtcars 看一眼相关与散点",
       "description": "用散点图和相关系数理解汽车重量与燃油效率之间的关系。",
       "date": "2026-03-18",
-      "category": "统计入门",
+      "category": "R 统计",
+      "categorySlug": "r-stats",
       "tags": [
         "mtcars",
         "相关",
@@ -32,5 +51,5 @@
       "md": "posts/001-mtcars-scatter/001-用mtcars看一眼相关与散点.md"
     }
   ],
-  "updatedAt": "2026-09-21T08:53:47.198Z"
+  "updatedAt": "2026-09-21T09:18:27.661Z"
 }

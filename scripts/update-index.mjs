@@ -57,6 +57,7 @@ if (fs.existsSync(postsDir)) {
       description: meta.description || "",
       date: meta.date || "",
       category: meta.category || "",
+      categorySlug: meta["category-slug"] || "",
       tags: Array.isArray(meta.tags) ? meta.tags : [],
       qmd: toPosix(path.relative(path.join(root, "content"), qmdPath)),
       md: fs.existsSync(mdPath)

@@ -9,7 +9,7 @@
       "id": "topic-regex-grepl-state-names",
       "title": "用 grepl() 从州名中筛出目标文本",
       "blurb": "用 R 内置的 state.name 演示最基本的模式匹配，得到逻辑结果并筛出含 New 的州名。",
-      "categoryId": "r-basics",
+      "categoryId": "r-base",
       "angle": "先会判断，再用判断结果筛选",
       "outline": {
         "workingTitle": "R 正则入门：用 grepl() 找出包含目标文字的州名",
@@ -40,7 +40,7 @@
       "id": "topic-regex-anchors-state-abb",
       "title": "正则里的 ^ 和 $ 到底匹配哪里？",
       "blurb": "用 state.abb 检查州缩写的开头和结尾，直观看懂字符串边界，而不是死记符号。",
-      "categoryId": "r-basics",
+      "categoryId": "r-base",
       "angle": "用可核对结果理解开头与结尾",
       "outline": {
         "workingTitle": "用州缩写看懂正则表达式中的 ^ 和 $",
@@ -71,7 +71,7 @@
       "id": "topic-string-sub-gsub",
       "title": "sub() 和 gsub() 有什么区别？",
       "blurb": "用带有多余空格和横线的最小文本示例，对比只替换第一次与替换全部匹配。",
-      "categoryId": "r-basics",
+      "categoryId": "r-base",
       "angle": "一组输入直接对照两个函数",
       "outline": {
         "workingTitle": "一眼分清 sub() 和 gsub()：一次替换与全部替换",
@@ -102,7 +102,7 @@
       "id": "topic-regex-extract-file-names",
       "title": "如何从文件名中提取年份和编号？",
       "blurb": "从 report_2024_03.csv 这类文件名中提取数字片段，练习 gregexpr() 与 regmatches()。",
-      "categoryId": "r-basics",
+      "categoryId": "r-base",
       "angle": "从常见文件名中提取多个匹配",
       "outline": {
         "workingTitle": "R 中从文件名提取年份和编号",
@@ -133,7 +133,7 @@
       "id": "topic-regex-capture-state-names",
       "title": "用捕获组调整双词州名的顺序",
       "blurb": "从 state.name 找出 New York 等双词州名，再用捕获组改成 York, New，理解括号和反向引用。",
-      "categoryId": "r-basics",
+      "categoryId": "r-base",
       "angle": "用可见的前后变化理解捕获组",
       "outline": {
         "workingTitle": "R 正则进阶一步：用捕获组重排双词州名",
@@ -164,7 +164,7 @@
       "id": "topic-sample-cor",
       "title": "用 mtcars 三分钟看懂相关",
       "blurb": "散点 + cor()，讲清重量和油耗怎么一起动",
-      "categoryId": "stats",
+      "categoryId": "r-stats",
       "angle": "一张图一个数",
       "outline": null,
       "outlinedAt": null,
@@ -176,6 +176,42 @@
       },
       "createdAt": "2026-03-18T00:00:00.000Z",
       "updatedAt": "2026-03-18T00:00:00.000Z"
+    },
+    {
+      "id": "topic-regex-real-world",
+      "title": "啥是正则表达式？为啥字符串处理很关键？",
+      "blurb": "从批量读取 Excel、识别 ICD 编码和固定格式文本提取三个场景，理解正则表达式如何描述字符串规律。",
+      "categoryId": "r-base",
+      "angle": "以真实工作场景串起筛选、判断和提取",
+      "outline": {
+        "workingTitle": "啥是正则表达式？为啥字符串处理很关键？",
+        "hook": "文件名、疾病编码和业务文本看似不同，本质上都可以先找出字符串规律。",
+        "dataset": "文章内定义的最小可复现文件名、ICD 编码与固定格式文本；医疗示例仅用于演示字符串规则。",
+        "sections": [
+          {
+            "heading": "读入所有以 dataset 开头的 xlsx 文件",
+            "point": "用 list.files() 的 pattern 参数筛选文件名，再配合 for 循环逐个读入。"
+          },
+          {
+            "heading": "根据 ICD 编码识别呼吸系统感染",
+            "point": "用 grepl() 判断编码是否落在示例规则覆盖的 J00–J22 子范围，并说明规则边界。"
+          },
+          {
+            "heading": "从固定格式文本中提取字段",
+            "point": "用捕获组、regexec() 和 regmatches() 提取 ID、日期和值。"
+          }
+        ],
+        "takeaway": "正则表达式先描述文本结构，再帮助 R 批量筛选、判断和提取。",
+        "risks": "ICD 分类必须以实际版本和业务编码表为准，不能把演示正则当作完整临床规则。"
+      },
+      "article": {
+        "id": "003",
+        "title": "啥是正则表达式？为啥字符串处理很关键？",
+        "qmd": "content/posts/003-regex-real-world/003-啥是正则表达式为啥字符串处理很关键.qmd",
+        "md": "content/posts/003-regex-real-world/003-啥是正则表达式为啥字符串处理很关键.md"
+      },
+      "createdAt": "2026-09-21T00:00:00.000Z",
+      "updatedAt": "2026-09-21T00:00:00.000Z"
     }
   ],
   "updatedAt": "2026-09-21T00:00:00.000Z"

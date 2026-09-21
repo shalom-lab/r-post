@@ -5,6 +5,7 @@ export type Article = {
   description: string;
   date: string;
   category: string;
+  categorySlug: string;
   tags: string[];
   qmd: string;
   md: string | null;

@@ -26,7 +26,7 @@ jobs:
 
       - name: Install R packages
         shell: Rscript {0}
-        run: install.packages(c("ggplot2", "knitr", "rmarkdown", "writexl"), repos = "https://cloud.r-project.org")
+        run: install.packages(c("ggplot2", "knitr", "rmarkdown", "readxl", "writexl"), repos = "https://cloud.r-project.org")
 
       - uses: quarto-dev/quarto-actions/setup@v2
 
@@ -37,12 +37,22 @@ jobs:
       - name: Render and embed images
         shell: bash
         run: |
+          set -o pipefail
           find content/posts -type f -name '*.qmd' -print0 |
             while IFS= read -r -d '' qmd; do
               dir=$(dirname "$qmd")
               name=$(basename "$qmd" .qmd)
-              quarto render "$qmd" --to gfm
+              echo "::group::Render $qmd"
+              if ! quarto render "$qmd" --to gfm; then
+                echo "::error file=$qmd::Quarto render failed"
+                exit 1
+              fi
+              if [ ! -f "$dir/$name.md" ]; then
+                echo "::error file=$qmd::Quarto did not create $dir/$name.md"
+                exit 1
+              fi
               node scripts/embed-images.mjs "$dir/$name.md"
+              echo "::endgroup::"
             done
           node scripts/update-index.mjs
 

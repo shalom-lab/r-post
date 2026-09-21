@@ -11,6 +11,7 @@ import {
 } from "./lib/ai.mjs";
 
 const topicsPath = path.join(root, "topics", "index.json");
+const categoriesPath = path.join(root, "content", "categories.json");
 const postsDir = path.join(root, "content", "posts");
 const lastGeneratePath = path.join(root, "content", ".last-generate.json");
 
@@ -45,7 +46,20 @@ function qmdTitle(text, fallback) {
 
 function assertQmd(text) {
   if (!/^---\s*\n[\s\S]+?\n---/.test(text)) throw new Error("生成结果缺少完整 YAML frontmatter");
-  if (!text.includes("```{r}")) throw new Error("生成结果没有可执行 R 代码块");
+  if (!/^(?:```|~~~)\{r\}/m.test(text)) throw new Error("生成结果没有可执行 R 代码块");
+}
+
+function classify(text) {
+  if (/ggplot|作图|绘图|图表|可视化/i.test(text)) return "r-plot";
+  if (/统计|回归|检验|相关|方差|概率|置信区间/i.test(text)) return "r-stats";
+  if (/tidyverse|dplyr|tidyr|purrr|管道|数据整理/i.test(text)) return "r-tidyverse";
+  if (/代码管理|项目|renv|git|包管理|目录结构|函数管理/i.test(text)) return "r-code-management";
+  return "r-base";
+}
+
+function categoryMeta(id) {
+  const categories = JSON.parse(fs.readFileSync(categoriesPath, "utf8")).categories || [];
+  return categories.find((item) => item.id === id) || categories.find((item) => item.id === "r-base");
 }
 
 function addMetadata(qmd, category, description) {
@@ -55,9 +69,14 @@ function addMetadata(qmd, category, description) {
   const quote = (value) => '"' + String(value).replace(/"/g, '\\"') + '"';
   const additions = [];
   if (!/^description:/m.test(yaml)) additions.push("description: " + quote(description));
-  if (!/^category:/m.test(yaml)) additions.push("category: " + quote(category || "R语言"));
+  const meta = categoryMeta(category);
+  const normalizedYaml = /^category:/m.test(yaml)
+    ? yaml.replace(/^category:.*$/m, "category: " + quote(meta.name))
+    : yaml;
+  if (!/^category:/m.test(normalizedYaml)) additions.push("category: " + quote(meta.name));
+  if (!/^category-slug:/m.test(normalizedYaml)) additions.push("category-slug: " + quote(meta.id));
   if (!/^tags:/m.test(yaml)) additions.push("tags: [R语言, 教程]");
-  return additions.length ? yaml + "\n" + additions.join("\n") + qmd.slice(close) : qmd;
+  return additions.length ? normalizedYaml + "\n" + additions.join("\n") + qmd.slice(close) : normalizedYaml + qmd.slice(close);
 }
 
 async function main() {
@@ -76,6 +95,7 @@ async function main() {
     category = category || selected.categoryId || "";
   }
   if (!topic) throw new Error("请提供 topicId 或自由主题 topic");
+  category = category || classify(topic);
 
   const articleId = nextNumber();
   const slug = safeSlug(args.slug || process.env.SLUG, articleId);

@@ -16,15 +16,18 @@ export default function HomePage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const categories = useMemo(
-    () => [...new Set(articles.map((article) => article.category).filter(Boolean))],
-    [articles],
-  );
+  const categories = useMemo(() => {
+    const unique = new Map<string, string>();
+    for (const article of articles) {
+      if (article.category) unique.set(article.categorySlug || article.category, article.category);
+    }
+    return [...unique.entries()];
+  }, [articles]);
 
   const visible = useMemo(() => {
     const keyword = query.trim().toLowerCase();
     return articles.filter((article) => {
-      if (category && article.category !== category) return false;
+      if (category && (article.categorySlug || article.category) !== category) return false;
       if (!keyword) return true;
       return [article.title, article.description, article.category, ...article.tags]
         .join(" ")
@@ -55,7 +58,7 @@ export default function HomePage() {
           aria-label="按分类筛选"
         >
           <option value="">全部分类</option>
-          {categories.map((name) => <option key={name} value={name}>{name}</option>)}
+          {categories.map(([slug, name]) => <option key={slug} value={slug}>{name}</option>)}
         </select>
       </section>
 

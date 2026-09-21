@@ -35,6 +35,7 @@ content/
 - 每篇文章使用独立编号目录，QMD 与 Markdown 同名。
 - 不保存独立图片目录；渲染工作流把图片嵌入 Markdown。
 - `content/index.json` 是构建产物，不手工维护。
+- 分类固定为 `r-plot`、`r-stats`、`r-base`、`r-tidyverse`、`r-code-management`，由生成流程自动选择。
 
 ## 自动化
 
