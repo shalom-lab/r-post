@@ -19,7 +19,7 @@ execute:
 
 ## 场景 1：读入所有以 dataset 开头的 xlsx 文件
 
-假设 data 文件夹里混着很多文件，我们只要 dataset_ 开头、.xlsx 结尾的文件。这里的 ^ 表示开头，$ 表示结尾；点号在正则里有特殊含义，所以写成 \\.
+假设 `data` 文件夹里混着很多文件，我们只要 `dataset_` 开头、`.xlsx` 结尾的文件。这里的 `^` 表示开头，`$` 表示结尾；点号在正则里有特殊含义，所以写成 `\\.`。
 
 ```{r}
 xlsx_files <- list.files(
@@ -27,8 +27,6 @@ xlsx_files <- list.files(
   pattern = "^dataset.*\\.xlsx$",
   full.names = TRUE
 )
-
-basename(xlsx_files)
 ```
 找到文件后，可以配合 for 循环逐个读入。用列表保存结果，是因为每个 Excel 文件可能有不同的行数。
 
@@ -40,7 +38,7 @@ for (i in seq_along(xlsx_files)) {
   data_list[[i]] <- readxl::read_excel(xlsx_files[i])
 }
 ```
-如果目录里没有匹配文件，seq_along() 会得到空序列，循环不会报错。正式处理前，可以再用 length(xlsx_files) 核对找到几个文件。
+如果目录里没有匹配文件，`seq_along()` 会得到空序列，循环不会报错。正式处理前，可以再用 `length(xlsx_files)` 核对找到几个文件。
 
 ## 场景 2：根据 ICD 编码识别呼吸系统感染
 
@@ -53,13 +51,13 @@ infection_pattern <- "^J(0[0-6]|09|1[0-8]|2[0-2])"
 is_respiratory_infection <- grepl(infection_pattern, icd)
 data.frame(icd, is_respiratory_infection)
 ```
-括号中的 | 表示“或者”。J45.9 属于呼吸系统疾病，但不在这里定义的感染范围内，所以结果为 FALSE。
+括号中的 `|` 表示“或者”。`J45.9` 属于呼吸系统疾病，但不在这里定义的感染范围内，所以结果为 `FALSE`。
 
 这段规则只适合演示字符串识别。真实医疗数据要以正在使用的 ICD 版本和业务编码表为准，例如 U07.1 这类编码需要另行纳入，不能只靠一个正则完成临床分类。
 
 ## 场景 3：从固定格式文本中抠出字段
 
-再看一类常见文本：每行都按 ID|DATE|VALUE 排列。括号可以把想要的部分分别“抓住”，[^|]+ 表示连续读取一个或多个非竖线字符。
+再看一类常见文本：每行都按 `ID|DATE|VALUE` 排列。括号可以把想要的部分分别“抓住”，`[^|]+` 表示连续读取一个或多个非竖线字符。
 
 ```{r}
 text <- c(
@@ -74,8 +72,7 @@ fields <- do.call(rbind, lapply(parts, function(x) x[-1]))
 colnames(fields) <- c("id", "date", "value")
 fields
 ```
-regexec() 负责定位整段文本和三个捕获组，regmatches() 再把内容取出来。x[-1] 去掉完整匹配，只保留三个字段。
+`regexec()` 负责定位整段文本和三个捕获组，`regmatches()` 再把内容取出来。`x[-1]` 去掉完整匹配，只保留三个字段。
 
-正则表达式的价值就在这里：先描述文本的共同结构，再让 R 批量筛选、判断或提取。先从 ^、$、.、*、括号和 | 这些常用符号开始，已经能处理很多真实任务。
-
+正则表达式的价值就在这里：先描述文本的共同结构，再让 R 批量筛选、判断或提取。先从 `^`、`$`、`.`、`*`、括号和 `|` 这些常用符号开始，已经能处理很多真实任务。
 
