@@ -9,86 +9,73 @@ execute:
   message: false
 ---
 
-R 里的“保存”不只有一种写法。选哪种方法，关键看你要保存单个对象、通用表格，还是整个工作环境。
+分析做到一半，怎么把数据稳稳地保存下来？R 提供了好几种方法，区别主要在于：你想留给自己下次继续用，还是发给别人打开。
 
-下面用 mtcars 中的 6 行数据演示。所有文件都写入临时目录，运行文章时不会弄乱当前工作目录。
+我们用 mtcars 中的 6 行数据做演示。为了不在你的项目里留下测试文件，示例统一保存到 R 的临时目录。
 
 ~~~{r}
-demo_data <- mtcars[1:6, c("mpg", "cyl", "wt")]
-output_dir <- file.path(tempdir(), "rpost-save-demo")
-dir.create(output_dir, showWarnings = FALSE)
-
-demo_data
+cars <- mtcars[1:6, c("mpg", "cyl", "wt")]
+demo_dir <- tempdir()
+cars
 ~~~
 
 ## 1. RDS：保存单个 R 对象
 
-RDS 适合保存一个 R 对象，例如数据框、模型或列表。它能保留对象的结构和属性，之后用 readRDS() 读回来。
+如果你只想保存一个数据框、模型或列表，RDS 通常最省心。它会保留对象在 R 里的结构，读回来后可以自己决定对象叫什么名字。
 
 ~~~{r}
-rds_file <- file.path(output_dir, "cars.rds")
-saveRDS(demo_data, rds_file)
-
-cars_from_rds <- readRDS(rds_file)
-identical(demo_data, cars_from_rds)
+saveRDS(cars, file.path(demo_dir, "cars.rds"))
+cars_rds <- readRDS(file.path(demo_dir, "cars.rds"))
+cars_rds
 ~~~
 
-读取时可以换一个新的对象名，这是 RDS 和 save() 的一个明显区别。
+一存一读，分别是 saveRDS() 和 readRDS()。只保存一个 R 对象时，优先想到它就可以。
 
 ## 2. Excel：保存为 xlsx 文件
 
-需要把结果交给使用 Excel 的同事时，可以用 writexl::write_xlsx()。它直接接收数据框，不需要先创建工作簿。
+如果文件要交给习惯使用 Excel 的同事，可以用 writexl 包。写法很直接，把数据和文件位置交给 write_xlsx() 即可。
 
 ~~~{r}
-xlsx_file <- file.path(output_dir, "cars.xlsx")
-writexl::write_xlsx(demo_data, xlsx_file)
-
-file.exists(xlsx_file)
+excel_file <- file.path(demo_dir, "cars.xlsx")
+writexl::write_xlsx(cars, excel_file)
+file.exists(excel_file)
 ~~~
 
-Excel 方便人工查看，但不如 RDS 适合完整保留复杂的 R 对象。
+结果里的 TRUE 表示文件已经生成。Excel 方便查看和传递，不过它并不适合保存模型、列表这类复杂对象。
 
 ## 3. CSV：保存通用表格
 
-CSV 是纯文本格式，几乎所有数据工具都能打开。使用 row.names = FALSE，可以避免把 R 的行名额外写成第一列。
+CSV 是更通用的表格格式，Excel、Python 和大多数数据工具都能打开。这里记得加上 row.names = FALSE，否则 R 的行名会多占一列。
 
 ~~~{r}
-csv_file <- file.path(output_dir, "cars.csv")
-write.csv(demo_data, csv_file, row.names = FALSE)
-
-cars_from_csv <- read.csv(csv_file)
-head(cars_from_csv, 3)
+csv_file <- file.path(demo_dir, "cars.csv")
+write.csv(cars, csv_file, row.names = FALSE)
+read.csv(csv_file)
 ~~~
 
-CSV 只保存表格内容，不会保留因子水平、日期类等全部 R 属性，重新读取后应检查列类型。
+CSV 简单好用，但它只保存表格内容。日期、因子等列重新读入后，最好再检查一下类型。
 
 ## 4. save()：保存指定的多个对象
 
-当几个对象需要一起保存时，可以用 save()。读取 .RData 文件后，对象会按保存时的名字重新出现在环境中。
+有时你想把数据和相关说明一起留下，这时可以使用 save()。它能把你点名的多个对象装进同一个 .RData 文件。
 
 ~~~{r}
-summary_text <- "mtcars 示例数据"
-rdata_file <- file.path(output_dir, "selected-objects.RData")
-save(demo_data, summary_text, file = rdata_file)
-
-rm(demo_data, summary_text)
-load(rdata_file)
-ls()[ls() %in% c("demo_data", "summary_text")]
+note <- "mtcars 示例数据"
+save(cars, note, file = file.path(demo_dir, "cars.RData"))
 ~~~
 
-这种方式适合对象之间有关联的情况；如果只保存一个对象，RDS 通常更清楚。
+以后使用 load() 读取时，cars 和 note 会按原来的名字回到环境中。对象较多时要留意这一点，避免覆盖已有的同名对象。
 
 ## 5. save.image()：保存整个工作空间
 
-save.image() 会把当前全局环境中的对象整体保存下来，本质上相当于对工作空间执行一次 save()。
+如果你想把当前环境里的对象全部打包，可以使用 save.image()。它更像给整个工作现场拍一张快照。
 
 ~~~{r}
-workspace_file <- file.path(output_dir, "workspace.RData")
+workspace_file <- file.path(demo_dir, "workspace.RData")
 save.image(file = workspace_file)
-
-file.info(workspace_file)[, c("size", "isdir")]
+file.exists(workspace_file)
 ~~~
 
-它适合临时保留工作现场，但长期项目更推荐用脚本重建分析过程，并只保存真正需要的数据或模型。
+它适合临时中断工作时留个备份。正式项目里，还是建议保留完整脚本，只保存真正需要的数据和模型，这样以后更容易复现。
 
-单个 R 对象优先考虑 RDS，跨软件交换表格用 CSV 或 Excel，多个相关对象用 save()；save.image() 更适合作为临时快照。
+你可以这样选：单个 R 对象用 RDS，给别人看表格用 Excel 或 CSV，多个相关对象用 save()，整个工作空间才考虑 save.image()。

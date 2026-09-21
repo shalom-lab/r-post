@@ -14,6 +14,7 @@ This repository has two content operations: **topic** and **post**.
 
 - Accept either a topic ID from `topics/index.json` or a free-form subject.
 - Treat the user's explicit title, section names, section count, order, examples, and output format as binding. They override style-pack defaults.
+- Write Chinese posts as a natural conversation with the reader. Prefer short, direct sentences and the smallest runnable code that teaches the requested operation.
 - When the request is already specific, generate the QMD directly without adding a topic first or asking for redundant confirmation.
 - Read the active post prompt from `prompt-rules/index.json`.
 - Write the source to `content/drafts/<slug>.qmd`.
