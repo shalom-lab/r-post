@@ -1,23 +1,10 @@
-name: Topic Generate (ideate / outline)
+name: Topic Generate
 
 on:
   workflow_dispatch:
     inputs:
-      mode:
-        description: "ideate=生成选题+大纲 | outline=补大纲"
-        required: false
-        type: choice
-        options:
-          - ideate
-          - outline
-        default: ideate
       quota:
-        description: "ideate 条数（留空用 meta.dailyQuota）"
-        required: false
-        type: string
-        default: ""
-      topicId:
-        description: "outline 时必须指定选题 id"
+        description: "生成数量（留空使用 JSON 默认值）"
         required: false
         type: string
         default: ""
@@ -52,20 +39,10 @@ jobs:
       - name: Run topic-generate
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-          MODE: ${{ inputs.mode || 'ideate' }}
           QUOTA: ${{ inputs.quota }}
           PROMPT_ID: ${{ inputs.promptId }}
           CATEGORY_ID: ${{ inputs.categoryId }}
-          TOPIC_ID: ${{ inputs.topicId }}
-        run: |
-          MODE="${{ inputs.mode }}"
-          if [ -z "$MODE" ]; then MODE=ideate; fi
-
-          if [ "$MODE" = "outline" ]; then
-            node scripts/topic-generate.mjs --mode outline --topicId "${{ inputs.topicId }}"
-          else
-            node scripts/topic-generate.mjs --mode ideate
-          fi
+        run: node scripts/topic-generate.mjs
 
       - name: Commit
         run: |
@@ -73,5 +50,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add topics/
           git diff --staged --quiet && echo "No changes" && exit 0
-          git commit -m "topics: ${{ inputs.mode || 'ideate' }}"
+          git commit -m "topics: generate candidates"
           git push

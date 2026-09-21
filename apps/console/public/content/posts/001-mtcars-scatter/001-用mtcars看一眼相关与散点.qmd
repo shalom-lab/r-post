@@ -1,7 +1,10 @@
 ---
 title: "用 mtcars 看一眼相关与散点"
+description: "用散点图和相关系数理解汽车重量与燃油效率之间的关系。"
 author: "RPost"
 date: "2026-03-18"
+category: "统计入门"
+tags: ["mtcars", "相关", "散点图"]
 format: gfm
 ---
 

@@ -24,9 +24,9 @@ function topics() {
 
 function list() {
   const rows = topics();
-  console.log(`候选选题：${rows.filter((row) => !row.articleId).length}，已撰写：${rows.filter((row) => row.articleId).length}`);
+  console.log(`候选选题：${rows.filter((row) => !row.article).length}，已撰写：${rows.filter((row) => row.article).length}`);
   for (const row of rows) {
-    console.log(`${row.articleId ? "✓" : "·"} [${row.id}] ${row.title}${row.articleId ? ` → ${row.articleId}` : ""}`);
+    console.log(`${row.article ? "✓" : "·"} [${row.id}] ${row.title}${row.article ? ` → ${row.article.id}` : ""}`);
   }
 }
 
@@ -34,10 +34,7 @@ const [, , command, ...args] = process.argv;
 switch (command) {
   case "topic":
   case "ideate":
-    run("topic-generate.mjs", ["--mode", "ideate", ...args]);
-    break;
-  case "outline":
-    run("topic-generate.mjs", ["--mode", "outline", ...args]);
+    run("topic-generate.mjs", args);
     break;
   case "post":
   case "write":
@@ -51,7 +48,6 @@ switch (command) {
     console.log(`RPost
 
   topic [--quota N] [--categoryId ID] [--promptId ID]
-  outline --topicId ID [--promptId ID]
   post (--topicId ID | --topic TEXT) [--promptId ID] [--slug SLUG]
   list
 `);

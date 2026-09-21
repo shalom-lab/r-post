@@ -1,0 +1,56 @@
+name: Render QMD articles
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - "content/posts/**/*.qmd"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: render-articles
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install R packages
+        shell: Rscript {0}
+        run: install.packages(c("ggplot2", "knitr", "rmarkdown", "writexl"), repos = "https://cloud.r-project.org")
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Render and embed images
+        shell: bash
+        run: |
+          find content/posts -type f -name '*.qmd' -print0 |
+            while IFS= read -r -d '' qmd; do
+              dir=$(dirname "$qmd")
+              name=$(basename "$qmd" .qmd)
+              quarto render "$qmd" --to gfm
+              node scripts/embed-images.mjs "$dir/$name.md"
+            done
+          node scripts/update-index.mjs
+
+      - name: Commit rendered articles
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/posts content/index.json
+          git diff --staged --quiet && echo "No render changes" && exit 0
+          git commit -m "content: render QMD articles"
+          git push

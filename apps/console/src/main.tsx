@@ -2,8 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import "./index.css";
-import "./studio.css";
+import "./reader.css";
 
 // Preserve existing bookmarked hash routes when switching to normal URLs.
 if (window.location.hash.startsWith("#/")) {

@@ -6,10 +6,11 @@ alwaysApply: true
 # RPost workflow
 
 - The only content stages are topic and post.
-- Topics live in `topics/index.json`; posts live in `content/drafts/*.qmd`.
+- `topics/index.json` is the topic data source; `topics/index.md` is its generated reading view. Posts live in numbered folders under `content/posts/`.
 - Read shared prompts through `prompt-rules/index.json`.
-- Generate a post directly from a selected topic ID or free-form subject.
+- Generate a post directly from a selected topic number or free-form subject.
 - Preserve explicit user-provided headings, order, examples, and output requirements; they override prompt defaults.
-- Use `articleId` to distinguish candidate and written topics.
+- Update JSON article metadata and regenerate the Markdown view when a candidate becomes an article.
+- Never create a permanent images folder; rendered Markdown embeds images.
 - Do not add scheduling, queue, rank, or automatic daily writing fields.
 - Follow the full repository contract in `AGENTS.md`.

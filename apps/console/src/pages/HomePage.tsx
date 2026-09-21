@@ -1,135 +1,87 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  type Article,
-  type Category,
-  type ContentIndex,
-  fetchCategories,
-  fetchIndex,
-} from "../lib/content";
-import { loadSettings, readRepoJson } from "../lib/github";
+import { type Article, fetchIndex } from "../lib/content";
 
 export default function HomePage() {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [cats, setCats] = useState<Category[]>([]);
-  const [categoryId, setCategoryId] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [msg, setMsg] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(true);
-  const [busy, setBusy] = useState(false);
-
-  function applyIndex(idx: ContentIndex, c: { categories?: Category[] }) {
-    setArticles(idx.articles || []);
-    setCats(c.categories || []);
-  }
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    Promise.all([fetchIndex(), fetchCategories()])
-      .then(([idx, c]) => applyIndex(idx, c))
-      .catch((e: Error) => setError(e.message))
+    fetchIndex()
+      .then((index) => setArticles(index.articles.filter((article) => article.md)))
+      .catch((reason: Error) => setError(reason.message))
       .finally(() => setLoading(false));
   }, []);
 
-  async function pullFromRepo() {
-    setBusy(true);
-    setMsg(null);
-    setError(null);
-    try {
-      const settings = loadSettings();
-      const [idx, catsFile] = await Promise.all([
-        readRepoJson<ContentIndex>(settings, "content/index.json"),
-        readRepoJson<{ categories?: Category[] }>(
-          settings,
-          "content/categories.json",
-        ),
-      ]);
-      if (!idx) throw new Error("仓库中没有 content/index.json");
-      applyIndex(idx, catsFile || { categories: cats });
-      setMsg("已从仓库拉取最新稿件索引");
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
+  const categories = useMemo(
+    () => [...new Set(articles.map((article) => article.category).filter(Boolean))],
+    [articles],
+  );
 
-  const catName = useMemo(() => {
-    const m = new Map(cats.map((c) => [c.id, c.name]));
-    return (id?: string | null) => (id ? m.get(id) || id : "");
-  }, [cats]);
-
-  const filtered = useMemo(() => {
-    if (!categoryId) return articles;
-    return articles.filter((a) => a.categoryId === categoryId);
-  }, [articles, categoryId]);
+  const visible = useMemo(() => {
+    const keyword = query.trim().toLowerCase();
+    return articles.filter((article) => {
+      if (category && article.category !== category) return false;
+      if (!keyword) return true;
+      return [article.title, article.description, article.category, ...article.tags]
+        .join(" ")
+        .toLowerCase()
+        .includes(keyword);
+    });
+  }, [articles, category, query]);
 
   return (
-    <section className="panel">
-      <div className="panel-head">
-        <div>
-          <h1>稿件</h1>
-          <p className="muted">按分类筛选；点标题打开预览。</p>
-        </div>
-        <div className="row">
-          <button type="button" className="btn" disabled={busy} onClick={pullFromRepo}>
-            拉取
-          </button>
-          <Link className="btn" to="/categories">
-            分类
-          </Link>
-          <Link className="btn" to="/new">
-            新建
-          </Link>
-          <Link className="btn primary" to="/generate">
-            写作
-          </Link>
-        </div>
-      </div>
+    <>
+      <section className="library-hero">
+        <span className="eyebrow">RPOST · R 语言短教程</span>
+        <h1>把一个问题，讲成一篇能运行的文章。</h1>
+        <p>短、清楚、可复现。这里收录已经完成渲染的 R 教程。</p>
+      </section>
 
-      <div className="toolbar">
-        <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+      <section className="library-tools" aria-label="文章筛选">
+        <input
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="搜索标题、内容或标签…"
+          aria-label="搜索文章"
+        />
+        <select
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+          aria-label="按分类筛选"
+        >
           <option value="">全部分类</option>
-          {cats.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
+          {categories.map((name) => <option key={name} value={name}>{name}</option>)}
         </select>
+      </section>
+
+      {loading && <p className="reader-state">正在加载文章…</p>}
+      {error && <p className="reader-state error">{error}</p>}
+      {!loading && !error && !visible.length && (
+        <p className="reader-state">没有匹配的文章。</p>
+      )}
+
+      <div className="article-list">
+        {visible.map((article) => (
+          <Link className="article-card" to={`/article/${article.id}`} key={article.id}>
+            <span className="article-number">{article.id}</span>
+            <div>
+              <h2>{article.title}</h2>
+              <p>{article.description}</p>
+              <div className="article-meta">
+                {article.category && <span>{article.category}</span>}
+                {article.date && <time>{article.date}</time>}
+                {article.tags.slice(0, 3).map((tag) => <span key={tag}>#{tag}</span>)}
+              </div>
+            </div>
+            <span className="article-arrow" aria-hidden="true">→</span>
+          </Link>
+        ))}
       </div>
-
-      {loading && <p className="muted">加载中…</p>}
-      {msg && <p className="ok">{msg}</p>}
-      {error && <p className="error">{error}</p>}
-
-      {!loading && !error && filtered.length === 0 && (
-        <p className="muted">暂无稿件。先去选题或写作。</p>
-      )}
-
-      {filtered.length > 0 && (
-        <ul className="simple-list">
-          {filtered.map((a) => (
-            <li key={a.id}>
-              <Link to={`/article/${a.id}`} className="simple-row">
-                <div className="simple-main">
-                  <strong>{a.title}</strong>
-                  <span className="meta">
-                    <code>{a.id}</code>
-                    {a.categoryId ? ` · ${catName(a.categoryId)}` : ""}
-                    {a.promptId || a.styleId
-                      ? ` · ${a.promptId || a.styleId}`
-                      : ""}
-                    {a.updatedAt ? ` · ${a.updatedAt.slice(0, 10)}` : ""}
-                  </span>
-                </div>
-                <span className="chip-row">
-                  {a.qmd && <span className="chip">QMD</span>}
-                  {a.md && <span className="chip chip-ok">MD</span>}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
+    </>
   );
 }

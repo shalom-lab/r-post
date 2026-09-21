@@ -1,25 +1,36 @@
 {
   "articles": [
     {
-      "id": "r-save-five-methods",
+      "id": "002",
+      "slug": "002-r-save-five-methods",
       "title": "R 语言保存数据的 5 种常见方法",
-      "categoryId": "r-basics",
-      "promptId": "wechat-short",
-      "topicId": null,
-      "qmd": "drafts/r-save-five-methods.qmd",
-      "md": null,
-      "updatedAt": "2026-09-21T00:00:00.000Z"
+      "description": "用简短示例比较 RDS、Excel、CSV、save() 和 save.image()。",
+      "date": "2026-09-21",
+      "category": "R 基础",
+      "tags": [
+        "数据保存",
+        "RDS",
+        "CSV",
+        "Excel"
+      ],
+      "qmd": "posts/002-r-save-five-methods/002-R语言保存数据的5种常见方法.qmd",
+      "md": null
     },
     {
-      "id": "mtcars-scatter",
+      "id": "001",
+      "slug": "001-mtcars-scatter",
       "title": "用 mtcars 看一眼相关与散点",
-      "categoryId": "stats",
-      "promptId": "wechat-short",
-      "topicId": null,
-      "qmd": "drafts/mtcars-scatter.qmd",
-      "md": "published/mtcars-scatter.md",
-      "updatedAt": "2026-03-18T00:00:00.000Z"
+      "description": "用散点图和相关系数理解汽车重量与燃油效率之间的关系。",
+      "date": "2026-03-18",
+      "category": "统计入门",
+      "tags": [
+        "mtcars",
+        "相关",
+        "散点图"
+      ],
+      "qmd": "posts/001-mtcars-scatter/001-用mtcars看一眼相关与散点.qmd",
+      "md": "posts/001-mtcars-scatter/001-用mtcars看一眼相关与散点.md"
     }
   ],
-  "updatedAt": "2026-03-18T00:00:00.000Z"
+  "updatedAt": "2026-09-21T08:53:47.198Z"
 }

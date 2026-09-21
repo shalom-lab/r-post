@@ -1,39 +1,81 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { type AppSettings, LS_GH_REPO, LS_GH_TOKEN, loadSettings, probeGitHubAccess, saveSettings } from "../lib/github";
+import {
+  LS_GH_REPO,
+  LS_GH_TOKEN,
+  actionsWorkflowUrl,
+  loadSettings,
+  probeGitHubAccess,
+  saveSettings,
+} from "../lib/github";
 
 export default function SettingsPage() {
-  const [settings, setSettings] = useState<AppSettings>(loadSettings);
-  const [saved, setSaved] = useState(false);
-  const [checking, setChecking] = useState(false);
-  const [probe, setProbe] = useState<{ok:boolean; message:string} | null>(null);
-  function update(key: "repoFull" | "pat", value: string) {
-    setSettings({...settings,[key]:value}); setSaved(false); setProbe(null);
+  const [settings, setSettings] = useState(loadSettings);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  const [ok, setOk] = useState(false);
+
+  async function testConnection() {
+    setBusy(true);
+    setMessage("");
+    try {
+      saveSettings(settings);
+      const result = await probeGitHubAccess(settings);
+      setOk(result.ok);
+      setMessage(result.message);
+    } catch (reason) {
+      setOk(false);
+      setMessage((reason as Error).message);
+    } finally {
+      setBusy(false);
+    }
   }
-  async function check() {
-    setChecking(true);setProbe(null);
-    try { setProbe(await probeGitHubAccess(settings)); }
-    catch(e) {setProbe({ok:false,message:(e as Error).message});}
-    finally {setChecking(false);}
-  }
-  return <div className="settings-studio">
-    <header className="page-heading"><span className="eyebrow">WORKSPACE / 设置</span><h1>为写作，准备好工作台。</h1><p>连接你的仓库，剩下的交给云端工作流。</p></header>
-    <div className="settings-grid">
-      <section className="panel connection-card">
-        <div className="connection-heading"><span className="service-icon" aria-hidden="true">↗</span><div><h2>连接 GitHub</h2><p className="muted">选题、稿件与提示词都保存在你的仓库。</p></div><span className={'connection-state '+(probe?.ok?'verified':'')}>{probe?.ok?'已验证':'待验证'}</span></div>
-        <form className="connection-form" onSubmit={e=>{e.preventDefault();try{saveSettings(settings);setSaved(true);}catch(err){setProbe({ok:false,message:(err as Error).message});}}}>
-          <label htmlFor="repository">仓库</label><input id="repository" value={settings.repoFull} onChange={e=>update('repoFull',e.target.value)} placeholder="your-name/r-post" spellCheck={false}/><p className="field-note">填写 owner/repo，也支持完整的 GitHub 仓库链接。</p>
-          <label htmlFor="token">访问令牌 <span className="label-note">Personal Access Token</span></label><input id="token" type="password" value={settings.pat} onChange={e=>update('pat',e.target.value)} autoComplete="off" placeholder="粘贴你的 GitHub Token"/><p className="field-note">需要 Contents 读写、Actions 写入权限。</p>
-          <div className="connection-footer"><div className="row"><button className="btn primary" type="submit">保存连接</button><button className="btn" type="button" disabled={checking||!settings.repoFull||!settings.pat} onClick={check}>{checking?'验证中…':'测试连接'}</button></div><span className="save-state" role="status">{saved?'✓ 已保存到本机':'仅保存在当前浏览器'}</span></div>
-        </form>
-        {probe && <p role="status" className={probe.ok?'ok':'error'}>{probe.message}</p>}
-      </section>
-      <aside className="settings-guide">
-        <div className="guide-title"><span className="eyebrow">QUICK START</span><h2>从想法，到成稿</h2></div>
-        <ol className="setup-steps"><li><span>01</span><div><strong>连接自己的仓库</strong><p>保存上方配置，再测试是否可以访问。</p></div></li><li><span>02</span><div><strong>准备 AI 密钥</strong><p>在仓库 Actions Secrets 中添加 <code>DEEPSEEK_API_KEY</code>。</p></div></li><li><span>03</span><div><strong>选一套写作风格</strong><p>调整选题方向与文章语气，就可以开始了。</p><Link to="/prompts">管理提示词 →</Link></div></li></ol>
-      </aside>
-    </div>
-    <details className="storage-details"><summary><span>高级配置</span><span className="muted">localStorage 字段与预先注入</span></summary><div><p className="muted">两个独立字段，直接存字符串。工作流文件名无需配置。</p><pre className="code-block">{`localStorage.setItem("${LS_GH_REPO}", "your-name/r-post");
-localStorage.setItem("${LS_GH_TOKEN}", "YOUR_TOKEN");`}</pre></div></details>
-  </div>;
+
+  return (
+    <section className="connection-page">
+      <header>
+        <span className="eyebrow">BYOK · 可选连接</span>
+        <h1>阅读不需要 Token。</h1>
+        <p>连接自己的 GitHub 仓库后，才需要下面的配置。Token 只保存在当前浏览器。</p>
+      </header>
+      <div className="connection-panel">
+        <label>
+          GitHub 仓库
+          <input
+            value={settings.repoFull}
+            onChange={(event) => setSettings({ ...settings, repoFull: event.target.value })}
+            placeholder="owner/repo"
+          />
+        </label>
+        <label>
+          GitHub Personal Access Token
+          <input
+            type="password"
+            value={settings.pat}
+            onChange={(event) => setSettings({ ...settings, pat: event.target.value })}
+            placeholder="github_pat_..."
+            autoComplete="off"
+          />
+        </label>
+        <button disabled={busy || !settings.repoFull || !settings.pat} onClick={testConnection}>
+          {busy ? "验证中…" : "保存并验证"}
+        </button>
+        {message && <p className={ok ? "connection-ok" : "connection-error"}>{message}</p>}
+        {ok && (
+          <div className="connection-links">
+            <a href={actionsWorkflowUrl(settings, settings.topicWorkflow)} target="_blank" rel="noreferrer">
+              打开选题 Action
+            </a>
+            <a href={actionsWorkflowUrl(settings, settings.postWorkflow)} target="_blank" rel="noreferrer">
+              打开写作 Action
+            </a>
+          </div>
+        )}
+        <details>
+          <summary>本地字段与 AI Key</summary>
+          <p><code>{LS_GH_REPO}</code> 与 <code>{LS_GH_TOKEN}</code> 分别保存仓库和 Token。</p>
+          <p>DeepSeek Key 请配置为仓库 Actions Secret：<code>DEEPSEEK_API_KEY</code>，不会进入网页。</p>
+        </details>
+      </div>
+    </section>
+  );
 }

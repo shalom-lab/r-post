@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * 将 Markdown 中相对路径图片转为 data URI 内嵌，便于 Pages 预览与后续公众号。
- * 用法: node scripts/embed-images.mjs content/published/foo.md
+ * 用法: node scripts/embed-images.mjs content/posts/001-example/001-example.md
  */
 
 import fs from "node:fs";

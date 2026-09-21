@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** 同步 content/、prompt-rules/、topics/ → apps/console/public/ */
+/** 同步只读文章内容 → apps/console/public/content/ */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,12 +18,18 @@ function copyDir(src, dest) {
   }
 }
 
-for (const name of ["content", "prompt-rules", "topics"]) {
-  const src = path.join(root, name);
-  const dest = path.join(pub, name);
-  fs.rmSync(dest, { recursive: true, force: true });
-  if (fs.existsSync(src)) copyDir(src, dest);
-}
-// 清理旧 public/rules
+const src = path.join(root, "content");
+const dest = path.join(pub, "content");
+fs.rmSync(dest, { recursive: true, force: true });
+if (fs.existsSync(src)) copyDir(src, dest);
+
+// 选题页只公开一个 Markdown 源文件。
+const topicsDest = path.join(pub, "topics");
+fs.rmSync(topicsDest, { recursive: true, force: true });
+fs.mkdirSync(topicsDest, { recursive: true });
+fs.copyFileSync(path.join(root, "topics", "index.md"), path.join(topicsDest, "index.md"));
+
+// 清理旧管理台静态数据
 fs.rmSync(path.join(pub, "rules"), { recursive: true, force: true });
-console.log("已同步 content/、prompt-rules/、topics/ → apps/console/public/");
+fs.rmSync(path.join(pub, "prompt-rules"), { recursive: true, force: true });
+console.log("已同步 content/ 与 topics/index.md → apps/console/public/");

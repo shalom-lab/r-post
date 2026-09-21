@@ -6,6 +6,161 @@
   },
   "items": [
     {
+      "id": "topic-regex-grepl-state-names",
+      "title": "用 grepl() 从州名中筛出目标文本",
+      "blurb": "用 R 内置的 state.name 演示最基本的模式匹配，得到逻辑结果并筛出含 New 的州名。",
+      "categoryId": "r-basics",
+      "angle": "先会判断，再用判断结果筛选",
+      "outline": {
+        "workingTitle": "R 正则入门：用 grepl() 找出包含目标文字的州名",
+        "hook": "面对一列名称，怎样快速判断哪些行包含指定文字？",
+        "dataset": "datasets::state.name；R 内置的 50 个美国州名字符向量。",
+        "sections": [
+          {
+            "heading": "先看字符向量",
+            "point": "查看 state.name 的前几项，明确 grepl() 要搜索的对象。"
+          },
+          {
+            "heading": "用 grepl() 判断是否匹配",
+            "point": "搜索 New，观察 TRUE/FALSE 结果，并解释 pattern 与 x 两个参数。"
+          },
+          {
+            "heading": "把匹配结果用于筛选",
+            "point": "用逻辑向量取出完整州名，核对数量和结果。"
+          }
+        ],
+        "takeaway": "grepl() 返回逻辑值，最适合直接参与筛选。",
+        "risks": "默认区分大小写；不要把 grep() 返回的位置与 grepl() 返回的逻辑值混淆。"
+      },
+      "outlinedAt": "2026-09-21T00:00:00.000Z",
+      "createdAt": "2026-09-21T00:00:00.000Z",
+      "updatedAt": "2026-09-21T00:00:00.000Z"
+    },
+    {
+      "id": "topic-regex-anchors-state-abb",
+      "title": "正则里的 ^ 和 $ 到底匹配哪里？",
+      "blurb": "用 state.abb 检查州缩写的开头和结尾，直观看懂字符串边界，而不是死记符号。",
+      "categoryId": "r-basics",
+      "angle": "用可核对结果理解开头与结尾",
+      "outline": {
+        "workingTitle": "用州缩写看懂正则表达式中的 ^ 和 $",
+        "hook": "同一个字母，放在正则开头或结尾，为什么结果完全不同？",
+        "dataset": "datasets::state.abb；R 内置的 50 个美国州名缩写字符向量。",
+        "sections": [
+          {
+            "heading": "先找以 A 开头的缩写",
+            "point": "使用 ^A 匹配字符串开头，列出并核对结果。"
+          },
+          {
+            "heading": "再找以 A 结尾的缩写",
+            "point": "使用 A$ 匹配字符串结尾，与上一组结果并排比较。"
+          },
+          {
+            "heading": "组合边界做完整校验",
+            "point": "用 ^[A-Z]{2}$ 检查缩写是否恰好由两个大写字母组成。"
+          }
+        ],
+        "takeaway": "^ 锁定开头，$ 锁定结尾，两者合用可以校验完整字符串。",
+        "risks": "需要说明方括号和量词的含义，但不要一次扩展过多元字符。"
+      },
+      "outlinedAt": "2026-09-21T00:00:00.000Z",
+      "createdAt": "2026-09-21T00:00:00.000Z",
+      "updatedAt": "2026-09-21T00:00:00.000Z"
+    },
+    {
+      "id": "topic-string-sub-gsub",
+      "title": "sub() 和 gsub() 有什么区别？",
+      "blurb": "用带有多余空格和横线的最小文本示例，对比只替换第一次与替换全部匹配。",
+      "categoryId": "r-basics",
+      "angle": "一组输入直接对照两个函数",
+      "outline": {
+        "workingTitle": "一眼分清 sub() 和 gsub()：一次替换与全部替换",
+        "hook": "代码几乎一样，为什么清理结果还会留下一个匹配？",
+        "dataset": "文章内定义的最小可复现字符向量，例如带重复横线和空格的标签；用于说明替换语义。",
+        "sections": [
+          {
+            "heading": "准备一组有重复符号的文本",
+            "point": "展示原始字符向量，并明确希望统一清理的部分。"
+          },
+          {
+            "heading": "用 sub() 只替换第一次",
+            "point": "执行一次替换，观察每个字符串中仍然保留的后续匹配。"
+          },
+          {
+            "heading": "用 gsub() 替换全部",
+            "point": "对同一输入执行全局替换，与 sub() 的结果逐项比较。"
+          }
+        ],
+        "takeaway": "sub() 每个字符串只处理第一次匹配，gsub() 会处理全部匹配。",
+        "risks": "示例文本必须简短，避免把重点转移到复杂正则。"
+      },
+      "outlinedAt": "2026-09-21T00:00:00.000Z",
+      "createdAt": "2026-09-21T00:00:00.000Z",
+      "updatedAt": "2026-09-21T00:00:00.000Z"
+    },
+    {
+      "id": "topic-regex-extract-file-names",
+      "title": "如何从文件名中提取年份和编号？",
+      "blurb": "从 report_2024_03.csv 这类文件名中提取数字片段，练习 gregexpr() 与 regmatches()。",
+      "categoryId": "r-basics",
+      "angle": "从常见文件名中提取多个匹配",
+      "outline": {
+        "workingTitle": "R 中从文件名提取年份和编号",
+        "hook": "文件名里明明有年份和批次，怎样不靠手工切位置把它们取出来？",
+        "dataset": "文章内定义的最小可复现文件名字符向量，例如 report_2024_03.csv；不对应外部文件。",
+        "sections": [
+          {
+            "heading": "看清文件名的共同结构",
+            "point": "列出几个文件名，标出需要提取的连续数字。"
+          },
+          {
+            "heading": "定位全部数字片段",
+            "point": "用 gregexpr() 和 [0-9]+ 找到每个字符串中的多个匹配。"
+          },
+          {
+            "heading": "取出匹配结果",
+            "point": "把位置结果交给 regmatches()，核对年份和编号是否完整。"
+          }
+        ],
+        "takeaway": "gregexpr() 负责找位置，regmatches() 负责取出实际文本。",
+        "risks": "反斜杠转义容易分散注意力，入门示例优先使用 [0-9]。"
+      },
+      "outlinedAt": "2026-09-21T00:00:00.000Z",
+      "createdAt": "2026-09-21T00:00:00.000Z",
+      "updatedAt": "2026-09-21T00:00:00.000Z"
+    },
+    {
+      "id": "topic-regex-capture-state-names",
+      "title": "用捕获组调整双词州名的顺序",
+      "blurb": "从 state.name 找出 New York 等双词州名，再用捕获组改成 York, New，理解括号和反向引用。",
+      "categoryId": "r-basics",
+      "angle": "用可见的前后变化理解捕获组",
+      "outline": {
+        "workingTitle": "R 正则进阶一步：用捕获组重排双词州名",
+        "hook": "匹配到两个单词后，怎样在替换结果里继续使用它们？",
+        "dataset": "datasets::state.name；R 内置州名字符向量，其中包含 New York、Rhode Island 等双词名称。",
+        "sections": [
+          {
+            "heading": "先筛出双词州名",
+            "point": "用空格作为线索找出双词名称，先确认实际输入。"
+          },
+          {
+            "heading": "用括号捕获两个单词",
+            "point": "构造两个捕获组，并解释每组保存了哪一段文本。"
+          },
+          {
+            "heading": "在替换结果中调整顺序",
+            "point": "用 sub() 和反向引用生成“第二词, 第一词”，逐项核对变化。"
+          }
+        ],
+        "takeaway": "捕获组不仅用于匹配，还能在替换文本中重复使用匹配到的内容。",
+        "risks": "R 字符串中的反斜杠需要转义，应清楚展示但不要引入更复杂的嵌套分组。"
+      },
+      "outlinedAt": "2026-09-21T00:00:00.000Z",
+      "createdAt": "2026-09-21T00:00:00.000Z",
+      "updatedAt": "2026-09-21T00:00:00.000Z"
+    },
+    {
       "id": "topic-sample-cor",
       "title": "用 mtcars 三分钟看懂相关",
       "blurb": "散点 + cor()，讲清重量和油耗怎么一起动",
@@ -13,10 +168,15 @@
       "angle": "一张图一个数",
       "outline": null,
       "outlinedAt": null,
-      "articleId": null,
+      "article": {
+        "id": "001",
+        "title": "用 mtcars 看一眼相关与散点",
+        "qmd": "content/posts/001-mtcars-scatter/001-用mtcars看一眼相关与散点.qmd",
+        "md": "content/posts/001-mtcars-scatter/001-用mtcars看一眼相关与散点.md"
+      },
       "createdAt": "2026-03-18T00:00:00.000Z",
       "updatedAt": "2026-03-18T00:00:00.000Z"
     }
   ],
-  "updatedAt": "2026-03-18T00:00:00.000Z"
+  "updatedAt": "2026-09-21T00:00:00.000Z"
 }

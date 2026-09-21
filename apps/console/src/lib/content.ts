@@ -1,14 +1,13 @@
 export type Article = {
   id: string;
+  slug: string;
   title: string;
-  categoryId?: string | null;
-  promptId?: string | null;
-  /** @deprecated 读作 promptId */
-  styleId?: string | null;
-  topicId?: string | null;
-  qmd: string | null;
+  description: string;
+  date: string;
+  category: string;
+  tags: string[];
+  qmd: string;
   md: string | null;
-  updatedAt: string;
 };
 
 export type ContentIndex = {
@@ -16,117 +15,27 @@ export type ContentIndex = {
   updatedAt: string;
 };
 
-export type Category = {
-  id: string;
-  name: string;
-  order?: number;
-};
-
-export type CategoriesFile = {
-  categories: Category[];
-  updatedAt?: string;
-};
-
-export type PromptPack = {
-  id: string;
-  title: string;
-  /** 相对 prompt-rules/ 的文件名，如 topic_prompt_default.md */
-  file: string;
-  description?: string;
-  active?: boolean;
-  updatedAt?: string;
-};
-
-export type PromptSection = {
-  defaultPromptId: string;
-  packs: PromptPack[];
-};
-
-/** prompt-rules/index.json */
-export type PromptRulesIndex = {
-  topic: PromptSection;
-  post: PromptSection;
-  updatedAt?: string;
-};
-
-export type TopicItem = {
-  id: string;
-  title: string;
-  blurb?: string;
-  categoryId?: string | null;
-  angle?: string | null;
-  outline?: Record<string, unknown> | null;
-  outlinedAt?: string | null;
-  articleId?: string | null;
-  createdAt: string;
-  updatedAt?: string;
-};
-
-export type TopicsFile = {
-  meta: {
-    dailyQuota: number;
-    topicPromptId?: string;
-    lastIdeatedAt?: string | null;
-  };
-  items: TopicItem[];
-  updatedAt?: string;
-};
-
-export function assetUrl(rel: string): string {
-  const cleaned = rel.replace(/^\//, "");
+export function assetUrl(relativePath: string): string {
   const base = import.meta.env.BASE_URL || "./";
-  return `${base}${cleaned}`.replace(/\/{2,}/g, "/").replace(":/", "://");
-}
-
-async function fetchJson<T>(rel: string): Promise<T> {
-  const res = await fetch(assetUrl(rel), { cache: "no-store" });
-  if (!res.ok) throw new Error(`无法加载 ${rel} (${res.status})`);
-  return res.json() as Promise<T>;
+  return `${base}${relativePath.replace(/^\//, "")}`
+    .replace(/\/{2,}/g, "/")
+    .replace(":/", "://");
 }
 
 export async function fetchIndex(): Promise<ContentIndex> {
-  return fetchJson<ContentIndex>("content/index.json");
+  const response = await fetch(assetUrl("content/index.json"), { cache: "no-store" });
+  if (!response.ok) throw new Error(`无法加载文章清单（${response.status}）`);
+  return response.json() as Promise<ContentIndex>;
 }
 
-export async function fetchCategories(): Promise<CategoriesFile> {
-  return fetchJson<CategoriesFile>("content/categories.json");
+export async function fetchContent(relativePath: string): Promise<string> {
+  const response = await fetch(assetUrl(`content/${relativePath}`), { cache: "no-store" });
+  if (!response.ok) throw new Error(`无法加载文章（${response.status}）`);
+  return response.text();
 }
 
-export async function fetchPromptRulesIndex(): Promise<PromptRulesIndex> {
-  return fetchJson<PromptRulesIndex>("prompt-rules/index.json");
-}
-
-export async function fetchTopics(): Promise<TopicsFile> {
-  return fetchJson<TopicsFile>("topics/index.json");
-}
-
-export async function fetchText(relFromContent: string): Promise<string> {
-  const res = await fetch(assetUrl(`content/${relFromContent}`), {
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error(`无法加载 ${relFromContent} (${res.status})`);
-  return res.text();
-}
-
-export async function fetchPromptFile(fileName: string): Promise<string> {
-  const res = await fetch(assetUrl(`prompt-rules/${fileName}`), {
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error(`无法加载 prompt-rules/${fileName} (${res.status})`);
-  return res.text();
-}
-
-export async function fetchTopicRulesIndex(): Promise<PromptSection> {
-  const idx = await fetchPromptRulesIndex();
-  return idx.topic;
-}
-
-export async function fetchPostRulesIndex(): Promise<PromptSection> {
-  const idx = await fetchPromptRulesIndex();
-  return idx.post;
-}
-
-/** @deprecated 用 fetchPostRulesIndex */
-export async function fetchBodyRulesIndex(): Promise<PromptSection> {
-  return fetchPostRulesIndex();
+export async function fetchTopicsMarkdown(): Promise<string> {
+  const response = await fetch(assetUrl("topics/index.md"), { cache: "no-store" });
+  if (!response.ok) throw new Error(`无法加载选题文档（${response.status}）`);
+  return response.text();
 }

@@ -1,31 +1,39 @@
-# RPost content workflow
+# RPost conversation workflow
 
-This repository has two content operations: **topic** and **post**.
+RPost is maintained through conversation. The website is a read-only article library.
 
-## Topic
+## Generate topics
 
-- Read the active topic prompt from `prompt-rules/index.json`.
-- Write candidates to `topics/index.json`.
-- Every candidate needs a unique `id`, title, short blurb, category, real R dataset, and 3–5 section outline.
-- Avoid duplicate titles. Do not add scheduling or queue fields.
-- A topic is a candidate when `articleId` is empty and written when `articleId` points to a post.
+- Read the active topic style from `prompt-rules/index.json`.
+- Store every candidate in `topics/index.json`, the machine-readable source of truth.
+- Run `node scripts/update-topics-md.mjs` after changing topic data; never edit the generated `topics/index.md` by hand.
+- Topic numbers shown in Markdown follow JSON array order.
+- Treat the user's theme, count, audience, and required concepts as binding.
+- Use real datasets for data analysis. Built-in character vectors or minimal literal examples are valid for regex, string, and syntax lessons.
+- Avoid duplicate topics. Status is either `候选` or `已成稿`.
 
-## Post
+## Write an article
 
-- Accept either a topic ID from `topics/index.json` or a free-form subject.
-- Treat the user's explicit title, section names, section count, order, examples, and output format as binding. They override style-pack defaults.
-- Write Chinese posts as a natural conversation with the reader. Prefer short, direct sentences and the smallest runnable code that teaches the requested operation.
-- When the request is already specific, generate the QMD directly without adding a topic first or asking for redundant confirmation.
-- Read the active post prompt from `prompt-rules/index.json`.
-- Write the source to `content/drafts/<slug>.qmd`.
-- Keep examples reproducible with real data available to R.
-- Prefer packages already installed by the post workflow. If the requested operation needs another package, update the workflow dependency list with the QMD.
-- Update `content/index.json`; when based on a topic, set that topic's `articleId`.
-- GitHub Actions renders QMD to `content/published/<slug>.md` and embeds local images.
+- Accept either a displayed topic number, a JSON topic id, or a free-form request.
+- Preserve explicit titles, heading order, examples, and output requirements.
+- Read the active post style from `prompt-rules/index.json`.
+- Find the largest directory number under `content/posts/` and use the next three-digit number.
+- Create `content/posts/NNN-ascii-slug/NNN-中文标题.qmd`.
+- Do not create an images directory. Quarto may create temporary figures; the render workflow embeds them into Markdown as data URIs.
+- Use conversational Chinese and the smallest runnable R code that teaches the operation.
+- Add title, description, author, date, category, tags, and `format: gfm` to QMD frontmatter.
+- When writing from a candidate, add its article metadata in `topics/index.json`, then regenerate `topics/index.md`.
+
+## Render and publish
+
+- `.github/workflows/render.yml` renders every QMD to a same-named Markdown file in its article directory.
+- `scripts/embed-images.mjs` embeds generated images into Markdown.
+- `scripts/update-index.mjs` scans article folders and generates `content/index.json`; never maintain the manifest by hand.
+- The React site reads only the generated manifest and rendered Markdown.
 
 ## Conversation shortcuts
 
-- “生成选题” means generate candidates and update `topics/index.json`.
-- “撰写这个选题” means create its QMD directly; no scheduling step.
-- “渲染” means render the specified QMD and update the Markdown/index.
-- Never recreate scheduling, ranking, queue, or automatic daily writing logic.
+- “生成选题” means append structured candidates and outlines to `topics/index.json`, then regenerate `topics/index.md`.
+- “写选题 003” means create the next numbered QMD and update topic 003.
+- “写一篇……” means create the next numbered QMD directly.
+- “渲染” means render QMD, embed images, and regenerate the manifest.

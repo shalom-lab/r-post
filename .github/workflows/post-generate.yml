@@ -67,6 +67,7 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Generate QMD via DeepSeek
+        id: generate
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           TOPIC: ${{ inputs.topic }}
@@ -77,33 +78,15 @@ jobs:
           CATEGORY_ID: ${{ inputs.categoryId }}
         run: node scripts/post-generate.mjs
 
-      - name: Resolve slug
-        id: slug
-        run: |
-          SLUG=$(node -e "const fs=require('fs'); const j=JSON.parse(fs.readFileSync('content/.last-generate.json','utf8')); process.stdout.write(j.slug)")
-          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
-          echo "[post-generate] slug=$SLUG"
-
       - name: Render QMD to GFM
         run: |
-          SLUG="${{ steps.slug.outputs.slug }}"
-          mkdir -p content/published
-          quarto render "content/drafts/${SLUG}.qmd" --to gfm --output-dir content/published
-          # 确保文件名匹配 slug
-          if [ ! -f "content/published/${SLUG}.md" ]; then
-            FOUND=$(find content/published -maxdepth 2 -name '*.md' | head -n 1)
-            if [ -n "$FOUND" ]; then
-              mv "$FOUND" "content/published/${SLUG}.md"
-            fi
-          fi
+          quarto render "${{ steps.generate.outputs.qmd }}" --to gfm
 
       - name: Finalize (embed images + update index)
-        env:
-          SLUG: ${{ steps.slug.outputs.slug }}
         run: |
-          # 内嵌图片 + 更新索引（post-generate 的 --update-only 模式）
-          node scripts/embed-images.mjs "content/published/${SLUG}.md"
-          node scripts/update-index.mjs --slug "${SLUG}"
+          node scripts/embed-images.mjs "${{ steps.generate.outputs.md }}"
+          node scripts/update-index.mjs
+          node scripts/update-topics-md.mjs
 
       - name: Commit and push
         run: |
@@ -111,5 +94,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add content/ topics/
           git diff --staged --quiet && echo "No changes" && exit 0
-          git commit -m "content: generate ${{ steps.slug.outputs.slug }}"
+          git commit -m "content: generate ${{ steps.generate.outputs.slug }}"
           git push
