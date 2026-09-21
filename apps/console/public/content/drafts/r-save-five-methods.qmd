@@ -1,0 +1,94 @@
+---
+title: "R 语言保存数据的 5 种常见方法"
+author: "RPost"
+date: "2026-09-21"
+format: gfm
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+R 里的“保存”不只有一种写法。选哪种方法，关键看你要保存单个对象、通用表格，还是整个工作环境。
+
+下面用 mtcars 中的 6 行数据演示。所有文件都写入临时目录，运行文章时不会弄乱当前工作目录。
+
+~~~{r}
+demo_data <- mtcars[1:6, c("mpg", "cyl", "wt")]
+output_dir <- file.path(tempdir(), "rpost-save-demo")
+dir.create(output_dir, showWarnings = FALSE)
+
+demo_data
+~~~
+
+## 1. RDS：保存单个 R 对象
+
+RDS 适合保存一个 R 对象，例如数据框、模型或列表。它能保留对象的结构和属性，之后用 readRDS() 读回来。
+
+~~~{r}
+rds_file <- file.path(output_dir, "cars.rds")
+saveRDS(demo_data, rds_file)
+
+cars_from_rds <- readRDS(rds_file)
+identical(demo_data, cars_from_rds)
+~~~
+
+读取时可以换一个新的对象名，这是 RDS 和 save() 的一个明显区别。
+
+## 2. Excel：保存为 xlsx 文件
+
+需要把结果交给使用 Excel 的同事时，可以用 writexl::write_xlsx()。它直接接收数据框，不需要先创建工作簿。
+
+~~~{r}
+xlsx_file <- file.path(output_dir, "cars.xlsx")
+writexl::write_xlsx(demo_data, xlsx_file)
+
+file.exists(xlsx_file)
+~~~
+
+Excel 方便人工查看，但不如 RDS 适合完整保留复杂的 R 对象。
+
+## 3. CSV：保存通用表格
+
+CSV 是纯文本格式，几乎所有数据工具都能打开。使用 row.names = FALSE，可以避免把 R 的行名额外写成第一列。
+
+~~~{r}
+csv_file <- file.path(output_dir, "cars.csv")
+write.csv(demo_data, csv_file, row.names = FALSE)
+
+cars_from_csv <- read.csv(csv_file)
+head(cars_from_csv, 3)
+~~~
+
+CSV 只保存表格内容，不会保留因子水平、日期类等全部 R 属性，重新读取后应检查列类型。
+
+## 4. save()：保存指定的多个对象
+
+当几个对象需要一起保存时，可以用 save()。读取 .RData 文件后，对象会按保存时的名字重新出现在环境中。
+
+~~~{r}
+summary_text <- "mtcars 示例数据"
+rdata_file <- file.path(output_dir, "selected-objects.RData")
+save(demo_data, summary_text, file = rdata_file)
+
+rm(demo_data, summary_text)
+load(rdata_file)
+ls()[ls() %in% c("demo_data", "summary_text")]
+~~~
+
+这种方式适合对象之间有关联的情况；如果只保存一个对象，RDS 通常更清楚。
+
+## 5. save.image()：保存整个工作空间
+
+save.image() 会把当前全局环境中的对象整体保存下来，本质上相当于对工作空间执行一次 save()。
+
+~~~{r}
+workspace_file <- file.path(output_dir, "workspace.RData")
+save.image(file = workspace_file)
+
+file.info(workspace_file)[, c("size", "isdir")]
+~~~
+
+它适合临时保留工作现场，但长期项目更推荐用脚本重建分析过程，并只保存真正需要的数据或模型。
+
+单个 R 对象优先考虑 RDS，跨软件交换表格用 CSV 或 Excel，多个相关对象用 save()；save.image() 更适合作为临时快照。

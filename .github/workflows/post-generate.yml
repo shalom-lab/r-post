@@ -3,18 +3,13 @@ name: Post Generate (QMD → render → index)
 on:
   workflow_dispatch:
     inputs:
-      fromScheduled:
-        description: "从已排期选题按顺序生成下一条"
-        required: false
-        type: string
-        default: "true"
       topicId:
-        description: "指定选题 id（优先于排队）"
+        description: "指定候选选题 id"
         required: false
         type: string
         default: ""
       topic:
-        description: "手动主题（fromScheduled=false 且无 topicId 时用）"
+        description: "自由主题（无 topicId 时使用）"
         required: false
         type: string
         default: ""
@@ -65,7 +60,7 @@ jobs:
 
       - name: Install R packages
         run: |
-          install.packages(c("ggplot2", "knitr", "rmarkdown"), repos = "https://cloud.r-project.org")
+          install.packages(c("ggplot2", "knitr", "rmarkdown", "writexl"), repos = "https://cloud.r-project.org")
         shell: Rscript {0}
 
       - name: Setup Quarto
@@ -80,7 +75,6 @@ jobs:
           PROMPT_ID: ${{ inputs.promptId }}
           TOPIC_ID: ${{ inputs.topicId }}
           CATEGORY_ID: ${{ inputs.categoryId }}
-          FROM_SCHEDULED: ${{ inputs.fromScheduled }}
         run: node scripts/post-generate.mjs
 
       - name: Resolve slug

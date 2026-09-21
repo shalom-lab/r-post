@@ -8,12 +8,10 @@
  *
  * 用法：
  *   node scripts/post-generate.mjs --topicId topic-xxx
- *   node scripts/post-generate.mjs --scheduled          # 取排期第一条
  *   node scripts/post-generate.mjs --topic "用 ggplot2 画折线图" [--slug my-slug]
  *
  * 环境变量：
  *   DEEPSEEK_API_KEY, TOPIC, SLUG, NOTE, PROMPT_ID, TOPIC_ID, CATEGORY_ID,
- *   FROM_SCHEDULED（"1"|"true"）
  */
 
 import fs from "node:fs";
@@ -181,7 +179,6 @@ function updateIndex(meta) {
     const item = (store.items || []).find((i) => i.id === topicId);
     if (item) {
       item.articleId = slug;
-      item.scheduled = false;
       item.updatedAt = now;
       store.updatedAt = now;
       fs.writeFileSync(topicsPath, `${JSON.stringify(store, null, 2)}\n`, "utf8");
@@ -230,21 +227,7 @@ function embedImages(mdPath) {
 async function main() {
   const args = parseArgs(process.argv);
 
-  let topicId = (args.topicId || process.env.TOPIC_ID || "").trim();
-  const fromScheduled =
-    args.scheduled !== undefined ||
-    process.env.FROM_SCHEDULED === "1" ||
-    process.env.FROM_SCHEDULED === "true";
-
-  // 从排期队列取下一条
-  if (!topicId && fromScheduled) {
-    if (!fs.existsSync(topicsPath)) throw new Error("topics/index.json 不存在");
-    const store = JSON.parse(fs.readFileSync(topicsPath, "utf8"));
-    const next = (store.items || []).find((i) => i.scheduled && !i.articleId);
-    if (!next) throw new Error("没有已排期且未成稿的选题");
-    topicId = next.id;
-    console.log(`[post-generate] 按排期取题: ${topicId} — ${next.title}`);
-  }
+  const topicId = (args.topicId || process.env.TOPIC_ID || "").trim();
 
   const meta = await generateQmd({
     topic: (args.topic || process.env.TOPIC || "").trim(),

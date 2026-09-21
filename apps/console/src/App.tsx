@@ -6,6 +6,9 @@ import HomePage from "./pages/HomePage";
 import PromptsPage from "./pages/PromptsPage";
 import SettingsPage from "./pages/SettingsPage";
 import TopicsPage from "./pages/TopicsPage";
+import GeneratePage from "./pages/GeneratePage";
+import NewDraftPage from "./pages/NewDraftPage";
+
 
 export default function App() {
   return (
@@ -25,6 +28,7 @@ export default function App() {
             </NavLink>
             <NavLink to="/articles">稿件</NavLink>
             <NavLink to="/topics">选题</NavLink>
+            <NavLink to="/prompts">提示词</NavLink>
             <NavLink to="/settings">设置</NavLink>
           </nav>
           <a
@@ -54,6 +58,8 @@ export default function App() {
 
           {/* 稿件列表 + 详情 */}
           <Route path="/articles" element={<HomePage />} />
+          <Route path="/generate" element={<GeneratePage />} />
+          <Route path="/new" element={<NewDraftPage />} />
           <Route path="/article/:id" element={<ArticlePage />} />
 
           {/* 选题管理 */}

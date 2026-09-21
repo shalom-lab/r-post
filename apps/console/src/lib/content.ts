@@ -55,7 +55,6 @@ export type TopicItem = {
   blurb?: string;
   categoryId?: string | null;
   angle?: string | null;
-  scheduled: boolean;
   outline?: Record<string, unknown> | null;
   outlinedAt?: string | null;
   articleId?: string | null;

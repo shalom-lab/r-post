@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import OutlineView from "./OutlineView";
 import {
   type Category,
   type PromptPack,
@@ -12,7 +13,6 @@ import {
 import {
   dispatchGenerate,
   dispatchIdeate,
-  dispatchOutline,
   loadSettings,
   readRepoJson,
   saveTopicsFile,
@@ -24,11 +24,15 @@ function newId() {
 }
 
 export default function TopicsPage() {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [showGenerator, setShowGenerator] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
   const [store, setStore] = useState<TopicsFile | null>(null);
   const [cats, setCats] = useState<Category[]>([]);
   const [topicPacks, setTopicPacks] = useState<PromptPack[]>([]);
   const [topicPromptId, setTopicPromptId] = useState("default");
-  const [filter, setFilter] = useState<"all" | "open" | "scheduled" | "done">(
+  const [filter, setFilter] = useState<"all" | "open" | "done">(
     "all",
   );
   const [categoryFilter, setCategoryFilter] = useState("");
@@ -81,32 +85,43 @@ export default function TopicsPage() {
 
   const items = useMemo(() => {
     let list = store?.items || [];
+    if (search.trim()) list = list.filter(i => (i.title + " " + (i.blurb || "")).toLowerCase().includes(search.trim().toLowerCase()));
     if (categoryFilter) {
       list = list.filter((i) => i.categoryId === categoryFilter);
     }
     if (filter === "open") {
-      return list.filter((i) => !i.scheduled && !i.articleId);
+      return list.filter((i) => !i.articleId);
     }
-    if (filter === "scheduled") return list.filter((i) => i.scheduled);
     if (filter === "done") return list.filter((i) => i.articleId);
     return list;
-  }, [store, filter, categoryFilter]);
+  }, [store, filter, categoryFilter, search]);
 
-  const scheduleRank = useMemo(() => {
-    const map = new Map<string, number>();
-    let n = 0;
-    for (const i of store?.items || []) {
-      if (i.scheduled && !i.articleId) {
-        n += 1;
-        map.set(i.id, n);
-      }
-    }
-    return map;
+  const statusCounts = useMemo(() => {
+    const all = store?.items || [];
+    return {
+      all: all.length,
+      open: all.filter((i) => !i.articleId).length,
+      done: all.filter((i) => Boolean(i.articleId)).length,
+    };
   }, [store]);
 
-  const scheduledCount = (store?.items || []).filter(
-    (i) => i.scheduled && !i.articleId,
-  ).length;
+  useEffect(() => {
+    if (selectedId && !items.some((item) => item.id === selectedId)) {
+      setSelectedId(null);
+      setEditingId(null);
+    }
+  }, [items, selectedId]);
+
+  useEffect(() => {
+    function closeDetail(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setSelectedId(null);
+        setEditingId(null);
+      }
+    }
+    window.addEventListener("keydown", closeDetail);
+    return () => window.removeEventListener("keydown", closeDetail);
+  }, []);
 
   async function withLiveStore(
     mutator: (live: TopicsPayload) => void,
@@ -121,13 +136,16 @@ export default function TopicsPage() {
       const live =
         (await readRepoJson<TopicsPayload>(settings, "topics/index.json")) ||
         (store as unknown as TopicsPayload);
+      if (!live) throw new Error("无法加载选题数据，请刷新后重试");
       if (!live.items) live.items = [];
       mutator(live);
       await saveTopicsFile(settings, live, message);
       setMsg("已写回 topics/index.json");
       setStore(live as unknown as TopicsFile);
+      return true;
     } catch (e) {
       setError((e as Error).message);
+      return false;
     } finally {
       setBusy(false);
     }
@@ -142,62 +160,37 @@ export default function TopicsPage() {
     });
   }
 
-  function onSaveEdit(id: string) {
-    return withLiveStore((live) => {
+  async function onSaveEdit(id: string) {
+    if (!draft.title.trim()) { setError("请填写标题"); return; }
+    const saved = await withLiveStore((live) => {
       const row = live.items.find((i) => i.id === id) as TopicItem | undefined;
       if (!row) return;
       row.title = draft.title.trim() || row.title;
       row.blurb = draft.blurb.trim();
       row.categoryId = draft.categoryId || null;
       row.updatedAt = new Date().toISOString();
-      setEditingId(null);
     }, `topics: edit ${id}`);
+    if (saved) setEditingId(null);
   }
 
-  function onPass(item: TopicItem) {
-    if (!window.confirm(`Pass 并删除「${item.title}」？将从 JSON 移除，不可恢复。`)) {
+  async function onPass(item: TopicItem) {
+    if (!window.confirm(`删除选题「${item.title}」？该条目将从 JSON 移除，且无法恢复。`)) {
       return;
     }
-    return withLiveStore((live) => {
+    const removed = await withLiveStore((live) => {
       live.items = live.items.filter((i) => i.id !== item.id);
     }, `topics: pass-delete ${item.id}`);
+    if (removed) {
+      setSelectedId(null);
+      setEditingId(null);
+    }
   }
 
-  function onToggleScheduled(item: TopicItem) {
-    return withLiveStore((live) => {
-      const row = live.items.find((i) => i.id === item.id) as
-        | TopicItem
-        | undefined;
-      if (!row) return;
-      row.scheduled = !row.scheduled;
-      row.updatedAt = new Date().toISOString();
-      if (row.scheduled) {
-        live.items = [
-          ...live.items.filter((i) => i.id !== item.id),
-          row as unknown as Record<string, unknown>,
-        ];
-      }
-    }, `topics: schedule ${item.id}`);
-  }
-
-  function onMove(item: TopicItem, dir: -1 | 1) {
-    return withLiveStore((live) => {
-      const idx = live.items.findIndex((i) => i.id === item.id);
-      const j = idx + dir;
-      if (idx < 0 || j < 0 || j >= live.items.length) return;
-      const copy = [...live.items];
-      const tmp = copy[idx];
-      copy[idx] = copy[j];
-      copy[j] = tmp;
-      live.items = copy;
-    }, `topics: reorder ${item.id}`);
-  }
-
-  function onAdd() {
-    const title = window.prompt("新选题标题");
+  async function onAdd() {
+    const title = newTitle;
     if (!title?.trim()) return;
     const now = new Date().toISOString();
-    return withLiveStore((live) => {
+    const saved = await withLiveStore((live) => {
       live.items = [
         {
           id: newId(),
@@ -205,7 +198,6 @@ export default function TopicsPage() {
           blurb: "",
           categoryId: ideateCategoryId || null,
           angle: null,
-          scheduled: false,
           outline: null,
           outlinedAt: null,
           articleId: null,
@@ -215,6 +207,7 @@ export default function TopicsPage() {
         ...live.items,
       ];
     }, "topics: add manual");
+    if (saved) setNewTitle("");
   }
 
   async function onIdeate() {
@@ -223,6 +216,7 @@ export default function TopicsPage() {
     setRunUrl(null);
     setError(null);
     try {
+      if (!Number.isInteger(Number(quota)) || Number(quota) < 1 || Number(quota) > 20) throw new Error("每次数量请设为 1–20 的整数");
       const url = await dispatchIdeate(loadSettings(), {
         quota,
         promptId: topicPromptId,
@@ -238,6 +232,7 @@ export default function TopicsPage() {
   }
 
   async function onSaveQuota() {
+    if (!Number.isInteger(Number(quota)) || Number(quota) < 1 || Number(quota) > 20) { setError("每天数量请设为 1–20 的整数"); return; }
     return withLiveStore((live) => {
       live.meta = live.meta || { dailyQuota: 5 };
       live.meta.dailyQuota = Number(quota) || 5;
@@ -245,15 +240,15 @@ export default function TopicsPage() {
     }, "topics: update meta prompts");
   }
 
-  async function onOutlineScheduled() {
+  async function onGeneratePost(item: TopicItem) {
     setBusy(true);
     setMsg(null);
     setRunUrl(null);
     setError(null);
     try {
-      const url = await dispatchOutline(loadSettings(), "", topicPromptId);
+      const url = await dispatchGenerate(loadSettings(), { topicId: item.id, categoryId: item.categoryId || "" });
       setRunUrl(url);
-      setMsg("已触发：仅为缺大纲的排期项补大纲（兜底）");
+      setMsg(`已触发写作：${item.title}`);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -261,291 +256,56 @@ export default function TopicsPage() {
     }
   }
 
-  async function onGenerateNext() {
-    setBusy(true);
-    setMsg(null);
-    setRunUrl(null);
-    setError(null);
-    try {
-      const url = await dispatchGenerate(loadSettings(), { fromScheduled: true });
-      setRunUrl(url);
-      setMsg("已触发写作：按排期生成下一条稿件");
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  if (!store && !error) {
-    return (
-      <section className="panel">
-        <p className="muted">加载选题…</p>
-      </section>
-    );
-  }
-
-  const filterTabs = [
-    ["all", "全部"],
-    ["open", "待办"],
-    ["scheduled", "排期"],
-    ["done", "成稿"],
-  ] as const;
-
-  return (
-    <section className="panel">
-      <div className="panel-head">
-        <div>
-          <h1>选题</h1>
-          <p className="muted">
-            AI 出题+大纲 → 勾选排期 → 写作。提示词见{" "}
-            <Link to="/prompts">提示词</Link>。
-          </p>
-        </div>
-        <div className="row">
-          <button type="button" className="btn" disabled={busy} onClick={pullFromRepo}>
-            拉取
-          </button>
-          <button type="button" className="btn" disabled={busy} onClick={onAdd}>
-            手动加
-          </button>
-          <button
-            type="button"
-            className="btn primary"
-            disabled={busy}
-            onClick={onIdeate}
-          >
-            AI 选题
-          </button>
-          <button
-            type="button"
-            className="btn primary"
-            disabled={busy || scheduledCount === 0}
-            onClick={onGenerateNext}
-          >
-            写作下一条（{scheduledCount}）
-          </button>
-        </div>
+  const selected = store?.items.find(i => i.id === selectedId);
+  const tabs = [["all", "全部"], ["open", "候选"], ["done", "已撰写"]] as const;
+  return <section className="panel topic-studio">
+    <div className="panel-head">
+      <div><span className="eyebrow">TOPIC / 01</span><h1>把值得写的题，留下来。</h1><p className="muted">查看题目和大纲，选中后直接生成稿件。</p></div>
+      <div className="row"><button className="btn" disabled={busy} onClick={pullFromRepo}>刷新</button>
+        <button className="btn primary" aria-expanded={showGenerator} onClick={()=>setShowGenerator(!showGenerator)}>＋ 生成选题</button></div>
+    </div>
+    {showGenerator && <section className="generator-box" aria-label="生成选题">
+      <div><h2>下一批，想写什么？</h2><p className="muted">每条包含题目、真实数据与简短大纲。生成后再挑选。</p></div>
+      <div className="generator-fields">
+        <label>数量<input type="number" min="1" max="20" value={quota} onChange={e=>setQuota(e.target.value)}/></label>
+        <label>选题风格<select value={topicPromptId} onChange={e=>setTopicPromptId(e.target.value)}>{topicPacks.map(p=><option key={p.id} value={p.id}>{p.title}</option>)}</select></label>
+        <label>内容方向<select value={ideateCategoryId} onChange={e=>setIdeateCategoryId(e.target.value)}><option value="">不限方向</option>{cats.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
+        <button className="btn primary" disabled={busy || !topicPacks.length} onClick={onIdeate}>{busy ? "处理中…" : "生成题目与大纲"}</button>
       </div>
-
-      <div className="topics-setup">
-        <label className="inline">
-          条数
-          <input
-            value={quota}
-            onChange={(e) => setQuota(e.target.value)}
-            className="input-sm"
-          />
-        </label>
-        <label className="inline">
-          Prompt
-          <select
-            value={topicPromptId}
-            onChange={(e) => setTopicPromptId(e.target.value)}
-          >
-            {topicPacks.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.title}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="inline">
-          分类
-          <select
-            value={ideateCategoryId}
-            onChange={(e) => setIdeateCategoryId(e.target.value)}
-          >
-            <option value="">不限</option>
-            {cats.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button type="button" className="btn" disabled={busy} onClick={onSaveQuota}>
-          保存
-        </button>
-        <button
-          type="button"
-          className="btn"
-          disabled={busy}
-          onClick={onOutlineScheduled}
-          title="仅为缺大纲的排期项补大纲"
-        >
-          补大纲
-        </button>
+      <details className="secondary-settings"><summary>默认设置</summary><div className="row"><button className="btn" disabled={busy} onClick={onSaveQuota}>保存数量与默认风格</button><Link to="/prompts">管理提示词 →</Link></div></details>
+    </section>}
+    <div className="topics-filter"><div className="seg" aria-label="选题状态">{tabs.map(([k,label])=><button key={k} aria-pressed={filter===k} className={filter===k?"is-active":""} onClick={()=>setFilter(k)}><span>{label}</span><small>{statusCounts[k]}</small></button>)}</div>
+      <input className="topic-search" aria-label="搜索选题" placeholder="搜索题目或简介…" value={search} onChange={e=>setSearch(e.target.value)}/>
+      <select aria-label="按分类筛选" value={categoryFilter} onChange={e=>setCategoryFilter(e.target.value)}><option value="">全部分类</option>{cats.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select>
+    </div>
+    {error && <p role="alert" className="error">{error}</p>}
+    {msg && <p role="status" className="ok">{msg} {runUrl && <a href={runUrl} target="_blank" rel="noreferrer">查看运行 →</a>}</p>}
+    <div className={selected ? "topic-workspace has-detail" : "topic-workspace"}>
+      <div>
+        <form className="quick-add" onSubmit={e=>{e.preventDefault();void onAdd();}}><input aria-label="手动选题标题" placeholder="＋ 记下一个自己的选题…" value={newTitle} onChange={e=>setNewTitle(e.target.value)}/><button className="btn" disabled={busy || !newTitle.trim()}>添加</button></form>
+        <ul className="topic-candidates">{items.map(item=><li key={item.id} className={selectedId===item.id?"selected":""}>
+          <button className="candidate-content" aria-expanded={selectedId===item.id} onClick={()=>{setSelectedId(selectedId===item.id?null:item.id);setEditingId(null);}}>
+            <strong>{item.title}</strong><span>{item.blurb || "点击补充想法与大纲"}</span><small>{item.articleId?"已撰写":"候选"} · {cats.find(c=>c.id===item.categoryId)?.name || "未分类"} · {item.outline?"查看大纲":"暂无大纲"}</small>
+          </button><span className="candidate-arrow" aria-hidden="true">›</span>
+        </li>)}</ul>
+        {!store && !error && <p className="empty-state">正在加载选题…</p>}
+        {store && !items.length && <div className="empty-state"><p>{search || categoryFilter || filter !== "all" ? "没有匹配的选题，试试调整筛选。" : "这里还没有选题。生成一批，或者记下自己的想法。"}</p>{(search || categoryFilter || filter !== "all") && <button className="btn" onClick={()=>{setSearch("");setCategoryFilter("");setFilter("all");}}>清除筛选</button>}</div>}
       </div>
-
-      <div className="topics-filter">
-        <div className="seg" role="tablist">
-          {filterTabs.map(([k, label]) => (
-            <button
-              key={k}
-              type="button"
-              role="tab"
-              aria-selected={filter === k}
-              className={filter === k ? "is-active" : ""}
-              onClick={() => setFilter(k)}
-            >
-              {label}
-            </button>
-          ))}
+      {selected && <aside className="topic-detail">
+        <div className="pane-bar"><span className="eyebrow">选题详情</span><button className="btn" onClick={()=>setSelectedId(null)} aria-label="隐藏选题详情">收起 ×</button></div>
+        {editingId===selected.id ? <div className="todo-edit">
+          <label>题目<input value={draft.title} onChange={e=>setDraft({...draft,title:e.target.value})}/></label>
+          <label>简介<textarea rows={3} value={draft.blurb} onChange={e=>setDraft({...draft,blurb:e.target.value})}/></label>
+          <label>成稿分类<select value={draft.categoryId} onChange={e=>setDraft({...draft,categoryId:e.target.value})}><option value="">未分类</option>{cats.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
+          <div className="row"><button className="btn primary" disabled={busy} onClick={()=>onSaveEdit(selected.id)}>保存修改</button><button className="btn" onClick={()=>setEditingId(null)}>取消</button></div>
+        </div> : <><h2>{selected.title}</h2><p className="muted">{selected.blurb}</p><OutlineView outline={selected.outline}/></>}
+        <div className="detail-actions">
+          {!selected.articleId && <button className="btn primary" disabled={busy} onClick={()=>onGeneratePost(selected)}>{busy?"触发中…":"撰写这篇 →"}</button>}
+          <button className="btn" disabled={busy} onClick={()=>startEdit(selected)}>编辑</button>
+          {selected.articleId && <Link className="btn" to={`/article/${selected.articleId}`}>打开稿件</Link>}
+          <details><summary>更多操作</summary><div className="row"><button className="btn danger" disabled={busy} onClick={()=>onPass(selected)}>删除选题</button></div></details>
         </div>
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          aria-label="按分类筛选"
-        >
-          <option value="">全部分类</option>
-          {cats.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {msg && <p className="ok">{msg}</p>}
-      {runUrl && (
-        <p className="ok">
-          Actions：{" "}
-          <a href={runUrl} target="_blank" rel="noreferrer">
-            查看运行
-          </a>
-        </p>
-      )}
-      {error && <p className="error">{error}</p>}
-
-      <ul className="todo-list">
-        {items.map((item) => (
-          <li
-            key={item.id}
-            className={`todo-row ${item.scheduled ? "is-scheduled" : ""} ${item.articleId ? "is-done" : ""}`}
-          >
-            <label className="todo-check" title="勾选加入排期">
-              <input
-                type="checkbox"
-                checked={Boolean(item.scheduled)}
-                disabled={busy || Boolean(item.articleId)}
-                onChange={() => onToggleScheduled(item)}
-              />
-            </label>
-
-            <div className="todo-body">
-              {editingId === item.id ? (
-                <div className="todo-edit">
-                  <input
-                    value={draft.title}
-                    onChange={(e) =>
-                      setDraft({ ...draft, title: e.target.value })
-                    }
-                  />
-                  <textarea
-                    rows={2}
-                    value={draft.blurb}
-                    onChange={(e) =>
-                      setDraft({ ...draft, blurb: e.target.value })
-                    }
-                    placeholder="简介"
-                  />
-                  <select
-                    value={draft.categoryId}
-                    onChange={(e) =>
-                      setDraft({ ...draft, categoryId: e.target.value })
-                    }
-                  >
-                    <option value="">分类（可选）</option>
-                    {cats.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="row">
-                    <button
-                      type="button"
-                      className="btn primary"
-                      disabled={busy}
-                      onClick={() => onSaveEdit(item.id)}
-                    >
-                      保存
-                    </button>
-                    <button
-                      type="button"
-                      className="btn"
-                      onClick={() => setEditingId(null)}
-                    >
-                      取消
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <strong>
-                    {scheduleRank.has(item.id) && (
-                      <span className="rank">#{scheduleRank.get(item.id)}</span>
-                    )}
-                    {item.title}
-                  </strong>
-                  {item.blurb && <p className="muted blurb">{item.blurb}</p>}
-                  <span className="meta">
-                    {item.categoryId ? `${item.categoryId} · ` : ""}
-                    {item.articleId
-                      ? `成稿 ${item.articleId}`
-                      : item.scheduled
-                        ? "已排期"
-                        : "待办"}
-                    {item.outline ? " · 大纲" : ""}
-                  </span>
-                </>
-              )}
-            </div>
-
-            <div className="todo-actions">
-              <button
-                type="button"
-                className="btn icon-only"
-                disabled={busy}
-                onClick={() => onMove(item, -1)}
-                title="上移"
-              >
-                ↑
-              </button>
-              <button
-                type="button"
-                className="btn icon-only"
-                disabled={busy}
-                onClick={() => onMove(item, 1)}
-                title="下移"
-              >
-                ↓
-              </button>
-              {editingId !== item.id && (
-                <button
-                  type="button"
-                  className="btn"
-                  disabled={busy}
-                  onClick={() => startEdit(item)}
-                >
-                  改
-                </button>
-              )}
-              <button
-                type="button"
-                className="btn danger"
-                disabled={busy}
-                onClick={() => onPass(item)}
-              >
-                Pass
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-
-      {!items.length && <p className="muted">当前筛选下没有选题。</p>}
-    </section>
-  );
+      </aside>}
+    </div>
+  </section>;
 }

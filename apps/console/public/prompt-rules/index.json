@@ -1,12 +1,12 @@
 {
   "topic": {
-    "defaultPromptId": "default",
+    "defaultPromptId": "series-friendly",
     "packs": [
       {
         "id": "default",
-        "title": "常规选题助手",
+        "title": "实用选题 · 题目与大纲",
         "file": "topic_prompt_default.md",
-        "description": "题目+大纲一次出",
+        "description": "具体问题、真实数据、可执行大纲，一次生成",
         "active": true,
         "updatedAt": "2026-03-18T00:00:00.000Z"
       },
@@ -25,9 +25,9 @@
     "packs": [
       {
         "id": "wechat-short",
-        "title": "公众号短文",
+        "title": "公众号短教程",
         "file": "post_prompt_wechat-short.md",
-        "description": "简单易学、真实数据、不啰嗦",
+        "description": "短段落、少套话、代码与结果可核对",
         "active": true,
         "updatedAt": "2026-03-18T00:00:00.000Z"
       },
@@ -41,5 +41,5 @@
       }
     ]
   },
-  "updatedAt": "2026-03-18T00:00:00.000Z"
+  "updatedAt": "2026-09-18T11:09:38.715Z"
 }

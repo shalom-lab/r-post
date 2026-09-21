@@ -9,7 +9,6 @@ import {
 import { dispatchGenerate, loadSettings } from "../lib/github";
 
 export default function GeneratePage() {
-  const [fromScheduled, setFromScheduled] = useState(true);
   const [topic, setTopic] = useState("");
   const [slug, setSlug] = useState("");
   const [note, setNote] = useState("");
@@ -41,7 +40,6 @@ export default function GeneratePage() {
     setError(null);
     try {
       const url = await dispatchGenerate(loadSettings(), {
-        fromScheduled,
         topic,
         slug,
         note,
@@ -50,11 +48,7 @@ export default function GeneratePage() {
         categoryId,
       });
       setRunUrl(url);
-      setStatus(
-        fromScheduled
-          ? "已触发：按已排期顺序生成下一条。"
-          : "已触发 Actions 生成。",
-      );
+      setStatus("已触发 Actions 生成。");
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -68,43 +62,23 @@ export default function GeneratePage() {
         <div>
           <h1>写作</h1>
           <p className="muted">
-            写作 Prompt 在 <Link to="/prompts">提示词 → 写作</Link>。默认从选题排期队列取题成稿。
+            填写候选选题 ID 或自由主题，使用选定的写作 Prompt 生成 QMD。
           </p>
         </div>
         <Link className="btn" to="/topics">
-          去排期选题
+          查看候选选题
         </Link>
       </div>
 
       <form className="form" onSubmit={onSubmit}>
-        <label className="inline check-row">
-          <input
-            type="checkbox"
-            checked={fromScheduled}
-            onChange={(e) => setFromScheduled(e.target.checked)}
-          />
-          从已排期选题按顺序生成下一条
+        <label>
+          选题 ID（与自由主题二选一）
+          <input value={topicId} onChange={(e) => setTopicId(e.target.value)} placeholder="topic-xxx" />
         </label>
-
-        {!fromScheduled && (
-          <>
-            <label>
-              主题
-              <input
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-                placeholder="用 iris 做相关入门"
-              />
-            </label>
-            <label>
-              选题 id（可选）
-              <input
-                value={topicId}
-                onChange={(e) => setTopicId(e.target.value)}
-              />
-            </label>
-          </>
-        )}
+        <label>
+          自由主题
+          <input value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="用 iris 做相关入门" />
+        </label>
 
         <label>
           写作 Prompt
@@ -145,7 +119,7 @@ export default function GeneratePage() {
             rows={3}
           />
         </label>
-        <button className="btn primary" type="submit" disabled={busy}>
+        <button className="btn primary" type="submit" disabled={busy || (!topic.trim() && !topicId.trim())}>
           {busy ? "触发中…" : "触发 Actions"}
         </button>
       </form>

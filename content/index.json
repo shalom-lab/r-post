@@ -1,6 +1,16 @@
 {
   "articles": [
     {
+      "id": "r-save-five-methods",
+      "title": "R 语言保存数据的 5 种常见方法",
+      "categoryId": "r-basics",
+      "promptId": "wechat-short",
+      "topicId": null,
+      "qmd": "drafts/r-save-five-methods.qmd",
+      "md": null,
+      "updatedAt": "2026-09-21T00:00:00.000Z"
+    },
+    {
       "id": "mtcars-scatter",
       "title": "用 mtcars 看一眼相关与散点",
       "categoryId": "stats",

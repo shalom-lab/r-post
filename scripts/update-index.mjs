@@ -57,7 +57,6 @@ function markTopicDone(slug, topicId) {
   const item = (store.items || []).find((i) => i.id === topicId);
   if (!item) return;
   item.articleId = slug;
-  item.scheduled = false;
   item.updatedAt = new Date().toISOString();
   store.updatedAt = item.updatedAt;
   fs.writeFileSync(topicsPath, `${JSON.stringify(store, null, 2)}\n`, "utf8");

@@ -11,11 +11,6 @@
   --ok: #1b6b3a;
   --code: #eef3ef;
 
-  /* 工作流状态色 */
-  --color-open: #9ca3af;
-  --color-scheduled: #2563eb;
-  --color-done: #16a34a;
-
   font-family: "Inter", "IBM Plex Sans", "Noto Sans SC", sans-serif;
   line-height: 1.45;
   font-weight: 400;
@@ -576,75 +571,6 @@ textarea.full,
   background: #fff;
 }
 
-.todo-row {
-  display: grid;
-  grid-template-columns: 2rem 1fr auto;
-  gap: 0.55rem;
-  align-items: center;
-  padding: 0.6rem 0.75rem;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  border-bottom: 1px solid var(--line);
-}
-
-.todo-row:last-child {
-  border-bottom: none;
-}
-
-.todo-row.is-scheduled {
-  border-color: transparent;
-  border-bottom-color: var(--line);
-  background: #f3faf7;
-}
-
-.todo-row.is-done {
-  opacity: 0.6;
-  background: #faf8f4;
-}
-
-.todo-check {
-  display: grid;
-  place-items: center;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-}
-
-.todo-check input {
-  width: 1rem;
-  height: 1rem;
-  accent-color: var(--accent);
-}
-
-.todo-body {
-  min-width: 0;
-}
-
-.todo-body strong {
-  font-size: 0.98rem;
-  font-weight: 600;
-}
-
-.todo-body .rank {
-  display: inline-block;
-  margin-right: 0.35rem;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
-  font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
-  font-size: 0.85rem;
-}
-
-.todo-body .blurb {
-  margin: 0.15rem 0 0;
-  font-size: 0.88rem;
-}
-
-.todo-body .meta {
-  font-size: 0.82rem;
-  color: var(--muted);
-}
-
 .todo-edit {
   display: grid;
   gap: 0.35rem;
@@ -659,13 +585,6 @@ textarea.full,
   border: 1px solid var(--line);
   border-radius: 0.3rem;
   font-size: 0.92rem;
-}
-
-.todo-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.2rem;
-  align-items: center;
 }
 
 .topics-setup {
@@ -738,10 +657,6 @@ textarea.full,
 }
 
 @media (max-width: 700px) {
-  .todo-row {
-    grid-template-columns: 1fr;
-  }
-
   .app-shell {
     padding: 0.5rem 0.75rem 1.5rem;
   }
@@ -757,7 +672,6 @@ textarea.full,
 }
 
 /* ─── Google Fonts preconnect (fallback declaration) ──────────────── */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 /* ─── Dashboard ───────────────────────────────────────────────── */
 
@@ -852,119 +766,6 @@ p.error.toast {
   font-family: "IBM Plex Serif", Georgia, serif;
 }
 
-/* 排期队列 */
-.queue-empty {
-  padding: 0.5rem 0;
-}
-
-.queue-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 0;
-}
-
-.queue-item {
-  border-bottom: 1px solid var(--line);
-  padding: 0.6rem 0;
-}
-
-.queue-item:last-child {
-  border-bottom: none;
-}
-
-.queue-item.has-outline .queue-title::after {
-  content: " 📝";
-  font-size: 0.8em;
-  opacity: 0.7;
-}
-
-.queue-item-header {
-  display: flex;
-  gap: 0.5rem;
-  align-items: flex-start;
-}
-
-.queue-rank {
-  font-variant-numeric: tabular-nums;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
-  font-size: 0.8rem;
-  color: var(--color-scheduled);
-  font-weight: 600;
-  min-width: 1.5rem;
-  line-height: 1.6;
-  flex-shrink: 0;
-}
-
-.queue-body {
-  flex: 1;
-  min-width: 0;
-}
-
-.queue-title {
-  display: block;
-  font-size: 0.95rem;
-  font-weight: 600;
-  line-height: 1.35;
-}
-
-.queue-blurb {
-  margin: 0.1rem 0 0;
-  font-size: 0.83rem;
-}
-
-.queue-meta {
-  display: block;
-  font-size: 0.78rem;
-  margin-top: 0.1rem;
-}
-
-.queue-actions {
-  display: flex;
-  gap: 0.2rem;
-  flex-shrink: 0;
-  flex-wrap: wrap;
-}
-
-/* 大纲展开区 */
-.outline-panel {
-  margin: 0.45rem 0 0.1rem 1.9rem;
-  padding: 0.5rem 0.65rem;
-  background: var(--code);
-  border: 1px solid var(--line);
-  border-radius: 0.4rem;
-  font-size: 0.82rem;
-}
-
-.outline-title {
-  font-weight: 600;
-  margin: 0 0 0.35rem;
-}
-
-.outline-sections {
-  margin: 0;
-  padding-left: 1.2rem;
-  display: grid;
-  gap: 0.25rem;
-}
-
-.outline-sections ul {
-  margin: 0.15rem 0 0;
-  padding-left: 1rem;
-  color: var(--muted);
-}
-
-.outline-raw {
-  margin: 0;
-  white-space: pre-wrap;
-  word-break: break-word;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
-  font-size: 0.75rem;
-  max-height: 12rem;
-  overflow: auto;
-}
-
 /* 最新稿件列表 */
 .recent-list {
   list-style: none;
@@ -1009,4 +810,3 @@ p.error.toast {
 .recent-main span {
   font-size: 0.8rem;
 }
-

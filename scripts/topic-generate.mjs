@@ -1,14 +1,15 @@
 #!/usr/bin/env node
+import { validateTopics } from "./lib/topic-validation.mjs";
 /**
  * 选题工作流：ideate（AI 生成候选选题+大纲）| outline（为已有选题补大纲）
  * 统一使用 prompt-rules/ 下的 topic_prompt_*.md。
  *
  * 用法：
  *   node scripts/topic-generate.mjs --mode ideate [--quota 5] [--promptId default] [--categoryId xxx]
- *   node scripts/topic-generate.mjs --mode outline [--topicId xxx | --scheduled] [--promptId default]
+ *   node scripts/topic-generate.mjs --mode outline --topicId xxx [--promptId default]
  *
  * 环境变量（GitHub Actions / CI 也支持）：
- *   DEEPSEEK_API_KEY, MODE, QUOTA, PROMPT_ID, CATEGORY_ID, TOPIC_ID, SCHEDULED
+ *   DEEPSEEK_API_KEY, MODE, QUOTA, PROMPT_ID, CATEGORY_ID, TOPIC_ID
  */
 
 import fs from "node:fs";
@@ -41,6 +42,7 @@ async function runIdeate(args, store, system) {
   const quota = Number(
     args.quota || process.env.QUOTA || store.meta?.dailyQuota || 5,
   );
+  if (!Number.isInteger(quota) || quota < 1 || quota > 20) throw new Error("quota must be an integer from 1 to 20");
   const categoryFilter = (
     args.categoryId ||
     process.env.CATEGORY_ID ||
@@ -72,6 +74,7 @@ async function runIdeate(args, store, system) {
   console.log(`[topic-generate] ideate … quota=${quota}`);
   const raw = await chatDeepSeek({ system, user, temperature: 0.8 });
   const arr = parseJsonLoose(raw);
+  validateTopics(arr, quota, store.items || [], cats.map(c => c.id));
   if (!Array.isArray(arr)) throw new Error("模型未返回 JSON 数组");
 
   const now = new Date().toISOString();
@@ -89,7 +92,6 @@ async function runIdeate(args, store, system) {
       blurb: String(row.blurb || "").trim(),
       categoryId: String(row.categoryId || categoryFilter || "").trim() || null,
       angle: String(row.angle || "").trim() || null,
-      scheduled: false,
       outline,
       outlinedAt: outline ? now : null,
       articleId: null,
@@ -127,14 +129,8 @@ async function runOutline(args, store, system) {
     const item = (store.items || []).find((i) => i.id === id);
     if (!item) throw new Error(`找不到选题 ${id}`);
     targets = [item];
-  } else if (
-    args.scheduled !== undefined ||
-    process.env.SCHEDULED === "1" ||
-    process.env.ALL_SELECTED === "1"
-  ) {
-    targets = (store.items || []).filter((i) => i.scheduled && !i.outline);
   } else {
-    throw new Error("outline 模式需要 --topicId 或 --scheduled");
+    throw new Error("outline 模式需要 --topicId");
   }
 
   if (!targets.length) {

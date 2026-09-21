@@ -5,7 +5,6 @@ export const LS_GH_TOKEN = "gh-token-rpost";
 export const WORKFLOWS = {
   topic: "topic-generate.yml",
   post: "post-generate.yml",
-  daily: "daily-generate.yml",
 } as const;
 
 export type AppSettings = {
@@ -249,15 +248,12 @@ export async function dispatchGenerate(
     promptId?: string;
     topicId?: string;
     categoryId?: string;
-    fromScheduled?: boolean;
   },
 ): Promise<string> {
-  const fromScheduled = Boolean(inputs.fromScheduled);
-  if (!fromScheduled && !inputs.topic?.trim() && !inputs.topicId?.trim()) {
-    throw new Error("需要主题、选题 id，或勾选从已排期队列生成");
+  if (!inputs.topic?.trim() && !inputs.topicId?.trim()) {
+    throw new Error("请填写主题或选题 id");
   }
   return dispatchWorkflow(settings, settings.postWorkflow, {
-    fromScheduled: fromScheduled ? "true" : "false",
     topic: inputs.topic?.trim() || "",
     slug: inputs.slug?.trim() || "",
     note: inputs.note?.trim() || "",
@@ -277,20 +273,6 @@ export async function dispatchIdeate(
     topicId: "",
     promptId: inputs.promptId?.trim() || "",
     categoryId: inputs.categoryId?.trim() || "",
-  });
-}
-
-export async function dispatchOutline(
-  settings: AppSettings,
-  topicId = "",
-  promptId = "",
-): Promise<string> {
-  return dispatchWorkflow(settings, settings.topicWorkflow, {
-    mode: "outline",
-    quota: "",
-    topicId: topicId.trim(),
-    promptId: promptId.trim(),
-    categoryId: "",
   });
 }
 
