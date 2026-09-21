@@ -46,7 +46,7 @@ function qmdTitle(text, fallback) {
 
 function assertQmd(text) {
   if (!/^---\s*\n[\s\S]+?\n---/.test(text)) throw new Error("生成结果缺少完整 YAML frontmatter");
-  if (!/^(?:```|~~~)\{r\}/m.test(text)) throw new Error("生成结果没有可执行 R 代码块");
+  if (!/^```\{r\}/m.test(text)) throw new Error("生成结果没有标准的 Quarto R 代码块");
 }
 
 function classify(text) {
