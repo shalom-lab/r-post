@@ -15,7 +15,7 @@
         "pivot_wider"
       ],
       "qmd": "posts/20260927-wide-to-long/20260927-R语言里随访宽表怎么拧成长表.qmd",
-      "md": null
+      "md": "posts/20260927-wide-to-long/20260927-R语言里随访宽表怎么拧成长表.md"
     },
     {
       "id": "20260927-regex-extract-data",
@@ -87,5 +87,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-09-27T10:02:02.029Z"
+  "updatedAt": "2026-09-27T10:15:15.825Z"
 }
