@@ -161,23 +161,6 @@
       "updatedAt": "2026-09-21T00:00:00.000Z"
     },
     {
-      "id": "topic-sample-cor",
-      "title": "用 mtcars 三分钟看懂相关",
-      "blurb": "散点 + cor()，讲清重量和油耗怎么一起动",
-      "categoryId": "r-stats",
-      "angle": "一张图一个数",
-      "outline": null,
-      "outlinedAt": null,
-      "article": {
-        "id": "001",
-        "title": "用 mtcars 看一眼相关与散点",
-        "qmd": "content/posts/001-mtcars-scatter/001-用mtcars看一眼相关与散点.qmd",
-        "md": "content/posts/001-mtcars-scatter/001-用mtcars看一眼相关与散点.md"
-      },
-      "createdAt": "2026-03-18T00:00:00.000Z",
-      "updatedAt": "2026-03-18T00:00:00.000Z"
-    },
-    {
       "id": "topic-r-save-five-methods",
       "title": "R 语言保存数据的 5 种常见方法",
       "blurb": "用简短示例比较 RDS、Excel、CSV、save() 和 save.image()。",
@@ -329,5 +312,5 @@
       "updatedAt": "2026-09-27T08:41:12.000Z"
     }
   ],
-  "updatedAt": "2026-09-27T08:41:12.000Z"
+  "updatedAt": "2026-09-27T08:48:27.000Z"
 }
