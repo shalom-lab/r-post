@@ -1,5 +1,5 @@
 ---
-title: "for 能用，但这三种更省事"
+title: "一百个 Excel 怎么一次读进来"
 description: "文件夹里一堆文件名不同的 Excel：for 能跑，对照 map、map + list_rbind、walk 三种更省事的批处理。"
 author: "RPost"
 date: "2026-09-27"

@@ -3,8 +3,8 @@
     {
       "id": "20260927-regex-extract-data",
       "slug": "20260927-regex-extract-data",
-      "title": "如何利用正则扣数据",
-      "description": "备注里搜关键词、从文件名抠批次信息、从规则串里取出字段——三种常做的字符串提取。",
+      "title": "如何用正则从字符串里提取数据",
+      "description": "从备注里取出命中的关键词、从文件名取出地区和日期、从规则串里取出字段——三种常做的字符串提取。",
       "date": "2026-09-27",
       "category": "R 基础",
       "categorySlug": "r-base",
@@ -14,13 +14,13 @@
         "文件名",
         "字符串提取"
       ],
-      "qmd": "posts/20260927-regex-extract-data/20260927-如何利用正则扣数据.qmd",
+      "qmd": "posts/20260927-regex-extract-data/20260927-如何用正则从字符串里提取数据.qmd",
       "md": null
     },
     {
       "id": "20260927-batch-read-without-for",
       "slug": "20260927-batch-read-without-for",
-      "title": "for 能用，但这三种更省事",
+      "title": "一百个 Excel 怎么一次读进来",
       "description": "文件夹里一堆文件名不同的 Excel：for 能跑，对照 map、map + list_rbind、walk 三种更省事的批处理。",
       "date": "2026-09-27",
       "category": "R tidyverse",
@@ -31,14 +31,14 @@
         "readxl",
         "map"
       ],
-      "qmd": "posts/20260927-batch-read-without-for/20260927-for能用但这三种更省事.qmd",
+      "qmd": "posts/20260927-batch-read-without-for/20260927-一百个Excel怎么一次读进来.qmd",
       "md": null
     },
     {
       "id": "20260921-regex-real-world",
       "slug": "20260921-regex-real-world",
       "title": "啥是正则表达式？先会认文本形状",
-      "description": "用文件名筛选、备注关键词、简单替换三块日常例子认识正则：pattern 是什么、怎么匹配，扣字段留给下一篇。",
+      "description": "用文件名筛选、备注关键词、简单替换三块日常例子认识正则：pattern 是什么、怎么匹配，提取字段留给下一篇。",
       "date": "2026-09-21",
       "category": "R 基础",
       "categorySlug": "r-base",
@@ -49,7 +49,7 @@
         "pattern"
       ],
       "qmd": "posts/20260921-regex-real-world/20260921-啥是正则表达式先会认文本形状.qmd",
-      "md": null
+      "md": "posts/20260921-regex-real-world/20260921-啥是正则表达式先会认文本形状.md"
     },
     {
       "id": "20260921-r-save-five-methods",
@@ -67,8 +67,8 @@
         "save"
       ],
       "qmd": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.qmd",
-      "md": null
+      "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-09-27T09:34:19.772Z"
+  "updatedAt": "2026-09-27T09:41:15.517Z"
 }
