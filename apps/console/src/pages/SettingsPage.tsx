@@ -33,9 +33,9 @@ export default function SettingsPage() {
   return (
     <section className="connection-page">
       <header>
-        <span className="eyebrow">BYOK · 可选连接</span>
-        <h1>阅读不需要 Token。</h1>
-        <p>连接自己的 GitHub 仓库后，才需要下面的配置。Token 只保存在当前浏览器。</p>
+        <span className="eyebrow">连接</span>
+        <h1>GitHub 连接</h1>
+        <p>可选。Token 只保存在当前浏览器，用来打开仓库 Actions。</p>
       </header>
       <div className="connection-panel">
         <label>

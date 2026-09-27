@@ -2,7 +2,6 @@ import { Link, NavLink, Navigate, Route, Routes } from "react-router-dom";
 import ArticlePage from "./pages/ArticlePage";
 import HomePage from "./pages/HomePage";
 import SettingsPage from "./pages/SettingsPage";
-import TopicsPage from "./pages/TopicsPage";
 
 function GitHubIcon() {
   return (
@@ -23,7 +22,6 @@ export default function App() {
         <div className="reader-actions">
           <nav className="reader-nav" aria-label="主导航">
             <NavLink to="/" end>文章</NavLink>
-            <NavLink to="/topics">选题</NavLink>
             <NavLink to="/settings">连接</NavLink>
           </nav>
           <a className="reader-github" href="https://github.com/shalom-lab/r-post" target="_blank" rel="noreferrer" aria-label="打开 GitHub 仓库">
@@ -36,12 +34,12 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/articles" element={<Navigate to="/" replace />} />
           <Route path="/article/:id" element={<ArticlePage />} />
-          <Route path="/topics" element={<TopicsPage />} />
+          <Route path="/topics" element={<Navigate to="/" replace />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      <footer className="reader-footer">RPost · 用可运行的代码讲清一个问题</footer>
+      <footer className="reader-footer">RPost · 个人文稿后台</footer>
     </div>
   );
 }

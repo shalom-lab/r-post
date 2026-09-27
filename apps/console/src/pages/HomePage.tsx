@@ -38,12 +38,6 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="library-hero">
-        <span className="eyebrow">RPOST · R 语言短教程</span>
-        <h1>把一个问题，讲成一篇能运行的文章。</h1>
-        <p>短、清楚、可复现。这里收录已经完成渲染的 R 教程。</p>
-      </section>
-
       <section className="library-tools" aria-label="文章筛选">
         <input
           type="search"

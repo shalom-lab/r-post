@@ -35,8 +35,3 @@ export async function fetchContent(relativePath: string): Promise<string> {
   return response.text();
 }
 
-export async function fetchTopicsMarkdown(): Promise<string> {
-  const response = await fetch(assetUrl("topics/index.md"), { cache: "no-store" });
-  if (!response.ok) throw new Error(`无法加载选题文档（${response.status}）`);
-  return response.text();
-}
