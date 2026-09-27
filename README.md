@@ -19,7 +19,7 @@
 ```text
 topics/index.json          # 选题真相
 prompt-rules/              # 选题与写作风格
-content/posts/NNN-slug/    # 定稿 QMD（及渲染后的 Markdown）
+content/posts/YYYYMMDD-slug/  # 定稿 QMD（及渲染后的 Markdown）
 AGENTS.md                  # 人机共用操作说明
 ```
 

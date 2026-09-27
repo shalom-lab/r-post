@@ -1,18 +1,28 @@
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { type Article, fetchContent, fetchIndex } from "../lib/content";
+
+/** Old serial article ids → new YYYYMMDD-slug folder ids (keep old links alive). */
+const LEGACY_ARTICLE_REDIRECTS: Record<string, string> = {
+  "002": "20260921-r-save-five-methods",
+  "003": "20260921-regex-real-world",
+  "004": "20260927-batch-read-without-for",
+  "005": "20260927-regex-extract-data",
+};
 
 function withoutFrontmatter(markdown: string) {
   return markdown.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, "");
 }
 
 export default function ArticlePage() {
-  const { id } = useParams();
+  const { id: rawId } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const wantMd = searchParams.get("view") === "md";
+  const legacyTarget = rawId ? LEGACY_ARTICLE_REDIRECTS[rawId] : undefined;
+  const id = legacyTarget || rawId;
 
   const [article, setArticle] = useState<Article | null>(null);
   const [qmdText, setQmdText] = useState("");
@@ -21,7 +31,7 @@ export default function ArticlePage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || legacyTarget) return;
     let cancelled = false;
     (async () => {
       try {
@@ -55,7 +65,7 @@ export default function ArticlePage() {
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, legacyTarget]);
 
   useEffect(() => {
     if (!article) return;
@@ -67,9 +77,21 @@ export default function ArticlePage() {
   useEffect(() => {
     if (!article) return;
     const prev = document.title;
-    document.title = `${article.id} · ${article.title}`;
+    document.title = article.date
+      ? `${article.date} · ${article.title}`
+      : article.title;
     return () => { document.title = prev; };
   }, [article]);
+
+  if (legacyTarget) {
+    const search = searchParams.toString();
+    return (
+      <Navigate
+        to={search ? `/article/${legacyTarget}?${search}` : `/article/${legacyTarget}`}
+        replace
+      />
+    );
+  }
 
   if (error) {
     return (
@@ -90,9 +112,8 @@ export default function ArticlePage() {
       </Link>
       <header className="article-toolbar">
         <div className="article-meta">
-          <span className="article-number">{article.id}</span>
+          <span className="article-number">{article.date || article.id}</span>
           {article.category && <span>{article.category}</span>}
-          {article.date && <time>{article.date}</time>}
         </div>
         <div className="view-toggle" role="tablist" aria-label="源稿与渲染">
           <Link

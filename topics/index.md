@@ -116,7 +116,7 @@ gregexpr() 负责找位置，regmatches() 负责取出实际文本。
 
 - 状态：已成稿
 - 分类：r-base
-- 成稿：[R 语言保存数据的 5 种常见方法](../content/posts/002-r-save-five-methods/002-R语言保存数据的5种常见方法.md)
+- 成稿：[R 语言保存数据的 5 种常见方法](../content/posts/20260921-r-save-five-methods/20260921-R语言保存数据的5种常见方法.md)
 - 创建：2026-09-21
 - 示例数据：datasets::mtcars 的 6 行演示子集；示例写入 R 临时目录。
 
@@ -138,7 +138,7 @@ gregexpr() 负责找位置，regmatches() 负责取出实际文本。
 
 - 状态：已成稿
 - 分类：r-base
-- 成稿：[啥是正则表达式？为啥字符串处理很关键？](../content/posts/003-regex-real-world/003-啥是正则表达式为啥字符串处理很关键.md)
+- 成稿：[啥是正则表达式？为啥字符串处理很关键？](../content/posts/20260921-regex-real-world/20260921-啥是正则表达式为啥字符串处理很关键.md)
 - 创建：2026-09-21
 - 示例数据：文章内定义的最小可复现文件名、ICD 编码与固定格式文本；医疗示例仅用于演示字符串规则。
 
@@ -160,7 +160,7 @@ gregexpr() 负责找位置，regmatches() 负责取出实际文本。
 
 - 状态：已成稿
 - 分类：r-tidyverse
-- 成稿：[如何优雅地批处理，别再用 for 循环了](../content/posts/004-batch-read-without-for/004-如何优雅地批处理别再用for循环了.md)
+- 成稿：[如何优雅地批处理，别再用 for 循环了](../content/posts/20260927-batch-read-without-for/20260927-如何优雅地批处理别再用for循环了.md)
 - 创建：2026-09-27
 - 示例数据：临时目录中用 writexl 生成的演示 xlsx；真活用业务文件夹路径。
 
@@ -183,7 +183,7 @@ gregexpr() 负责找位置，regmatches() 负责取出实际文本。
 
 - 状态：已成稿
 - 分类：r-base
-- 成稿：[如何利用正则扣数据](../content/posts/005-regex-extract-data/005-如何利用正则扣数据.md)
+- 成稿：[如何利用正则扣数据](../content/posts/20260927-regex-extract-data/20260927-如何利用正则扣数据.md)
 - 创建：2026-09-27
 - 示例数据：文章内最小可复现文本与编码；不代替正式编码表。
 

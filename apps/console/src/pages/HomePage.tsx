@@ -65,13 +65,12 @@ export default function HomePage() {
       <div className="article-list">
         {visible.map((article) => (
           <Link className="article-card" to={`/article/${article.id}`} key={article.id}>
-            <span className="article-number">{article.id}</span>
+            <span className="article-number">{article.date || article.id}</span>
             <div>
               <h2>{article.title}</h2>
               <p>{article.description}</p>
               <div className="article-meta">
                 {article.category && <span>{article.category}</span>}
-                {article.date && <time>{article.date}</time>}
                 {article.md ? <span className="source-badge soft">已渲染 MD</span> : <span className="source-muted">仅 QMD</span>}
                 {article.tags.slice(0, 3).map((tag) => <span key={tag}>#{tag}</span>)}
               </div>

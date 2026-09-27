@@ -38,20 +38,29 @@ function toPosix(value) {
   return value.split(path.sep).join("/");
 }
 
+/** Prefer YYYYMMDD folder prefix; fall back to meta.date (YYYY-MM-DD → digits). */
+function sortKey(article) {
+  const fromFolder = article.id.match(/^(\d{8})/)?.[1];
+  if (fromFolder) return fromFolder;
+  const fromDate = String(article.date || "").replace(/-/g, "").slice(0, 8);
+  return fromDate || "00000000";
+}
+
 const articles = [];
 if (fs.existsSync(postsDir)) {
   for (const entry of fs.readdirSync(postsDir, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
+    // Date-based folders: YYYYMMDD-ascii-slug
+    if (!/^\d{8}-/.test(entry.name)) continue;
     const folder = path.join(postsDir, entry.name);
     const qmdName = fs.readdirSync(folder).find((name) => name.endsWith(".qmd"));
     if (!qmdName) continue;
-    const number = entry.name.match(/^(\d+)/)?.[1] || "";
     const qmdPath = path.join(folder, qmdName);
     const mdName = qmdName.replace(/\.qmd$/, ".md");
     const mdPath = path.join(folder, mdName);
     const meta = frontmatter(fs.readFileSync(qmdPath, "utf8"));
     articles.push({
-      id: number || entry.name,
+      id: entry.name,
       slug: entry.name,
       title: meta.title || qmdName.replace(/\.qmd$/, ""),
       description: meta.description || "",
@@ -67,7 +76,12 @@ if (fs.existsSync(postsDir)) {
   }
 }
 
-articles.sort((a, b) => Number(b.id) - Number(a.id));
+// Newest date first; same day → folder name desc (unique when two share a day)
+articles.sort((a, b) => {
+  const dateCmp = sortKey(b).localeCompare(sortKey(a));
+  if (dateCmp !== 0) return dateCmp;
+  return b.id.localeCompare(a.id);
+});
 fs.writeFileSync(
   indexPath,
   `${JSON.stringify({ articles, updatedAt: new Date().toISOString() }, null, 2)}\n`,

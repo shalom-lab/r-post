@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Generate one QMD in content/posts/NNN-slug from a topic id or free topic. */
+/** Generate one QMD in content/posts/YYYYMMDD-slug from a topic id or free topic. */
 import fs from "node:fs";
 import path from "node:path";
 import {
@@ -20,24 +20,37 @@ function toPosix(value) {
   return value.split(path.sep).join("/");
 }
 
-function nextNumber() {
-  if (!fs.existsSync(postsDir)) return "001";
-  const ids = fs.readdirSync(postsDir)
-    .map((name) => Number(name.match(/^(\d+)/)?.[1]))
-    .filter(Number.isFinite);
-  return String((ids.length ? Math.max(...ids) : 0) + 1).padStart(3, "0");
+function todayStamp() {
+  // Local calendar date as YYYYMMDD (box/user zone).
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${y}${m}${d}`;
 }
 
-function safeSlug(value, id) {
+function safeSlug(value, fallback) {
   const slug = String(value || "").toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 48);
-  return slug || "r-post-" + id;
+  return slug || fallback || "r-post";
 }
 
 function safeFileTitle(value) {
   return String(value).replace(/[<>:"/\\|?*]/g, "").replace(/\s+/g, "").slice(0, 70) || "R语言短教程";
+}
+
+/** Unique folder: YYYYMMDD-slug, or YYYYMMDD-slug-2, -3, … if taken. */
+function allocateFolder(dateStamp, slug) {
+  fs.mkdirSync(postsDir, { recursive: true });
+  let candidate = `${dateStamp}-${slug}`;
+  if (!fs.existsSync(path.join(postsDir, candidate))) return candidate;
+  for (let n = 2; n < 1000; n++) {
+    candidate = `${dateStamp}-${slug}-${n}`;
+    if (!fs.existsSync(path.join(postsDir, candidate))) return candidate;
+  }
+  throw new Error("无法分配唯一文章目录：" + dateStamp + "-" + slug);
 }
 
 function qmdTitle(text, fallback) {
@@ -91,8 +104,11 @@ async function main() {
   if (!topic) throw new Error("请提供 topicId 或自由主题 topic");
   category = category || classify(topic);
 
-  const articleId = nextNumber();
-  const slug = safeSlug(args.slug || process.env.SLUG, articleId);
+  const dateStamp = todayStamp();
+  const slug = safeSlug(args.slug || process.env.SLUG, "r-post");
+  const folderName = allocateFolder(dateStamp, slug);
+  // File prefix matches the date stamp (folder may be …-2; files stay YYYYMMDD-标题)
+  const filePrefix = dateStamp;
   const note = String(args.note || process.env.NOTE || "").trim();
   const promptId = String(args.promptId || process.env.PROMPT_ID || "").trim();
   const rules = fs.readFileSync(resolvePromptPath("post", promptId || undefined), "utf8");
@@ -113,8 +129,7 @@ async function main() {
   assertQmd(qmd);
   qmd = addMetadata(qmd, category, selected?.blurb || topic);
   const title = qmdTitle(qmd, topic);
-  const folderName = articleId + "-" + slug;
-  const filename = articleId + "-" + safeFileTitle(title) + ".qmd";
+  const filename = filePrefix + "-" + safeFileTitle(title) + ".qmd";
   const folder = path.join(postsDir, folderName);
   const qmdPath = path.join(folder, filename);
   const mdPath = qmdPath.replace(/\.qmd$/, ".md");
@@ -123,14 +138,15 @@ async function main() {
 
   const qmdRelative = toPosix(path.relative(root, qmdPath));
   const mdRelative = toPosix(path.relative(root, mdPath));
+  // article.id = full folder name (unique when two posts share a day)
   if (selected && store) {
-    selected.article = { id: articleId, title, qmd: qmdRelative, md: mdRelative };
+    selected.article = { id: folderName, title, qmd: qmdRelative, md: mdRelative };
     selected.updatedAt = new Date().toISOString();
     store.updatedAt = selected.updatedAt;
     fs.writeFileSync(topicsPath, JSON.stringify(store, null, 2) + "\n", "utf8");
     await import("./update-topics-md.mjs");
   }
-  const meta = { articleId, slug: folderName, title, qmd: qmdRelative, md: mdRelative };
+  const meta = { articleId: folderName, slug: folderName, title, qmd: qmdRelative, md: mdRelative };
   fs.writeFileSync(lastGeneratePath, JSON.stringify(meta, null, 2) + "\n", "utf8");
   if (process.env.GITHUB_OUTPUT) {
     fs.appendFileSync(process.env.GITHUB_OUTPUT, "qmd=" + qmdRelative + "\nmd=" + mdRelative + "\nslug=" + folderName + "\n");

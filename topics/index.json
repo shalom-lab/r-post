@@ -189,10 +189,10 @@
       },
       "outlinedAt": "2026-09-21T00:00:00.000Z",
       "article": {
-        "id": "002",
+        "id": "20260921-r-save-five-methods",
         "title": "R 语言保存数据的 5 种常见方法",
-        "qmd": "content/posts/002-r-save-five-methods/002-R语言保存数据的5种常见方法.qmd",
-        "md": "content/posts/002-r-save-five-methods/002-R语言保存数据的5种常见方法.md"
+        "qmd": "content/posts/20260921-r-save-five-methods/20260921-R语言保存数据的5种常见方法.qmd",
+        "md": "content/posts/20260921-r-save-five-methods/20260921-R语言保存数据的5种常见方法.md"
       },
       "createdAt": "2026-09-21T00:00:00.000Z",
       "updatedAt": "2026-09-21T00:00:00.000Z"
@@ -225,10 +225,10 @@
         "risks": "ICD 分类必须以实际版本和业务编码表为准，不能把演示正则当作完整临床规则。"
       },
       "article": {
-        "id": "003",
+        "id": "20260921-regex-real-world",
         "title": "啥是正则表达式？为啥字符串处理很关键？",
-        "qmd": "content/posts/003-regex-real-world/003-啥是正则表达式为啥字符串处理很关键.qmd",
-        "md": "content/posts/003-regex-real-world/003-啥是正则表达式为啥字符串处理很关键.md"
+        "qmd": "content/posts/20260921-regex-real-world/20260921-啥是正则表达式为啥字符串处理很关键.qmd",
+        "md": "content/posts/20260921-regex-real-world/20260921-啥是正则表达式为啥字符串处理很关键.md"
       },
       "createdAt": "2026-09-21T00:00:00.000Z",
       "updatedAt": "2026-09-21T00:00:00.000Z"
@@ -266,10 +266,10 @@
       },
       "outlinedAt": "2026-09-27T08:23:24.419Z",
       "article": {
-        "id": "004",
+        "id": "20260927-batch-read-without-for",
         "title": "如何优雅地批处理，别再用 for 循环了",
-        "qmd": "content/posts/004-batch-read-without-for/004-如何优雅地批处理别再用for循环了.qmd",
-        "md": "content/posts/004-batch-read-without-for/004-如何优雅地批处理别再用for循环了.md"
+        "qmd": "content/posts/20260927-batch-read-without-for/20260927-如何优雅地批处理别再用for循环了.qmd",
+        "md": "content/posts/20260927-batch-read-without-for/20260927-如何优雅地批处理别再用for循环了.md"
       },
       "createdAt": "2026-09-27T08:23:24.419Z",
       "updatedAt": "2026-09-27T08:41:12.000Z"
@@ -299,14 +299,14 @@
           }
         ],
         "takeaway": "正则管结构，可变词表与范围留在数据里。",
-        "risks": "示例命名规则需换成业务真实模板；与 003 入门文分工：本文偏实操扣取。"
+        "risks": "示例命名规则需换成业务真实模板；与正则入门文（20260921-regex-real-world）分工：本文偏实操扣取。"
       },
       "outlinedAt": "2026-09-27T08:23:24.419Z",
       "article": {
-        "id": "005",
+        "id": "20260927-regex-extract-data",
         "title": "如何利用正则扣数据",
-        "qmd": "content/posts/005-regex-extract-data/005-如何利用正则扣数据.qmd",
-        "md": "content/posts/005-regex-extract-data/005-如何利用正则扣数据.md"
+        "qmd": "content/posts/20260927-regex-extract-data/20260927-如何利用正则扣数据.qmd",
+        "md": "content/posts/20260927-regex-extract-data/20260927-如何利用正则扣数据.md"
       },
       "createdAt": "2026-09-27T08:23:24.419Z",
       "updatedAt": "2026-09-27T08:57:57.000Z"

@@ -1,8 +1,8 @@
 {
   "articles": [
     {
-      "id": "005",
-      "slug": "005-regex-extract-data",
+      "id": "20260927-regex-extract-data",
+      "slug": "20260927-regex-extract-data",
       "title": "如何利用正则扣数据",
       "description": "备注里搜关键词、从文件名抠批次信息、从规则串里取出字段——三种常做的字符串提取。",
       "date": "2026-09-27",
@@ -14,12 +14,12 @@
         "文件名",
         "字符串提取"
       ],
-      "qmd": "posts/005-regex-extract-data/005-如何利用正则扣数据.qmd",
-      "md": "posts/005-regex-extract-data/005-如何利用正则扣数据.md"
+      "qmd": "posts/20260927-regex-extract-data/20260927-如何利用正则扣数据.qmd",
+      "md": "posts/20260927-regex-extract-data/20260927-如何利用正则扣数据.md"
     },
     {
-      "id": "004",
-      "slug": "004-batch-read-without-for",
+      "id": "20260927-batch-read-without-for",
+      "slug": "20260927-batch-read-without-for",
       "title": "如何优雅地批处理，别再用 for 循环了",
       "description": "文件夹里一堆文件名不同的 Excel：先 for 循环老写法，再对照 map、map_dfr、walk 三种批处理。",
       "date": "2026-09-27",
@@ -31,12 +31,12 @@
         "readxl",
         "map_dfr"
       ],
-      "qmd": "posts/004-batch-read-without-for/004-如何优雅地批处理别再用for循环了.qmd",
-      "md": "posts/004-batch-read-without-for/004-如何优雅地批处理别再用for循环了.md"
+      "qmd": "posts/20260927-batch-read-without-for/20260927-如何优雅地批处理别再用for循环了.qmd",
+      "md": "posts/20260927-batch-read-without-for/20260927-如何优雅地批处理别再用for循环了.md"
     },
     {
-      "id": "003",
-      "slug": "003-regex-real-world",
+      "id": "20260921-regex-real-world",
+      "slug": "20260921-regex-real-world",
       "title": "啥是正则表达式？为啥字符串处理很关键？",
       "description": "用批量读取 Excel、识别 ICD 编码和提取固定格式字段三个场景认识正则表达式。",
       "date": "2026-09-21",
@@ -48,12 +48,12 @@
         "ICD",
         "批量读取"
       ],
-      "qmd": "posts/003-regex-real-world/003-啥是正则表达式为啥字符串处理很关键.qmd",
-      "md": "posts/003-regex-real-world/003-啥是正则表达式为啥字符串处理很关键.md"
+      "qmd": "posts/20260921-regex-real-world/20260921-啥是正则表达式为啥字符串处理很关键.qmd",
+      "md": "posts/20260921-regex-real-world/20260921-啥是正则表达式为啥字符串处理很关键.md"
     },
     {
-      "id": "002",
-      "slug": "002-r-save-five-methods",
+      "id": "20260921-r-save-five-methods",
+      "slug": "20260921-r-save-five-methods",
       "title": "R 语言保存数据的 5 种常见方法",
       "description": "用简短示例比较 RDS、Excel、CSV、save() 和 save.image()。",
       "date": "2026-09-21",
@@ -65,9 +65,9 @@
         "CSV",
         "Excel"
       ],
-      "qmd": "posts/002-r-save-five-methods/002-R语言保存数据的5种常见方法.qmd",
-      "md": "posts/002-r-save-five-methods/002-R语言保存数据的5种常见方法.md"
+      "qmd": "posts/20260921-r-save-five-methods/20260921-R语言保存数据的5种常见方法.qmd",
+      "md": "posts/20260921-r-save-five-methods/20260921-R语言保存数据的5种常见方法.md"
     }
   ],
-  "updatedAt": "2026-09-27T08:59:41.943Z"
+  "updatedAt": "2026-09-27T09:19:43.324Z"
 }

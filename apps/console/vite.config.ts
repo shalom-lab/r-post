@@ -26,6 +26,11 @@ export default defineConfig({
           mkdirSync(`${dist}/article/${article.id}`, { recursive: true });
           writeFileSync(`${dist}/article/${article.id}/index.html`, appShell);
         }
+        // Keep old serial URLs loadable on Pages (SPA redirects in ArticlePage).
+        for (const legacyId of ["002", "003", "004", "005"]) {
+          mkdirSync(`${dist}/article/${legacyId}`, { recursive: true });
+          writeFileSync(`${dist}/article/${legacyId}/index.html`, appShell);
+        }
       }
       // Unknown routes still load the app instead of the Pages 404 document.
       writeFileSync(`${dist}/404.html`, appShell);
