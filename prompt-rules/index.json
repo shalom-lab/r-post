@@ -41,11 +41,18 @@
       }
     ]
   },
-  "updatedAt": "2026-09-27T08:17:39.000Z",
+  "updatedAt": "2026-09-27T08:36:39.000Z",
   "style": {
     "file": "writing-style.md",
     "title": "场景带入与篇章切分",
     "description": "几乎每篇都要有贴合数据分析实战的场景带入；人机共用",
     "updatedAt": "2026-09-27T08:17:39.000Z"
+  },
+  "postContentCheck": {
+    "file": "post-content-check.md",
+    "title": "Post-content 检查（落盘前必做）",
+    "description": "去 AI 味、常用场景/分镜核对；未通过不得写入 content/posts QMD",
+    "required": true,
+    "updatedAt": "2026-09-27T08:36:39.000Z"
   }
 }

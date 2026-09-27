@@ -4,7 +4,7 @@
 
 ## 主线
 
-候选选题与大纲 → 人选定 → 写作与推文打磨 → 定稿 QMD → Actions 自动渲染并上站。
+候选选题与大纲 → 人选定 → 写作与推文打磨 → Post-content 检查（必做）→ 通过后定稿 QMD → Actions 自动渲染并上站。
 
 人和 AI 共用同一套步骤与文件，见 `AGENTS.md`。风格在 `prompt-rules/`。
 
