@@ -7,7 +7,7 @@
 1. **选题**：把候选与大纲写入 `topics/index.json`，再运行 `node scripts/update-topics-md.mjs`（不要手改 `topics/index.md`）。
 2. **定夺**：人选定写哪一条（或自由主题）。未点头前不写正文。
 3. **写作**：按 `prompt-rules/` 写正文；默认可直接写入 `content/posts/`。不必先建 `.drafts/` 或另开「预览过闸」步骤；用户说改就直接改线上文。
-4. **Post-content 检查（必做，不可删）**：按 `prompt-rules/post-content-check.md` 逐项过（去 AI 味、场景是否常用等）。未通过先改到过，再推；通过后写入 `content/posts/YYYYMMDD-ascii-slug/YYYYMMDD-中文标题.qmd`。
+4. **Post-content 检查（必做，不可删）**：按 `prompt-rules/post-content-check.md` 逐项过（去 AI 味（按 qu-ai-wei）、场景是否常用等）。未通过先改到过，再推；通过后写入 `content/posts/YYYYMMDD-ascii-slug/YYYYMMDD-中文标题.qmd`。
 5. **自动化**：QMD 落盘并合入后，由 `render.yml` 渲染 Markdown、嵌图、更新 `content/index.json`；Pages 负责上站。
 
 卡点在前面：选题、大纲、成稿、**Post-content 检查**、QMD 能否定稿落盘。落盘之后不要再人工重复渲染流程。
