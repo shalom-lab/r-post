@@ -1,0 +1,117 @@
+---
+title: "如何优雅地批处理，别再用 for 循环了"
+description: "一百个文件名不同的表要读进来：先看 for 循环老办法，再对照 map、map_dfr 和 walk 三种写法。"
+author: "RPost"
+date: "2026-09-27"
+category: "R tidyverse"
+category-slug: "r-tidyverse"
+tags: ["批处理", "purrr", "readxl", "map_dfr"]
+format: gfm
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+文件夹里忽然多出几十上百个 Excel，名字还各不相同：`sales_华东.xlsx`、`sales_2024Q3.xlsx`……你要做的不是打开某一个，而是**全部读进来**，还能分清哪张表来自哪个文件。
+
+下面用临时目录里的 3 个小 xlsx 演示（真活里换成你的文件夹路径即可）。本篇会用到 `writexl`（写演示文件）、`readxl`、`purrr`、`dplyr`。
+
+```{r}
+library(readxl)
+library(purrr)
+library(dplyr)
+
+demo_dir <- file.path(tempdir(), "rpost-batch-xlsx")
+dir.create(demo_dir, showWarnings = FALSE)
+
+writexl::write_xlsx(
+  data.frame(region = "east", amount = c(10, 12)),
+  file.path(demo_dir, "sales_east.xlsx")
+)
+writexl::write_xlsx(
+  data.frame(region = "west", amount = c(8, 9, 11)),
+  file.path(demo_dir, "sales_west.xlsx")
+)
+writexl::write_xlsx(
+  data.frame(region = "north", amount = 15),
+  file.path(demo_dir, "sales_north.xlsx")
+)
+
+xlsx_files <- list.files(demo_dir, pattern = "\\.xlsx$", full.names = TRUE)
+basename(xlsx_files)
+```
+
+## 古老办法：pattern + for
+
+先用 `list.files()`（或 `dir()`）按扩展名捞文件，再写个小函数，`for` 循环往列表里塞。
+
+```{r}
+read_one <- function(path) {
+  read_excel(path)
+}
+
+data_list_for <- vector("list", length(xlsx_files))
+names(data_list_for) <- basename(xlsx_files)
+
+for (i in seq_along(xlsx_files)) {
+  data_list_for[[i]] <- read_one(xlsx_files[i])
+}
+
+length(data_list_for)
+names(data_list_for)
+```
+
+能跑，也清晰。文件一多，循环体里若再夹杂“并表、打来源标签、写进环境”就会越写越挤。
+
+## 方案 1：`map` 读成 list
+
+同一批路径，交给 `purrr::map`，结果仍是列表，和 for 的目标一样，但循环骨架收掉了。
+
+```{r}
+data_list_map <- map(xlsx_files, read_excel)
+names(data_list_map) <- basename(xlsx_files)
+names(data_list_map)
+```
+
+适合：后面还要对每个表分别清洗，暂时不想并成一张大表。
+
+## 方案 2：`map_dfr` 并表，并标记来自哪张表
+
+若你要的是一张长表做汇总，用 `map_dfr()`，在里面 `mutate(from = ...)` 把文件名带上。
+
+```{r}
+big_tbl <- map_dfr(
+  xlsx_files,
+  ~ read_excel(.x) |>
+    mutate(from = basename(.x))
+)
+
+big_tbl
+count(big_tbl, from)
+```
+
+`from` 列就是“这行来自哪个文件”。以后按地区、按文件排查对不上的数，都靠它。
+
+## 方案 3：`walk` + `assign` 直接写进全局环境
+
+有时同事的旧脚本假设环境里已经有 `sales_east`、`sales_west` 这种对象名。可以用 `walk` 边读边 `assign` 到 `.GlobalEnv`（演示里用独立环境，避免真的污染你的会话）。
+
+```{r}
+demo_env <- new.env(parent = emptyenv())
+
+walk(
+  xlsx_files,
+  function(path) {
+    nm <- tools::file_path_sans_ext(basename(path))
+    assign(nm, read_excel(path), envir = demo_env)
+  }
+)
+
+ls(demo_env)
+demo_env$sales_east
+```
+
+真要写进全局环境时，把 `envir = demo_env` 换成 `envir = .GlobalEnv` 即可。方便，但也最容易把工作区弄乱；优先列表或 `map_dfr`，这是备选。
+
+三种写法办的是同一件事：批量读入。列表适合分表处理，并表适合统一分析，写入环境适合衔接老脚本。先选你下一步真正要用的那种。

@@ -32,3 +32,7 @@
 - 对话或直接改仓库文件：默认路径。
 - `node scripts/rpost.mjs`：本地脚本入口，同样写上述文件。
 - `topic-generate.yml` / `post-generate.yml`：DeepSeek 可选自动化，可能未审就推到默认分支；日常协同不要当作默认。
+
+## 提交前依赖检查
+
+成稿若引入新的 R 包，提交前对照 `.github/workflows/render.yml`（`setup-r-dependencies` 的 `packages` 列表）。CI 里没有的包先补上再推，避免 Render 失败。
