@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { type Article, fetchContent, fetchIndex } from "../lib/content";
 
@@ -10,12 +10,14 @@ function withoutFrontmatter(markdown: string) {
 
 export default function ArticlePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const wantMd = searchParams.get("view") === "md";
 
   const [article, setArticle] = useState<Article | null>(null);
   const [qmdText, setQmdText] = useState("");
   const [markdown, setMarkdown] = useState("");
+  const [hasMd, setHasMd] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -29,12 +31,13 @@ export default function ArticlePage() {
 
         const qmdBody = await fetchContent(found.qmd);
         let mdBody = "";
+        let mdOk = false;
         if (found.md) {
           try {
             mdBody = withoutFrontmatter(await fetchContent(found.md));
+            mdOk = Boolean(mdBody.trim());
           } catch {
-            // index 说有 md，但文件没同步到站点时，当作未渲染
-            found.md = null;
+            mdOk = false;
           }
         }
 
@@ -42,6 +45,7 @@ export default function ArticlePage() {
           setArticle(found);
           setQmdText(qmdBody);
           setMarkdown(mdBody);
+          setHasMd(mdOk);
           setError("");
         }
       } catch (reason) {
@@ -53,6 +57,13 @@ export default function ArticlePage() {
     };
   }, [id]);
 
+  useEffect(() => {
+    if (!article) return;
+    if (wantMd && !hasMd) {
+      navigate(`/article/${article.id}`, { replace: true });
+    }
+  }, [article, wantMd, hasMd, navigate]);
+
   if (error) {
     return (
       <div className="reader-state error">
@@ -63,7 +74,6 @@ export default function ArticlePage() {
   }
   if (!article) return <p className="reader-state">正在加载文章…</p>;
 
-  const hasMd = Boolean(article.md && markdown);
   const showMd = wantMd && hasMd;
 
   return (
@@ -78,31 +88,44 @@ export default function ArticlePage() {
         <div className="article-meta">
           {article.category && <span>{article.category}</span>}
           {article.date && <time>{article.date}</time>}
-          <span className="source-badge">原始 QMD</span>
+        </div>
+        <div className="view-toggle" role="tablist" aria-label="源稿与渲染">
+          <Link
+            className={`view-tab${!showMd ? " active" : ""}`}
+            to={`/article/${article.id}`}
+            role="tab"
+            aria-selected={!showMd}
+          >
+            QMD
+          </Link>
           {hasMd ? (
-            showMd ? (
-              <Link to={`/article/${article.id}`}>看原始 QMD</Link>
-            ) : (
-              <Link to={`/article/${article.id}?view=md`}>查看已渲染 Markdown</Link>
-            )
+            <Link
+              className={`view-tab${showMd ? " active" : ""}`}
+              to={`/article/${article.id}?view=md`}
+              role="tab"
+              aria-selected={showMd}
+            >
+              MD
+            </Link>
           ) : (
-            <span className="source-muted">尚未渲染 Markdown</span>
+            <span className="view-tab disabled" role="tab" aria-disabled="true" title="尚未渲染">
+              MD
+            </span>
           )}
         </div>
       </header>
 
-      {showMd ? (
-        <div className="article-body">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
-        </div>
-      ) : (
-        <section className="qmd-panel" aria-label="原始 QMD">
-          <div className="qmd-panel-label">QMD 源稿（未渲染）</div>
+      <section className="content-card" aria-label={showMd ? "已渲染 Markdown" : "原始 QMD"}>
+        {showMd ? (
+          <div className="article-body">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
+          </div>
+        ) : (
           <pre className="qmd-source">
             <code>{qmdText}</code>
           </pre>
-        </section>
-      )}
+        )}
+      </section>
     </article>
   );
 }
