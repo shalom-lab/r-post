@@ -3,7 +3,7 @@
     {
       "id": "20260927-wide-to-long",
       "slug": "20260927-wide-to-long",
-      "title": "R 语言长宽转换：宽表怎么变成分析用的长表",
+      "title": "R 语言里随访宽表怎么拧成长表",
       "description": "随访多时点常导出成宽表，分析要长表：先认清两种形状，再用 pivot_longer / pivot_wider 拧过来。",
       "date": "2026-09-27",
       "category": "R tidyverse",
@@ -14,7 +14,7 @@
         "pivot_longer",
         "pivot_wider"
       ],
-      "qmd": "posts/20260927-wide-to-long/20260927-R语言长宽转换宽表怎么变成分析用的长表.qmd",
+      "qmd": "posts/20260927-wide-to-long/20260927-R语言里随访宽表怎么拧成长表.qmd",
       "md": null
     },
     {
@@ -87,5 +87,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-09-27T10:00:00.924Z"
+  "updatedAt": "2026-09-27T10:02:02.029Z"
 }
