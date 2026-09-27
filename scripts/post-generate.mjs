@@ -9,6 +9,7 @@ import {
   root,
   stripFences,
 } from "./lib/ai.mjs";
+import { classify } from "./lib/classify.mjs";
 
 const topicsPath = path.join(root, "topics", "index.json");
 const categoriesPath = path.join(root, "content", "categories.json");
@@ -49,13 +50,6 @@ function assertQmd(text) {
   if (!/^```\{r\}/m.test(text)) throw new Error("生成结果没有标准的 Quarto R 代码块");
 }
 
-function classify(text) {
-  if (/ggplot|作图|绘图|图表|可视化/i.test(text)) return "r-plot";
-  if (/统计|回归|检验|相关|方差|概率|置信区间/i.test(text)) return "r-stats";
-  if (/tidyverse|dplyr|tidyr|purrr|管道|数据整理/i.test(text)) return "r-tidyverse";
-  if (/代码管理|项目|renv|git|包管理|目录结构|函数管理/i.test(text)) return "r-code-management";
-  return "r-base";
-}
 
 function categoryMeta(id) {
   const categories = JSON.parse(fs.readFileSync(categoriesPath, "utf8")).categories || [];

@@ -5,13 +5,12 @@ alwaysApply: true
 
 # RPost workflow
 
-- The only content stages are topic and post.
-- `topics/index.json` is the topic data source; `topics/index.md` is its generated reading view. Posts live in numbered folders under `content/posts/`.
+- Mainline only: topics + outlines → human pick → write/polish → finalize QMD → Actions render/Pages.
+- `topics/index.json` is the topic source; `topics/index.md` is generated. Posts live under `content/posts/`.
 - Read shared prompts through `prompt-rules/index.json`.
-- Automatically choose one fixed category slug: `r-plot`, `r-stats`, `r-base`, `r-tidyverse`, or `r-code-management`.
-- Generate a post directly from a selected topic number or free-form subject.
-- Preserve explicit user-provided headings, order, examples, and output requirements; they override prompt defaults.
-- Update JSON article metadata and regenerate the Markdown view when a candidate becomes an article.
+- Choose exactly one category slug: `r-plot`, `r-stats`, `r-base`, `r-tidyverse`, or `r-code-management`.
+- Preserve explicit user headings, order, examples, and output requirements.
+- When a candidate becomes an article, update its `article` metadata and regenerate `topics/index.md`.
 - Never create a permanent images folder; rendered Markdown embeds images.
 - Do not add scheduling, queue, rank, or automatic daily writing fields.
-- Follow the full repository contract in `AGENTS.md`.
+- Front stages need human approval; post-QMD render is automated. Follow `AGENTS.md`.

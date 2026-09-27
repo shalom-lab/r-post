@@ -1,7 +1,7 @@
 {
   "meta": {
     "dailyQuota": 5,
-    "topicPromptId": "default",
+    "topicPromptId": "series-friendly",
     "lastIdeatedAt": null
   },
   "items": [
@@ -178,6 +178,43 @@
       "updatedAt": "2026-03-18T00:00:00.000Z"
     },
     {
+      "id": "topic-r-save-five-methods",
+      "title": "R 语言保存数据的 5 种常见方法",
+      "blurb": "用简短示例比较 RDS、Excel、CSV、save() 和 save.image()。",
+      "categoryId": "r-base",
+      "angle": "同一批小数据对照五种保存方式",
+      "outline": {
+        "workingTitle": "R 语言保存数据的 5 种常见方法",
+        "hook": "分析做到一半，怎么把数据稳稳地保存下来？",
+        "dataset": "datasets::mtcars 的 6 行演示子集；示例写入 R 临时目录。",
+        "sections": [
+          {
+            "heading": "RDS：保存单个 R 对象",
+            "point": "用 saveRDS/readRDS 保存并读回数据框。"
+          },
+          {
+            "heading": "Excel 与 CSV",
+            "point": "分别演示 writexl 与 write.csv/read.csv。"
+          },
+          {
+            "heading": "save() 与 save.image()",
+            "point": "对照多对象工作区保存与整份会话快照。"
+          }
+        ],
+        "takeaway": "按“留给自己继续用”还是“交给别人打开”选择保存格式。",
+        "risks": "演示文件应落在临时目录，避免污染项目。"
+      },
+      "outlinedAt": "2026-09-21T00:00:00.000Z",
+      "article": {
+        "id": "002",
+        "title": "R 语言保存数据的 5 种常见方法",
+        "qmd": "content/posts/002-r-save-five-methods/002-R语言保存数据的5种常见方法.qmd",
+        "md": "content/posts/002-r-save-five-methods/002-R语言保存数据的5种常见方法.md"
+      },
+      "createdAt": "2026-09-21T00:00:00.000Z",
+      "updatedAt": "2026-09-21T00:00:00.000Z"
+    },
+    {
       "id": "topic-regex-real-world",
       "title": "啥是正则表达式？为啥字符串处理很关键？",
       "blurb": "从批量读取 Excel、识别 ICD 编码和固定格式文本提取三个场景，理解正则表达式如何描述字符串规律。",
@@ -214,5 +251,5 @@
       "updatedAt": "2026-09-21T00:00:00.000Z"
     }
   ],
-  "updatedAt": "2026-09-21T00:00:00.000Z"
+  "updatedAt": "2026-09-27T08:03:16.150Z"
 }
