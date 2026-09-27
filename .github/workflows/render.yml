@@ -33,6 +33,9 @@ jobs:
             any::knitr
             any::rmarkdown
             any::writexl
+            any::readxl
+            any::purrr
+            any::dplyr
 
       - uses: quarto-dev/quarto-actions/setup@v2
 
