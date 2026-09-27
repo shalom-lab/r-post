@@ -175,13 +175,13 @@ gregexpr() 负责找位置，regmatches() 负责取出实际文本。
 
 - 状态：已成稿
 - 分类：r-tidyverse
-- 成稿：[如何优雅地批处理，别再用 for 循环了](../content/posts/004-batch-read-without-for/004-如何优雅地批处理别再用for循环了.qmd)
+- 成稿：[如何优雅地批处理，别再用 for 循环了](../content/posts/004-batch-read-without-for/004-如何优雅地批处理别再用for循环了.md)
 - 创建：2026-09-27
 - 示例数据：临时目录中用 writexl 生成的演示 xlsx；真活用业务文件夹路径。
 
 ### 选题说明
 
-一百个文件名不同的 xlsx 要读进来：先 for 循环老办法，再对照 map、map_dfr 和 walk 三种写法。
+一堆文件名不同的 Excel：for 老写法对照 map、map_dfr、walk。
 
 ### 内容大纲
 
@@ -198,18 +198,18 @@ gregexpr() 负责找位置，regmatches() 负责取出实际文本。
 
 - 状态：已成稿
 - 分类：r-base
-- 成稿：[如何利用正则扣数据](../content/posts/005-regex-extract-data/005-如何利用正则扣数据.qmd)
+- 成稿：[如何利用正则扣数据](../content/posts/005-regex-extract-data/005-如何利用正则扣数据.md)
 - 创建：2026-09-27
 - 示例数据：文章内最小可复现文本与编码；不代替正式编码表。
 
 ### 选题说明
 
-诊断文本关键词、ICD 呼吸道感染识别，以及从规则字符串抠出字段。
+备注关键词、从文件名抠地区/日期、从规则串抠字段——三种常用扣数据分镜。
 
 ### 内容大纲
 
-1. **关键词识别**：grepl + 词表 paste 成 | 模式。
-2. **ICD 识别**：示意 J 段感染范围，强调业务表为准。
+1. **备注里搜关键词**：grepl + 词表 paste 成 | 模式。
+2. **从文件名抠地区和日期**：捕获组解析 sales_地区_yyyymm.xlsx。
 3. **从规则串抠字段**：捕获组 + regexec/regmatches。
 
 ### 读者带走

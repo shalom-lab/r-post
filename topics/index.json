@@ -253,7 +253,7 @@
     {
       "id": "topic-batch-read-without-for",
       "title": "如何优雅地批处理，别再用 for 循环了",
-      "blurb": "一百个文件名不同的 xlsx 要读进来：先 for 循环老办法，再对照 map、map_dfr 和 walk 三种写法。",
+      "blurb": "一堆文件名不同的 Excel：for 老写法对照 map、map_dfr、walk。",
       "categoryId": "r-tidyverse",
       "angle": "情景代入后旧法与三种升级方案对照",
       "outline": {
@@ -289,26 +289,26 @@
         "md": "content/posts/004-batch-read-without-for/004-如何优雅地批处理别再用for循环了.md"
       },
       "createdAt": "2026-09-27T08:23:24.419Z",
-      "updatedAt": "2026-09-27T08:23:24.419Z"
+      "updatedAt": "2026-09-27T08:41:12.000Z"
     },
     {
       "id": "topic-regex-extract-data",
       "title": "如何利用正则扣数据",
-      "blurb": "诊断文本关键词、ICD 呼吸道感染识别，以及从规则字符串抠出字段。",
+      "blurb": "备注关键词、从文件名抠地区/日期、从规则串抠字段——三种常用扣数据分镜。",
       "categoryId": "r-base",
-      "angle": "一主题三个扣数据分镜",
+      "angle": "一主题三个常用扣数据分镜（已换掉偏门 ICD 示意）",
       "outline": {
         "workingTitle": "如何利用正则扣数据",
         "hook": "清洗数据时常要判断关键词、识别 ICD、从规则串里抠字段。",
         "dataset": "文章内最小可复现文本与编码；不代替正式编码表。",
         "sections": [
           {
-            "heading": "关键词识别",
+            "heading": "备注里搜关键词",
             "point": "grepl + 词表 paste 成 | 模式。"
           },
           {
-            "heading": "ICD 识别",
-            "point": "示意 J 段感染范围，强调业务表为准。"
+            "heading": "从文件名抠地区和日期",
+            "point": "捕获组解析 sales_地区_yyyymm.xlsx。"
           },
           {
             "heading": "从规则串抠字段",
@@ -316,7 +316,7 @@
           }
         ],
         "takeaway": "正则管结构，可变词表与范围留在数据里。",
-        "risks": "与 003 入门文分工：本文偏实操扣取；示例非临床标准。"
+        "risks": "示例命名规则需换成业务真实模板；与 003 入门文分工：本文偏实操扣取。"
       },
       "outlinedAt": "2026-09-27T08:23:24.419Z",
       "article": {
@@ -326,8 +326,8 @@
         "md": "content/posts/005-regex-extract-data/005-如何利用正则扣数据.md"
       },
       "createdAt": "2026-09-27T08:23:24.419Z",
-      "updatedAt": "2026-09-27T08:23:24.419Z"
+      "updatedAt": "2026-09-27T08:41:12.000Z"
     }
   ],
-  "updatedAt": "2026-09-27T08:23:24.419Z"
+  "updatedAt": "2026-09-27T08:41:12.000Z"
 }
