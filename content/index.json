@@ -1,6 +1,23 @@
 {
   "articles": [
     {
+      "id": "20260927-wide-to-long",
+      "slug": "20260927-wide-to-long",
+      "title": "R 语言长宽转换：宽表怎么变成分析用的长表",
+      "description": "随访多时点常导出成宽表，分析要长表：先认清两种形状，再用 pivot_longer / pivot_wider 拧过来。",
+      "date": "2026-09-27",
+      "category": "R tidyverse",
+      "categorySlug": "r-tidyverse",
+      "tags": [
+        "长宽转换",
+        "tidyr",
+        "pivot_longer",
+        "pivot_wider"
+      ],
+      "qmd": "posts/20260927-wide-to-long/20260927-R语言长宽转换宽表怎么变成分析用的长表.qmd",
+      "md": null
+    },
+    {
       "id": "20260927-regex-extract-data",
       "slug": "20260927-regex-extract-data",
       "title": "如何用正则从字符串里提取数据",
@@ -70,5 +87,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-09-27T09:49:33.192Z"
+  "updatedAt": "2026-09-27T10:00:00.924Z"
 }

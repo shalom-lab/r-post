@@ -1,0 +1,100 @@
+---
+title: "R 语言长宽转换：宽表怎么变成分析用的长表"
+description: "随访多时点常导出成宽表，分析要长表：先认清两种形状，再用 pivot_longer / pivot_wider 拧过来。"
+author: "RPost"
+date: "2026-09-27"
+category: "R tidyverse"
+category-slug: "r-tidyverse"
+tags: ["长宽转换", "tidyr", "pivot_longer", "pivot_wider"]
+format: gfm
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+反复测量、三次随访、多时点导出——Excel 里往往一行一个人，`bp_v1`、`bp_v2`、`bp_v3` 横着排。做前后对比、画折线、按人次汇总时，要的是「一人多行」的长表。依赖：`tidyr`。
+
+## 啥是宽表、啥是长表
+
+宽表：同一人占一行，时点散在多列。
+
+```{r}
+wide <- data.frame(
+  id = c("A", "B"),
+  bp_v1 = c(120, 118),
+  bp_v2 = c(118, 116),
+  bp_v3 = c(122, 115)
+)
+wide
+```
+
+长表：同一人占多行，时点一列、数值一列。
+
+```{r}
+data.frame(
+  id = rep(c("A", "B"), each = 3),
+  visit = rep(c("v1", "v2", "v3"), 2),
+  bp = c(120, 118, 122, 118, 116, 115)
+)
+```
+
+导出给人看的对照表常是宽的；进模型、画图、按时点筛，长表更好使。下面用 `tidyr` 拧。
+
+## 三次随访横着排，拧成长表
+
+把 `bp_v1`–`bp_v3` 收成 `visit` + `bp`：
+
+```{r}
+library(tidyr)
+
+long_bp <- wide |>
+  pivot_longer(
+    cols = starts_with("bp_"),
+    names_to = "visit",
+    names_prefix = "bp_",
+    values_to = "bp"
+  )
+long_bp
+```
+
+`cols` 选要拧的列；`names_to` 接原列名剥下来的标签；`names_prefix` 去掉前缀，只留 `v1` / `v2` / `v3`；`values_to` 接数值列名。`id` 这种不变列会自动留下。
+
+坑：列名写错或漏选，多出来的宽列还在表里。拧完先看几行，对数。
+
+## 多个指标一起拧
+
+同一时点还有体重，列名像 `bp_v1`、`wt_v1`、`bp_v2`、`wt_v2`。一次拆成「指标 + 时点」：
+
+```{r}
+data.frame(
+  id = c("A", "B"),
+  bp_v1 = c(120, 118), wt_v1 = c(70, 65),
+  bp_v2 = c(118, 116), wt_v2 = c(69, 64)
+) |>
+  pivot_longer(
+    cols = -id,
+    names_to = c("measure", "visit"),
+    names_sep = "_",
+    values_to = "value"
+  )
+```
+
+`names_sep = "_"` 按下划线切开列名，分别进 `measure` 与 `visit`。列名更乱时用 `names_pattern`；也可以先 longer 一次再拆列名——先认清规律再选，别一次拧太狠。
+
+## 长表再拧回宽表
+
+汇报对照、按人一行贴回 Excel 时，再变宽：
+
+```{r}
+long_bp |>
+  pivot_wider(
+    names_from = visit,
+    values_from = bp,
+    names_prefix = "bp_"
+  )
+```
+
+`names_from` 决定新列名从哪来，`values_from` 填数值。一对多键对不齐时会报错或变成 list-col——合并、对照前确认 `id` + 时点能唯一定一行。
+
+长宽来回就这几下：导出常见宽，分析先 `pivot_longer`；要对齐对照再 `pivot_wider`。列名规律摸清，半条命令够用。

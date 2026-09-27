@@ -36,6 +36,7 @@ jobs:
             any::readxl
             any::purrr
             any::dplyr
+            any::tidyr
 
       - uses: quarto-dev/quarto-actions/setup@v2
 
