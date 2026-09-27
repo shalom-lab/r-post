@@ -54,8 +54,8 @@
     {
       "id": "20260921-r-save-five-methods",
       "slug": "20260921-r-save-five-methods",
-      "title": "R 语言保存数据的 5 种常见方法",
-      "description": "用简短示例比较 RDS、Excel、CSV、save() 和 save.image()。",
+      "title": "分析做到一半如何存临时数据？",
+      "description": "分析中途要落盘时，RDS、Excel、CSV、save()、save.image() 各适合什么场景，用 mtcars 短示例过一遍。",
       "date": "2026-09-21",
       "category": "R 基础",
       "categorySlug": "r-base",
@@ -63,11 +63,12 @@
         "数据保存",
         "RDS",
         "CSV",
-        "Excel"
+        "Excel",
+        "save"
       ],
-      "qmd": "posts/20260921-r-save-five-methods/20260921-R语言保存数据的5种常见方法.qmd",
-      "md": "posts/20260921-r-save-five-methods/20260921-R语言保存数据的5种常见方法.md"
+      "qmd": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.qmd",
+      "md": null
     }
   ],
-  "updatedAt": "2026-09-27T09:19:43.324Z"
+  "updatedAt": "2026-09-27T09:22:48.609Z"
 }

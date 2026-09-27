@@ -116,7 +116,7 @@ gregexpr() 负责找位置，regmatches() 负责取出实际文本。
 
 - 状态：已成稿
 - 分类：r-base
-- 成稿：[R 语言保存数据的 5 种常见方法](../content/posts/20260921-r-save-five-methods/20260921-R语言保存数据的5种常见方法.md)
+- 成稿：[分析做到一半如何存临时数据？](../content/posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.qmd)
 - 创建：2026-09-21
 - 示例数据：datasets::mtcars 的 6 行演示子集；示例写入 R 临时目录。
 

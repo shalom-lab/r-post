@@ -190,9 +190,9 @@
       "outlinedAt": "2026-09-21T00:00:00.000Z",
       "article": {
         "id": "20260921-r-save-five-methods",
-        "title": "R 语言保存数据的 5 种常见方法",
-        "qmd": "content/posts/20260921-r-save-five-methods/20260921-R语言保存数据的5种常见方法.qmd",
-        "md": "content/posts/20260921-r-save-five-methods/20260921-R语言保存数据的5种常见方法.md"
+        "title": "分析做到一半如何存临时数据？",
+        "qmd": "content/posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.qmd",
+        "md": "content/posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
       },
       "createdAt": "2026-09-21T00:00:00.000Z",
       "updatedAt": "2026-09-21T00:00:00.000Z"

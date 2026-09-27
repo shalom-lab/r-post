@@ -1,0 +1,85 @@
+---
+title: "分析做到一半如何存临时数据？"
+description: "分析中途要落盘时，RDS、Excel、CSV、save()、save.image() 各适合什么场景，用 mtcars 短示例过一遍。"
+author: "RPost"
+date: "2026-09-21"
+category: "R 基础"
+category-slug: "r-base"
+tags: ["数据保存", "RDS", "CSV", "Excel", "save"]
+format: gfm
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+分析做到一半：表洗完了要留着明天接着跑，同事催一版能打开的表，或者快下班了想先把现场按住。这时不是背「有几种保存函数」，而是对着当下那一步，挑一个够用的写法。
+
+下面用 `mtcars` 里 6 行演示，文件都进临时目录，不在项目里留垃圾。
+
+```{r}
+cars <- mtcars[1:6, c("mpg", "cyl", "wt")]
+demo_dir <- tempdir()
+cars
+```
+
+## RDS：清洗完，明天接着跑
+
+单个数据框、模型或列表，还要原样进脚本：用 RDS。结构跟着走，读回来时对象叫什么由你定。
+
+```{r}
+saveRDS(cars, file.path(demo_dir, "cars.rds"))
+cars_rds <- readRDS(file.path(demo_dir, "cars.rds"))
+cars_rds
+```
+
+中间结果、流水线里反复读写同一个对象，先想到它就行。
+
+## Excel：同事要能直接打开的表
+
+对方习惯 Excel、只要表格内容：用 `writexl::write_xlsx()`，写出就能打开。
+
+```{r}
+excel_file <- file.path(demo_dir, "cars.xlsx")
+writexl::write_xlsx(cars, excel_file)
+file.exists(excel_file)
+```
+
+`TRUE` 表示文件已写出。模型、列表这类复杂对象别硬塞进 xlsx。
+
+## CSV：还要给别的工具读
+
+表要进 Python、数据库导入，或对方没有 Excel：走 CSV，通用交换最省事。
+
+```{r}
+csv_file <- file.path(demo_dir, "cars.csv")
+write.csv(cars, csv_file, row.names = FALSE)
+read.csv(csv_file)
+```
+
+记得加 `row.names = FALSE`，否则行名会多占一列。日期、因子读回去后最好再核对类型。
+
+## save()：数据和备注装进同一个文件
+
+数据框旁边还有备注、参数、小辅助对象，想装进同一个文件：用 `save()` 点名写入 `.RData`，`load()` 时按原来的名字回来。
+
+```{r}
+note <- "mtcars 示例切片"
+save(cars, note, file = file.path(demo_dir, "cars.RData"))
+```
+
+对象一多，留意别盖掉环境里已有的同名变量。只要一个对象、还想读回来改名时，仍更常用 RDS。
+
+## save.image()：临时中断，先拍张快照
+
+临时离开、还没整理完要存什么：可以用 `save.image()` 给整个工作现场拍一张。
+
+```{r}
+workspace_file <- file.path(demo_dir, "workspace.RData")
+save.image(file = workspace_file)
+file.exists(workspace_file)
+```
+
+它像应急备份，不是日常习惯。正式项目里优先留完整脚本，再按需 `saveRDS` / `save()`；工作区越存越脏，复现会变难。
+
+中途落盘时对照场景挑一个就够：续跑用 RDS，给 Excel 同事用 xlsx，跨工具用 CSV，多对象用 `save()`，整现场应急才动 `save.image()`。
