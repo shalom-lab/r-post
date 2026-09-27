@@ -15,7 +15,7 @@
         "字符串提取"
       ],
       "qmd": "posts/20260927-regex-extract-data/20260927-如何利用正则扣数据.qmd",
-      "md": null
+      "md": "posts/20260927-regex-extract-data/20260927-如何利用正则扣数据.md"
     },
     {
       "id": "20260927-batch-read-without-for",
@@ -32,7 +32,7 @@
         "map"
       ],
       "qmd": "posts/20260927-batch-read-without-for/20260927-for能用但这三种更省事.qmd",
-      "md": null
+      "md": "posts/20260927-batch-read-without-for/20260927-for能用但这三种更省事.md"
     },
     {
       "id": "20260921-regex-real-world",
@@ -49,7 +49,7 @@
         "pattern"
       ],
       "qmd": "posts/20260921-regex-real-world/20260921-啥是正则表达式先会认文本形状.qmd",
-      "md": null
+      "md": "posts/20260921-regex-real-world/20260921-啥是正则表达式先会认文本形状.md"
     },
     {
       "id": "20260921-r-save-five-methods",
@@ -67,8 +67,8 @@
         "save"
       ],
       "qmd": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.qmd",
-      "md": null
+      "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-09-27T09:34:19.772Z"
+  "updatedAt": "2026-09-27T09:36:05.012Z"
 }
