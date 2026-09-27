@@ -177,15 +177,15 @@
           },
           {
             "heading": "Excel 与 CSV",
-            "point": "分别演示 writexl 与 write.csv/read.csv。"
+            "point": "writexl 与 write.csv；CSV 提 row.names 与编码；大体量可以后上 parquet。"
           },
           {
             "heading": "save() 与 save.image()",
-            "point": "对照多对象工作区保存与整份会话快照。"
+            "point": "save 后 load 演示原名回来可能覆盖；save.image 是整工作区快照。"
           }
         ],
         "takeaway": "按“留给自己继续用”还是“交给别人打开”选择保存格式。",
-        "risks": "演示文件应落在临时目录，避免污染项目。"
+        "risks": "演示文件应落在临时目录；load 可能覆盖同名对象；save.image 不是只存当前演示对象。"
       },
       "outlinedAt": "2026-09-21T00:00:00.000Z",
       "article": {
@@ -195,52 +195,52 @@
         "md": "content/posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
       },
       "createdAt": "2026-09-21T00:00:00.000Z",
-      "updatedAt": "2026-09-21T00:00:00.000Z"
+      "updatedAt": "2026-09-27T09:33:48.000Z"
     },
     {
       "id": "topic-regex-real-world",
-      "title": "啥是正则表达式？为啥字符串处理很关键？",
-      "blurb": "从批量读取 Excel、识别 ICD 编码和固定格式文本提取三个场景，理解正则表达式如何描述字符串规律。",
+      "title": "啥是正则表达式？先会认文本形状",
+      "blurb": "用文件名筛选、备注关键词、简单替换三块日常例子认识正则：pattern 是什么、怎么匹配；扣字段留给扣数据篇。",
       "categoryId": "r-base",
-      "angle": "以真实工作场景串起筛选、判断和提取",
+      "angle": "先讲清 pattern，再认形状与筛；与扣数据篇分工",
       "outline": {
-        "workingTitle": "啥是正则表达式？为啥字符串处理很关键？",
-        "hook": "文件名、疾病编码和业务文本看似不同，本质上都可以先找出字符串规律。",
-        "dataset": "文章内定义的最小可复现文件名、ICD 编码与固定格式文本；医疗示例仅用于演示字符串规则。",
+        "workingTitle": "啥是正则表达式？先会认文本形状",
+        "hook": "文件名、备注、标签看似不同，都可以先描述共同形状再让 R 去认。",
+        "dataset": "文章内定义的最小可复现字符向量（文件名、备注、标签）；不依赖外部 data/ 目录。",
         "sections": [
           {
-            "heading": "读入所有以 dataset 开头的 xlsx 文件",
-            "point": "用 list.files() 的 pattern 参数筛选文件名，再配合 for 循环逐个读入。"
+            "heading": "在文件名向量里筛出目标表",
+            "point": "用 grepl + ^/$/.* 筛 sales_*.xlsx。"
           },
           {
-            "heading": "根据 ICD 编码识别呼吸系统感染",
-            "point": "用 grepl() 判断编码是否落在示例规则覆盖的 J00–J22 子范围，并说明规则边界。"
+            "heading": "备注里有没有这些词",
+            "point": "词表 paste 成 | 模式；顺带 fixed=TRUE 与英文假阳性提醒。"
           },
           {
-            "heading": "从固定格式文本中提取字段",
-            "point": "用捕获组、regexec() 和 regmatches() 提取 ID、日期和值。"
+            "heading": "用捕获组做一次简单替换",
+            "point": "sub + 括号 + \\\\1/\\\\2，轻量接触捕获；扣字段留给下一篇。"
           }
         ],
-        "takeaway": "正则表达式先描述文本结构，再帮助 R 批量筛选、判断和提取。",
-        "risks": "ICD 分类必须以实际版本和业务编码表为准，不能把演示正则当作完整临床规则。"
+        "takeaway": "pattern 描述形状；grepl 认与筛；括号 + sub 能抓住片段再拼。",
+        "risks": "不讲 ICD、不讲 for+readxl、不深挖 regexec；与 20260927-regex-extract-data 分工。"
       },
       "article": {
         "id": "20260921-regex-real-world",
-        "title": "啥是正则表达式？为啥字符串处理很关键？",
-        "qmd": "content/posts/20260921-regex-real-world/20260921-啥是正则表达式为啥字符串处理很关键.qmd",
-        "md": "content/posts/20260921-regex-real-world/20260921-啥是正则表达式为啥字符串处理很关键.md"
+        "title": "啥是正则表达式？先会认文本形状",
+        "qmd": "content/posts/20260921-regex-real-world/20260921-啥是正则表达式先会认文本形状.qmd",
+        "md": "content/posts/20260921-regex-real-world/20260921-啥是正则表达式先会认文本形状.md"
       },
       "createdAt": "2026-09-21T00:00:00.000Z",
-      "updatedAt": "2026-09-21T00:00:00.000Z"
+      "updatedAt": "2026-09-27T09:33:48.000Z"
     },
     {
       "id": "topic-batch-read-without-for",
-      "title": "如何优雅地批处理，别再用 for 循环了",
-      "blurb": "一堆文件名不同的 Excel：for 老写法对照 map、map_dfr、walk。",
+      "title": "for 能用，但这三种更省事",
+      "blurb": "一堆文件名不同的 Excel：for 能跑，对照 map、map+list_rbind、walk。",
       "categoryId": "r-tidyverse",
       "angle": "情景代入后旧法与三种升级方案对照",
       "outline": {
-        "workingTitle": "如何优雅地批处理，别再用 for 循环了",
+        "workingTitle": "for 能用，但这三种更省事",
         "hook": "文件夹里忽然多出几十上百个 Excel，名字还各不相同。",
         "dataset": "临时目录中用 writexl 生成的演示 xlsx；真活用业务文件夹路径。",
         "sections": [
@@ -253,53 +253,53 @@
             "point": "purrr::map 收成命名列表。"
           },
           {
-            "heading": "方案 2：map_dfr 并表并标记来源",
-            "point": "mutate(from = basename(...))。"
+            "heading": "方案 2：map + list_rbind 并表并标记来源",
+            "point": "替代退役中的 map_dfr；简述列不一致与读失败。"
           },
           {
-            "heading": "方案 3：walk + assign",
-            "point": "按文件名写入环境（演示用独立环境）。"
+            "heading": "附：walk + assign",
+            "point": "短 aside，仅对接旧脚本。"
           }
         ],
-        "takeaway": "列表、并表、写入环境三种目标，选下一步真正要用的那种。",
-        "risks": "需 readxl/purrr/dplyr；assign 到全局易污染工作区。"
+        "takeaway": "for 能用；要省事就 map 收 list，或 map + list_rbind 并表。",
+        "risks": "需 readxl/purrr/dplyr/writexl；assign 到全局易污染工作区；map_dfr 退役用 list_rbind。"
       },
       "outlinedAt": "2026-09-27T08:23:24.419Z",
       "article": {
         "id": "20260927-batch-read-without-for",
-        "title": "如何优雅地批处理，别再用 for 循环了",
-        "qmd": "content/posts/20260927-batch-read-without-for/20260927-如何优雅地批处理别再用for循环了.qmd",
-        "md": "content/posts/20260927-batch-read-without-for/20260927-如何优雅地批处理别再用for循环了.md"
+        "title": "for 能用，但这三种更省事",
+        "qmd": "content/posts/20260927-batch-read-without-for/20260927-for能用但这三种更省事.qmd",
+        "md": "content/posts/20260927-batch-read-without-for/20260927-for能用但这三种更省事.md"
       },
       "createdAt": "2026-09-27T08:23:24.419Z",
-      "updatedAt": "2026-09-27T08:41:12.000Z"
+      "updatedAt": "2026-09-27T09:33:48.000Z"
     },
     {
       "id": "topic-regex-extract-data",
       "title": "如何利用正则扣数据",
-      "blurb": "备注关键词、从文件名抠地区/日期、从规则串抠字段——三种常用扣数据场景。",
+      "blurb": "备注关键词、从文件名抠地区/日期、从规则串抠字段；展示捕获组结构、失败 NA、fixed 与边界提醒。",
       "categoryId": "r-base",
       "angle": "一主题三个常用扣数据场景（已换掉偏门 ICD 示意）",
       "outline": {
         "workingTitle": "如何利用正则扣数据",
-        "hook": "清洗数据时常要判断关键词、识别 ICD、从规则串里抠字段。",
-        "dataset": "文章内最小可复现文本与编码；不代替正式编码表。",
+        "hook": "已知 pattern 是形状后，下一步常是把匹配片段抠出来变成列。",
+        "dataset": "文章内最小可复现文本与文件名；失败行写成 NA。",
         "sections": [
           {
             "heading": "备注里搜关键词",
-            "point": "grepl + 词表 paste 成 | 模式。"
+            "point": "grepl + 词表；fixed=TRUE 与英文假阳性边界。"
           },
           {
             "heading": "从文件名抠地区和日期",
-            "point": "捕获组解析 sales_地区_yyyymm.xlsx。"
+            "point": "regexec/regmatches；打印 matched[[1]]；收 data.frame；无匹配 NA。"
           },
           {
             "heading": "从规则串抠字段",
-            "point": "捕获组 + regexec/regmatches。"
+            "point": "捕获组 + 失败例 NA。"
           }
         ],
         "takeaway": "正则管结构，可变词表与范围留在数据里。",
-        "risks": "示例命名规则需换成业务真实模板；与正则入门文（20260921-regex-real-world）分工：本文偏实操扣取。"
+        "risks": "示例命名规则需换成业务真实模板；与正则入门文（20260921-regex-real-world）分工：本文专讲提取。"
       },
       "outlinedAt": "2026-09-27T08:23:24.419Z",
       "article": {
@@ -309,8 +309,8 @@
         "md": "content/posts/20260927-regex-extract-data/20260927-如何利用正则扣数据.md"
       },
       "createdAt": "2026-09-27T08:23:24.419Z",
-      "updatedAt": "2026-09-27T08:57:57.000Z"
+      "updatedAt": "2026-09-27T09:33:48.000Z"
     }
   ],
-  "updatedAt": "2026-09-27T08:57:57.000Z"
+  "updatedAt": "2026-09-27T09:33:48.000Z"
 }

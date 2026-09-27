@@ -57,22 +57,31 @@ write.csv(cars, csv_file, row.names = FALSE)
 read.csv(csv_file)
 ```
 
-记得加 `row.names = FALSE`，否则行名会多占一列。日期、因子读回去后最好再核对类型。
+记得加 `row.names = FALSE`，否则行名会多占一列。中文路径或内容若乱码，读写时显式设 `fileEncoding`（或新接口的 `encoding`）再核对。日期、因子读回去后最好再看一眼类型。
+
+表已经很大、或要跨语言长期交换时，可以以后再上 parquet；日常中途落盘，CSV / RDS 通常够用。
 
 ## save()：数据和备注装进同一个文件
 
-数据框旁边还有备注、参数、小辅助对象，想装进同一个文件：用 `save()` 点名写入 `.RData`，`load()` 时按原来的名字回来。
+数据框旁边还有备注、参数、小辅助对象，想装进同一个文件：用 `save()` 点名写入 `.RData`。`load()` 时**按原来的名字**回来，环境里若已有同名对象会被盖掉。
 
 ```{r}
 note <- "mtcars 示例切片"
-save(cars, note, file = file.path(demo_dir, "cars.RData"))
+rdata_file <- file.path(demo_dir, "cars.RData")
+save(cars, note, file = rdata_file)
+
+# 演示：清掉这两个名字再 load，看它们怎么回来
+rm(cars, note)
+load(rdata_file)
+cars
+note
 ```
 
-对象一多，留意别盖掉环境里已有的同名变量。只要一个对象、还想读回来改名时，仍更常用 RDS。
+`load()` 的返回值是恢复出来的对象名字符向量；真正用的是副作用——对象直接进当前环境。只要一个对象、还想读回来改名时，仍更常用 RDS。
 
 ## save.image()：临时中断，先拍张快照
 
-临时离开、还没整理完要存什么：可以用 `save.image()` 给整个工作现场拍一张。
+临时离开、还没整理完要存什么：可以用 `save.image()` 给**整个工作区**拍一张（当前环境里几乎所有对象，不只是上面的 `cars`）。
 
 ```{r}
 workspace_file <- file.path(demo_dir, "workspace.RData")

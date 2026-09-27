@@ -13,7 +13,7 @@ execute:
   message: false
 ---
 
-清洗表时，字符串里常藏着要用的信息：备注要不要进「异常」清单、文件名里的日期和地区、配置串里的阈值。下面三块都用 base R，办的是同一类事——**按规律批量扣数据**。
+已经知道 pattern 是「文本形状」之后，下一步常是：**把匹配到的片段抠出来，变成列**。下面三块都用 base R，办的是同一类事——按规律批量扣数据。认形状、筛行见正则入门篇；本文专讲提取。
 
 ## 备注里搜关键词
 
@@ -34,7 +34,16 @@ hit <- grepl(kw_pattern, notes)
 data.frame(notes, hit)
 ```
 
-`grepl()` 得到逻辑向量，可直接筛选。词会改，就改 `keywords` 向量，再用 `paste(..., collapse = "|")` 拼，比手改正则正文稳。
+`grepl()` 得到逻辑向量，可直接筛选。词会改，就改 `keywords` 向量，再用 `paste(..., collapse = "|")` 拼。
+
+只要精确字面、不要通配时，用 `fixed = TRUE`：
+
+```{r}
+grepl("缺测|待核", notes[1], fixed = TRUE)  # 字面整串，| 不再表示「或者」
+grepl("缺测|待核", notes[1])                # 正则：缺测 或 待核
+```
+
+英文词表还要小心假阳性：`grepl("cat", "category")` 为 `TRUE`。需要整词时再加边界 `\b`；中文日常词表通常直接 `|` 就够。
 
 ## 从文件名抠地区和日期
 
@@ -52,13 +61,38 @@ files <- c(
 file_pat <- "^sales_(.+)_(20[0-9]{4})\\.xlsx$"
 matched <- regmatches(files, regexec(file_pat, files))
 
+# 先看第一条：整串 + 两个捕获组
+matched[[1]]
+```
+
+`matched[[1]]` 的第 1 个元素是整段匹配，后面才是括号里抓住的字段。对不上的（如 `readme.txt`）长度为 0：
+
+```{r}
+matched[[4]]
+length(matched[[4]])  # 0 → 无匹配
+```
+
+收成数据框时，无匹配写成 `NA`：
+
+```{r}
 file_info <- do.call(
   rbind,
-  lapply(matched, function(x) {
+  lapply(seq_along(matched), function(i) {
+    x <- matched[[i]]
     if (length(x) < 3) {
-      return(c(file = NA_character_, region = NA_character_, yyyymm = NA_character_))
+      return(data.frame(
+        file = files[i],
+        region = NA_character_,
+        yyyymm = NA_character_,
+        stringsAsFactors = FALSE
+      ))
     }
-    c(file = x[1], region = x[2], yyyymm = x[3])
+    data.frame(
+      file = x[1],
+      region = x[2],
+      yyyymm = x[3],
+      stringsAsFactors = FALSE
+    )
   })
 )
 
@@ -74,23 +108,43 @@ file_info
 ```{r}
 rules <- c(
   "FIELD=体温|OP=>=|VALUE=37.5|UNIT=C",
-  "FIELD=血氧|OP=<|VALUE=93|UNIT=%"
+  "FIELD=血氧|OP=<|VALUE=93|UNIT=%",
+  "坏掉的一行没有竖线"
 )
 
 rule_pat <- "^FIELD=([^|]+)\\|OP=([^|]+)\\|VALUE=([^|]+)\\|UNIT=([^|]+)$"
 matched <- regmatches(rules, regexec(rule_pat, rules))
 
+matched[[1]]  # 整串 + 四个捕获组
+matched[[3]]  # 长度 0，失败例
+```
+
+`([^|]+)` 表示「一段不含 `|` 的内容」。收表时同样把失败行写成 `NA`：
+
+```{r}
 rule_df <- do.call(
   rbind,
   lapply(matched, function(x) {
-    if (length(x) < 5) return(rep(NA_character_, 4))
-    x[-1]
+    if (length(x) < 5) {
+      return(data.frame(
+        field = NA_character_,
+        op = NA_character_,
+        value = NA_character_,
+        unit = NA_character_,
+        stringsAsFactors = FALSE
+      ))
+    }
+    data.frame(
+      field = x[2],
+      op = x[3],
+      value = x[4],
+      unit = x[5],
+      stringsAsFactors = FALSE
+    )
   })
 )
-colnames(rule_df) <- c("field", "op", "value", "unit")
+
 rule_df
 ```
 
-`([^|]+)` 表示「一段不含 `|` 的内容」。`regexec()` 定位，`regmatches()` 取出；`x[-1]` 丢掉整串，只留四个字段。
-
-关键词表、文件名模板、规则格式都会变：把可变部分留在数据或配置里，正则只写死结构。
+关键词表、文件名模板、规则格式都会变：把可变部分留在数据或配置里，正则只写死结构。对不上就给 `NA`，别假设每次都扣得出来。

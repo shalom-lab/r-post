@@ -1,11 +1,11 @@
 ---
-title: "如何优雅地批处理，别再用 for 循环了"
-description: "文件夹里一堆文件名不同的 Excel：先 for 循环老写法，再对照 map、map_dfr、walk 三种批处理。"
+title: "for 能用，但这三种更省事"
+description: "文件夹里一堆文件名不同的 Excel：for 能跑，对照 map、map + list_rbind、walk 三种更省事的批处理。"
 author: "RPost"
 date: "2026-09-27"
 category: "R tidyverse"
 category-slug: "r-tidyverse"
-tags: ["批处理", "purrr", "readxl", "map_dfr"]
+tags: ["批处理", "purrr", "readxl", "map"]
 format: gfm
 execute:
   echo: true
@@ -15,7 +15,7 @@ execute:
 
 接到活时，桌面文件夹里已经堆了几十上百个表：各省一份、各网点一份，名字还对不上号。你要的不是打开某一个，而是**一次性读进来**，并且还能知道每一行来自哪个文件。
 
-下面在临时目录里放 3 个小 xlsx 演示（真活把路径换成你的文件夹）。会用到 `writexl`（只为造演示文件）、`readxl`、`purrr`、`dplyr`。
+`for` 完全能办这件事；文件一多、还要并表、打来源时，下面三种写法往往更短、更好改。依赖：`writexl`（只为造演示文件）、`readxl`、`purrr`、`dplyr`。
 
 ```{r}
 library(readxl)
@@ -62,7 +62,7 @@ length(data_list_for)
 names(data_list_for)
 ```
 
-能跑。文件一多，循环里再夹「并表、打来源、写进环境」，就会又长又难改。
+能跑。循环里再夹「并表、打来源、写进环境」，就会又长又难改——不是 for 有罪，是骨架占地方。
 
 ## 方案 1：`map` 读成 list
 
@@ -76,16 +76,17 @@ names(data_list_map)
 
 适合：后面还要按表分别清洗，暂时不合并。
 
-## 方案 2：`map_dfr` 并成一张表，并标来源文件
+## 方案 2：并成一张表，并标来源文件
 
-要汇总、画图、筛选时，通常需要一张长表。`map_dfr()` 读完直接摞起来，再用 `mutate(from = ...)` 带上文件名。
+要汇总、画图、筛选时，通常需要一张长表。老写法是 `map_dfr()`；purrr 新版本里它在退役路上，现在更推荐 `map(...) |> list_rbind()`。
 
 ```{r}
-big_tbl <- map_dfr(
+big_tbl <- map(
   xlsx_files,
   ~ read_excel(.x) |>
     mutate(from = basename(.x))
-)
+) |>
+  list_rbind()
 
 big_tbl
 count(big_tbl, from)
@@ -93,25 +94,19 @@ count(big_tbl, from)
 
 `from` 就是「这行来自哪个文件」。对数对不上时，先按它排查。
 
-## 方案 3：`walk` + `assign`（衔接旧脚本）
+真活里还会踩两脚：各表**列名不一致**时，`list_rbind()` 可能报错或补 `NA`，先统一列再并；某个文件读失败时，整条管道停住——可以先 `map(..., possibly(read_excel, NULL))` 把坏文件变成 `NULL` 再过滤。演示从略，心里有数即可。
 
-有的旧脚本默认环境里已经有 `sales_east`、`sales_west` 这种对象。可以用 `walk` 边读边 `assign`。演示放进独立环境，避免弄乱你当前会话。
+## 附：`walk` + `assign`（对接旧脚本时）
+
+偶发旧脚本默认环境里已有 `sales_east` 这种对象名，才需要边读边 `assign`。日常优先 list 或并表；这里只留个最短样子。
 
 ```{r}
 demo_env <- new.env(parent = emptyenv())
-
-walk(
-  xlsx_files,
-  function(path) {
-    nm <- tools::file_path_sans_ext(basename(path))
-    assign(nm, read_excel(path), envir = demo_env)
-  }
-)
-
+walk(xlsx_files, function(path) {
+  nm <- tools::file_path_sans_ext(basename(path))
+  assign(nm, read_excel(path), envir = demo_env)
+})
 ls(demo_env)
-demo_env$sales_east
 ```
 
-真要写进全局环境，把 `envir = demo_env` 换成 `.GlobalEnv`。方便，也最容易把工作区搞乱；日常优先 list 或 `map_dfr`，这个留给对接旧代码。
-
-批读就这三件事：分表放 list、并表并标来源、按文件名塞进环境。下一步用哪一种，就选哪一种。
+批读就这几件事：`for` 能用；要省事就 `map` 收 list，或 `map` + `list_rbind` 并表打来源。下一步用哪一种，就选哪一种。
