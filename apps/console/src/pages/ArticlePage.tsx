@@ -64,6 +64,13 @@ export default function ArticlePage() {
     }
   }, [article, wantMd, hasMd, navigate]);
 
+  useEffect(() => {
+    if (!article) return;
+    const prev = document.title;
+    document.title = `${article.id} · ${article.title}`;
+    return () => { document.title = prev; };
+  }, [article]);
+
   if (error) {
     return (
       <div className="reader-state error">
@@ -81,11 +88,9 @@ export default function ArticlePage() {
       <Link className="reader-back" to="/">
         ← 返回文章列表
       </Link>
-      <header className="article-header">
-        <span className="article-number">{article.id}</span>
-        <h1>{article.title}</h1>
-        {article.description && <p>{article.description}</p>}
+      <header className="article-toolbar">
         <div className="article-meta">
+          <span className="article-number">{article.id}</span>
           {article.category && <span>{article.category}</span>}
           {article.date && <time>{article.date}</time>}
         </div>
