@@ -33,8 +33,7 @@ files <- c(
 )
 
 # ^ 开头，$ 结尾；点号在正则里是「任意字符」，所以写成 \\.
-xlsx_sales <- grepl("^sales_.*\\.xlsx$", files)
-files[xlsx_sales]
+files[grepl("^sales_.*\\.xlsx$", files)]
 ```
 
 `grepl(pattern, x)` 对每个元素返回 `TRUE` / `FALSE`。`.*` 表示中间随便多长。文件名规则变了，只改 pattern，不必手写一堆 `startsWith` / `endsWith`。
@@ -52,10 +51,7 @@ notes <- c(
 )
 
 keywords <- c("缺测", "待核", "异常")
-kw_pattern <- paste(keywords, collapse = "|")
-
-hit <- grepl(kw_pattern, notes)
-data.frame(notes, hit)
+data.frame(notes, hit = grepl(paste(keywords, collapse = "|"), notes))
 ```
 
 `|` 表示「或者」。词表会改，就改 `keywords`，再用 `paste(..., collapse = "|")` 拼，比手改正则正文稳。
