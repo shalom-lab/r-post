@@ -15,7 +15,7 @@
 
 - 选题源：`topics/index.json`；阅读视图：`topics/index.md`（生成物）。
 - 文章：`content/posts/` 下按编号目录；QMD 与渲染后的 Markdown 同名。
-- 风格：`prompt-rules/index.json` 指向当前选题/写作 prompt。
+- 风格：`prompt-rules/index.json` 指向当前选题/写作 prompt；场景带入与篇章切分见 `prompt-rules/writing-style.md`。
 - 分类只能是：`r-plot`、`r-stats`、`r-base`、`r-tidyverse`、`r-code-management`。
 - 不建永久图片目录；不添加调度、队列、排名、自动日更字段。
 - 从候选写成文时，回写该条的 `article` 元数据，再刷新选题 Markdown。
