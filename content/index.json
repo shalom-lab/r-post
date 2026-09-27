@@ -4,14 +4,14 @@
       "id": "005",
       "slug": "005-regex-extract-data",
       "title": "如何利用正则扣数据",
-      "description": "诊断文本里的关键词、ICD 编码识别，以及从规则字符串里抠出指定字段。",
+      "description": "备注里搜关键词、从文件名抠批次信息、从规则串里取出字段——三种常做的字符串提取。",
       "date": "2026-09-27",
       "category": "R 基础",
       "categorySlug": "r-base",
       "tags": [
         "正则表达式",
-        "ICD",
         "关键词",
+        "文件名",
         "字符串提取"
       ],
       "qmd": "posts/005-regex-extract-data/005-如何利用正则扣数据.qmd",
@@ -21,7 +21,7 @@
       "id": "004",
       "slug": "004-batch-read-without-for",
       "title": "如何优雅地批处理，别再用 for 循环了",
-      "description": "一百个文件名不同的表要读进来：先看 for 循环老办法，再对照 map、map_dfr 和 walk 三种写法。",
+      "description": "文件夹里一堆文件名不同的 Excel：先 for 循环老写法，再对照 map、map_dfr、walk 三种批处理。",
       "date": "2026-09-27",
       "category": "R tidyverse",
       "categorySlug": "r-tidyverse",
@@ -85,5 +85,5 @@
       "md": "posts/001-mtcars-scatter/001-用mtcars看一眼相关与散点.md"
     }
   ],
-  "updatedAt": "2026-09-27T08:31:32.867Z"
+  "updatedAt": "2026-09-27T08:43:07.303Z"
 }
