@@ -11,7 +11,7 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchIndex()
-      .then((index) => setArticles(index.articles.filter((article) => article.md)))
+      .then((index) => setArticles(index.articles.filter((article) => article.qmd)))
       .catch((reason: Error) => setError(reason.message))
       .finally(() => setLoading(false));
   }, []);
@@ -72,6 +72,7 @@ export default function HomePage() {
               <div className="article-meta">
                 {article.category && <span>{article.category}</span>}
                 {article.date && <time>{article.date}</time>}
+                {article.md ? <span className="source-badge soft">已渲染 MD</span> : <span className="source-muted">仅 QMD</span>}
                 {article.tags.slice(0, 3).map((tag) => <span key={tag}>#{tag}</span>)}
               </div>
             </div>
