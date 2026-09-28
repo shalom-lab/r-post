@@ -81,7 +81,7 @@ coef(cars_fit)
 
 ## save.image()：临时中断，先拍张快照
 
-临时离开、还没整理完要存什么：可以用 `save.image()` 给**整个工作区**拍一张（当前环境里几乎所有对象，不只是上面的 `cars`）。
+临时离开、还没整理完要存什么：可以用 `save.image()` 给**整个工作区**拍一张（当前环境里几乎所有对象，不只是上面的 `cars`）。可以把它想成游戏存档：一键留下当前进度，下次 `load()` 再接着跑。
 
 ```{r}
 workspace_file <- file.path(demo_dir, "workspace.RData")
@@ -89,6 +89,6 @@ save.image(file = workspace_file)
 file.exists(workspace_file)
 ```
 
-它像应急备份，不是日常习惯。正式项目里优先留完整脚本，再按需 `saveRDS` / `save()`；工作区越存越脏，复现会变难。
+存档方便应急，但不是日常习惯。正式项目里优先留完整脚本，再按需 `saveRDS` / `save()`；工作区越存越脏，复现会变难。
 
 中途落盘时对照场景挑一个就够：续跑用 RDS，给 Excel 同事用 xlsx，跨工具用 CSV，多对象用 `save()`，整现场应急才动 `save.image()`。
