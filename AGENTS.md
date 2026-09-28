@@ -37,3 +37,13 @@
 ## 提交前依赖检查
 
 成稿若引入新的 R 包，提交前对照 `.github/workflows/render.yml`（`setup-r-dependencies` 的 `packages` 列表）。CI 里没有的包先补上再推，避免 Render 失败。
+
+## 开发与验证
+
+- 前端位于 `apps/console/`，使用 React、TypeScript、Vite 和 npm workspace；Node.js 与 CI 对齐使用 22。
+- 在仓库根目录运行 `npm ci` 安装依赖，`npm run dev` 启动本地站点。
+- `npm run dev`、`npm run build`、`npm run sync` 都会先更新文章索引、选题 Markdown，再同步公开数据；这些命令可能改变生成文件，提交前检查 diff。
+- 前端改动运行 `npm run build` 和 `npm run lint -w apps/console`；纯文档改动核对内容与路径即可，目前没有配置自动化测试命令。
+- 构建产物位于根目录 `dist/`，生产 base 为 `/r-post/`；修改路由时同步检查 `vite.config.ts` 中供 Pages 直接访问的静态入口。
+- 不直接维护 `apps/console/public/` 的同步副本，不提交真实凭据或 `.env`，不使用会将 Token 打进浏览器包的 `VITE_GH_TOKEN`。
+- 开始工作先查看 git status，保留已有改动及未跟踪的历史文章资料；完成后说明验证结果。
