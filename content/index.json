@@ -72,7 +72,7 @@
       "id": "20260921-regex-real-world",
       "slug": "20260921-regex-real-world",
       "title": "啥是正则表达式？先会认文本形状",
-      "description": "用随访文件名筛选、病程发热词、科室标签替换三块例子认识正则：pattern 是什么、怎么匹配，提取字段留给下一篇。",
+      "description": "用随访文件名筛选、病程发热词、检验标签改写三块例子认识正则：pattern 是什么、怎么匹配，提取字段留给下一篇。",
       "date": "2026-09-21",
       "category": "R 基础",
       "categorySlug": "r-base",
@@ -104,5 +104,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-10-05T02:57:42.121Z"
+  "updatedAt": "2026-10-05T03:02:58.379Z"
 }
