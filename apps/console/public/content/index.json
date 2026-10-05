@@ -15,7 +15,7 @@
         "疼痛评分"
       ],
       "qmd": "posts/20261005-friedman-repeated-scores/20261005-R语言同一批人测了三次分数还不正态怎么比.qmd",
-      "md": null
+      "md": "posts/20261005-friedman-repeated-scores/20261005-R语言同一批人测了三次分数还不正态怎么比.md"
     },
     {
       "id": "20260927-wide-to-long",
@@ -38,7 +38,7 @@
       "id": "20260927-regex-extract-data",
       "slug": "20260927-regex-extract-data",
       "title": "如何用正则从字符串里提取数据",
-      "description": "从备注里取出命中的关键词、从文件名取出地区和日期、从规则串里取出字段——三种常做的字符串提取。",
+      "description": "从病程备注取出命中的发热词、从随访文件名取出地区和日期、从规则串里取出字段——三种常做的字符串提取。",
       "date": "2026-09-27",
       "category": "R 基础",
       "categorySlug": "r-base",
@@ -72,7 +72,7 @@
       "id": "20260921-regex-real-world",
       "slug": "20260921-regex-real-world",
       "title": "啥是正则表达式？先会认文本形状",
-      "description": "用文件名筛选、备注关键词、简单替换三块日常例子认识正则：pattern 是什么、怎么匹配，提取字段留给下一篇。",
+      "description": "用随访文件名筛选、病程发热词、科室标签替换三块例子认识正则：pattern 是什么、怎么匹配，提取字段留给下一篇。",
       "date": "2026-09-21",
       "category": "R 基础",
       "categorySlug": "r-base",
@@ -104,5 +104,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-10-05T01:11:48.227Z"
+  "updatedAt": "2026-10-05T02:55:25.434Z"
 }
