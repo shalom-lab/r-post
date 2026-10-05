@@ -73,7 +73,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add content/posts content/index.json
+          node scripts/sync-public.mjs
+          git add content/posts content/index.json apps/console/public
           git diff --staged --quiet && echo "No render changes" && exit 0
           git commit -m "content: render QMD articles"
+          git pull --rebase origin master
           git push
