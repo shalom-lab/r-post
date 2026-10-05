@@ -89,7 +89,7 @@
       "id": "20260921-r-save-five-methods",
       "slug": "20260921-r-save-five-methods",
       "title": "分析做到一半如何存临时数据？",
-      "description": "分析中途要落盘时，RDS、Excel、CSV、save()、save.image() 各适合什么场景，用 mtcars 短示例过一遍。",
+      "description": "分析做到一半要存数据时，RDS、Excel、CSV、save()、save.image() 各适合什么场景，用 mtcars 短示例过一遍。",
       "date": "2026-09-21",
       "category": "R 基础",
       "categorySlug": "r-base",

@@ -50,7 +50,7 @@
   },
   "postContentCheck": {
     "file": "post-content-check.md",
-    "title": "Post-content 检查（落盘前必做）",
+    "title": "Post-content 检查（入库前必做）",
     "description": "去 AI 味、常用场景/分镜核对；未通过不得写入 content/posts QMD",
     "required": true,
     "updatedAt": "2026-09-27T08:36:39.000Z"
