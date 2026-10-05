@@ -242,7 +242,7 @@
       "outline": {
         "workingTitle": "一百个 Excel 怎么一次读进来",
         "hook": "文件夹里忽然多出几十上百个 Excel，名字还各不相同。",
-        "dataset": "临时目录中用 writexl 生成的演示 xlsx；真活用业务文件夹路径。",
+        "dataset": "临时目录中用 writexl 生成的演示 xlsx；用到自己的数据时换成实际文件夹路径。",
         "sections": [
           {
             "heading": "古老办法：pattern + for",

@@ -160,9 +160,9 @@ pattern 描述形状；grepl 认与筛；括号 + sub 能抓住片段再拼。
 
 - 状态：已成稿
 - 分类：r-tidyverse
-- 成稿：[一百个 Excel 怎么一次读进来](../content/posts/20260927-batch-read-without-for/20260927-一百个Excel怎么一次读进来.qmd)
+- 成稿：[一百个 Excel 怎么一次读进来](../content/posts/20260927-batch-read-without-for/20260927-一百个Excel怎么一次读进来.md)
 - 创建：2026-09-27
-- 示例数据：临时目录中用 writexl 生成的演示 xlsx；真活用业务文件夹路径。
+- 示例数据：临时目录中用 writexl 生成的演示 xlsx；用到自己的数据时换成实际文件夹路径。
 
 ### 选题说明
 
@@ -183,7 +183,7 @@ for 能用；要省事就 map 收 list，或 map + list_rbind 并表。
 
 - 状态：已成稿
 - 分类：r-base
-- 成稿：[如何用正则从字符串里提取数据](../content/posts/20260927-regex-extract-data/20260927-如何用正则从字符串里提取数据.qmd)
+- 成稿：[如何用正则从字符串里提取数据](../content/posts/20260927-regex-extract-data/20260927-如何用正则从字符串里提取数据.md)
 - 创建：2026-09-27
 - 示例数据：文章内最小可复现文本与文件名；失败行写成 NA。
 
