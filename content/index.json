@@ -15,7 +15,7 @@
         "疼痛评分"
       ],
       "qmd": "posts/20261005-friedman-repeated-scores/20261005-R语言同一批人测了三次分数还不正态怎么比.qmd",
-      "md": null
+      "md": "posts/20261005-friedman-repeated-scores/20261005-R语言同一批人测了三次分数还不正态怎么比.md"
     },
     {
       "id": "20260927-wide-to-long",
@@ -104,5 +104,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-10-05T01:11:48.227Z"
+  "updatedAt": "2026-10-05T01:13:58.437Z"
 }
