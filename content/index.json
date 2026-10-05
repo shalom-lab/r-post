@@ -1,6 +1,23 @@
 {
   "articles": [
     {
+      "id": "20261005-friedman-repeated-scores",
+      "slug": "20261005-friedman-repeated-scores",
+      "title": "R语言：同一批人测了三次，分数还不正态，怎么比？",
+      "description": "术前、术后1天、术后7天的疼痛分偏态，又是同一批人：用 friedman.test()，再做两两 Wilcoxon 并校正 p 值。",
+      "date": "2026-10-05",
+      "category": "R 统计",
+      "categorySlug": "r-stats",
+      "tags": [
+        "Friedman检验",
+        "重复测量",
+        "Wilcoxon",
+        "疼痛评分"
+      ],
+      "qmd": "posts/20261005-friedman-repeated-scores/20261005-R语言同一批人测了三次分数还不正态怎么比.qmd",
+      "md": null
+    },
+    {
       "id": "20260927-wide-to-long",
       "slug": "20260927-wide-to-long",
       "title": "R 语言里随访宽表怎么拧成长表",
@@ -87,5 +104,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-09-28T04:39:09.505Z"
+  "updatedAt": "2026-10-05T01:11:48.227Z"
 }
