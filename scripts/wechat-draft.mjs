@@ -5,6 +5,7 @@ import path from "node:path";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 import { getWeChatHtml } from "markmuse-wechat/converter";
+import { bodyMarkdown } from "./lib/wechat-body-markdown.mjs";
 import {
   appendDraft,
   chunkIssues,
@@ -89,12 +90,6 @@ function mimeToExt(mime) {
   if (mime.includes("webp")) return { ext: "webp", mime: "image/webp" };
   if (mime.includes("bmp")) return { ext: "bmp", mime: "image/bmp" };
   return { ext: "png", mime: "image/png" };
-}
-
-function bodyMarkdown(markdown) {
-  let text = markdown.replace(/^\uFEFF/, "").replace(/^---\s*\n[\s\S]*?\n---\s*\n/, "");
-  text = text.replace(/^#\s+[^\n]+\n+/, "");
-  return `${text.trim()}\n`;
 }
 
 async function wechatJson(url, options = {}) {

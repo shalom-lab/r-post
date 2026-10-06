@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { bodyMarkdown } from "./lib/wechat-body-markdown.mjs";
 import {
   addItem,
   appendDraft,
@@ -11,6 +12,31 @@ import {
   removeItem,
   removeItems,
 } from "./lib/wechat-queue.mjs";
+
+test("wechat body drops title, RPost author, and date byline", () => {
+  const md = [
+    "# 分析做到一半如何存临时数据？",
+    "RPost",
+    "2026-09-21",
+    "",
+    "分析做到一半：表洗完了要留着明天接着跑。",
+    "",
+  ].join("\n");
+  assert.equal(
+    bodyMarkdown(md),
+    "分析做到一半：表洗完了要留着明天接着跑。\n",
+  );
+});
+
+test("wechat body keeps real opening paragraphs that are not bylines", () => {
+  const md = [
+    "# 标题",
+    "",
+    "清洗病历备注时，总有一列文字看着乱。",
+    "",
+  ].join("\n");
+  assert.equal(bodyMarkdown(md), "清洗病历备注时，总有一列文字看着乱。\n");
+});
 
 test("queue keeps first-seen id order and drops duplicates", () => {
   const queue = normalizeQueue({

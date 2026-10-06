@@ -27,6 +27,8 @@ GitHub：仓库 → Settings → Secrets and variables → Actions。网页上�
 
 `wechat/wechat_draft.json` 只记 **RPost 自动 `draft/add` 成功** 的稿（`source: "rpost"`、`media_id`、篇目 id、当时标题）。不拉微信草稿箱列表，你在后台手建的草稿不会进这份账。失败不写。不是定时群发记录。
 
+上传前会从已渲染 Markdown 去掉一级标题，以及标题下的 `RPost` / `YYYY-MM-DD` 两行（Quarto 留下的作者与日期）。微信草稿自带署名和日期，正文开头重复会冲突。
+
 ## 网页阅读用的 GitHub Token
 
 这不是微信密钥。连在浏览器里，只用来验证你是谁、改排期文件。
