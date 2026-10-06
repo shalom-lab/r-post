@@ -1,21 +1,23 @@
 #!/usr/bin/env node
-/** 把 wechat/queue.json 里待传文章转成公众号 HTML，并上传为一条微信草稿。 */
+/** 只把本流水线 draft/add 成功的稿记入 wechat_draft.json，不列举公众号后台手建草稿。 */
 import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 import { getWeChatHtml } from "markmuse-wechat/converter";
 import {
-  markDrafted,
-  markError,
-  pendingItems,
-  normalizeQueue,
-  serializeQueue,
+  appendDraft,
   chunkIssues,
+  normalizeDraftLog,
+  normalizeQueue,
+  removeItems,
+  serializeDraftLog,
+  serializeQueue,
 } from "./lib/wechat-queue.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const queuePath = path.join(root, "wechat", "queue.json");
+const draftLogPath = path.join(root, "wechat", "wechat_draft.json");
 const indexPath = path.join(root, "content", "index.json");
 
 function loadEnvFile(filePath) {
@@ -131,7 +133,7 @@ function loadPublishConfig() {
   const file = path.join(root, "wechat", "config.json");
   const raw = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")) : {};
   return {
-    tokenUrl: String(process.env.WECHAT_TOKEN_URL || raw.tokenUrl || "http://127.0.0.1:8795").trim(),
+    tokenUrl: String(process.env.WECHAT_TOKEN_URL || "").trim(),
     appName: String(process.env.WECHAT_APP_NAME || raw.appName || "").trim(),
     author: String(raw.author || "").trim(),
     articlesPerDraft: Math.min(2, Math.max(1, Number(raw.articlesPerDraft) || 2)),
@@ -220,18 +222,21 @@ async function convertArticle(article) {
 async function main() {
   const { tokenUrl, apiKey, appName, author, articlesPerDraft } = loadPublishConfig();
   if (!apiKey) throw new Error("请设置 WECHAT_API_KEY（wechat/.env 或 Actions secret），不要写进仓库。");
+  if (!tokenUrl) throw new Error("请设置 WECHAT_TOKEN_URL（wechat/.env 或 Actions secret），不要写进仓库。");
   if (!appName) throw new Error("请在 wechat/config.json 填写 appName（中控 apps.json 里的 name）。");
 
   let queue = normalizeQueue(JSON.parse(fs.readFileSync(queuePath, "utf8")));
-  const pending = pendingItems(queue);
-  if (!pending.length) {
+  let draftLog = normalizeDraftLog(
+    fs.existsSync(draftLogPath) ? JSON.parse(fs.readFileSync(draftLogPath, "utf8")) : {},
+  );
+  if (!queue.items.length) {
     console.log("没有待上传的公众号排期。");
     return;
   }
 
   const catalog = JSON.parse(fs.readFileSync(indexPath, "utf8"));
   const token = await accessToken(tokenUrl, apiKey, appName);
-  const issues = chunkIssues(pending, articlesPerDraft);
+  const issues = chunkIssues(queue.items, articlesPerDraft);
 
   for (const issue of issues) {
     const articles = issue.map((item) => {
@@ -240,41 +245,40 @@ async function main() {
       return article;
     });
     const ids = articles.map((article) => article.id);
-    try {
-      const news = [];
-      for (const article of articles) {
-        const raw = await convertArticle(article);
-        const withImages = await replaceImages(raw.html, raw.mdDir, token);
-        news.push({
-          article_type: "news",
-          title: article.title.slice(0, 64),
-          author,
-          digest: (article.description || article.title).slice(0, 120),
-          content: withImages.html,
-          content_source_url: "",
-          thumb_media_id: await uploadCover(token, withImages.cover),
-          need_open_comment: 0,
-          only_fans_can_comment: 0,
-        });
-      }
-      const created = await wechatJson(
-        `https://api.weixin.qq.com/cgi-bin/draft/add?access_token=${token}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ articles: news }),
-        },
-      );
-      if (!created.media_id) throw new Error("新建草稿后没有返回 media_id。");
-      queue = markDrafted(queue, ids, created.media_id);
-      fs.writeFileSync(queuePath, serializeQueue(queue), "utf8");
-      console.log(`已上传一期草稿（${ids.join("、")}）→ ${created.media_id}`);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      queue = markError(queue, ids, message);
-      fs.writeFileSync(queuePath, serializeQueue(queue), "utf8");
-      throw error;
+    const news = [];
+    for (const article of articles) {
+      const converted = await convertArticle(article);
+      const withImages = await replaceImages(converted.html, converted.mdDir, token);
+      news.push({
+        article_type: "news",
+        title: article.title.slice(0, 64),
+        author,
+        digest: (article.description || article.title).slice(0, 120),
+        content: withImages.html,
+        content_source_url: "",
+        thumb_media_id: await uploadCover(token, withImages.cover),
+        need_open_comment: 0,
+        only_fans_can_comment: 0,
+      });
     }
+    const created = await wechatJson(
+      `https://api.weixin.qq.com/cgi-bin/draft/add?access_token=${token}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ articles: news }),
+      },
+    );
+    if (!created.media_id) throw new Error("新建草稿后没有返回 media_id。");
+    draftLog = appendDraft(draftLog, {
+      mediaId: created.media_id,
+      ids,
+      titles: articles.map((article) => article.title),
+    });
+    queue = removeItems(queue, ids);
+    fs.writeFileSync(draftLogPath, serializeDraftLog(draftLog), "utf8");
+    fs.writeFileSync(queuePath, serializeQueue(queue), "utf8");
+    console.log(`已上传一期草稿（${ids.join("、")}）→ ${created.media_id}`);
   }
 }
 

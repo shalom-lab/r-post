@@ -1,6 +1,6 @@
 # RPost 工作流
 
-- 网站阅读须验证 Token 与允许的 GitHub 账号，验证通过后才加载静态内容。文章清单与正文仍是静态文件；公众号排期写在 `wechat/queue.json`，由获准账号用 Token 提交。
+- 网站阅读须验证 Token 与允许的 GitHub 账号，验证通过后才加载静态内容。文章清单与正文仍是静态文件；公众号待传排期写在 `wechat/queue.json`，已上传草稿写在 `wechat/wechat_draft.json`。
 
 ## 主线
 
@@ -19,7 +19,7 @@
 - 文章：`content/posts/` 下按 `YYYYMMDD-ascii-slug` 目录；QMD/MD 文件名为 `YYYYMMDD-中文标题`；清单里的 `id` 为完整文件夹名。
 - 风格：`prompt-rules/index.json` 指向当前选题/写作 prompt；场景带入见 `writing-style.md`；入库前检查见 `post-content-check.md`（必做）。
 - 分类只能是：`r-plot`、`r-stats`、`r-base`、`r-tidyverse`、`r-code-management`。
-- 不建永久图片目录；写作主线不添加调度、排名、自动日更字段。公众号推文顺序只记在 `wechat/queue.json`。
+- 不建永久图片目录；写作主线不添加调度、排名、自动日更字段。待传顺序在 `wechat/queue.json`，已上传草稿在 `wechat/wechat_draft.json`。
 - 从候选写成文时，回写该条的 `article` 元数据，再刷新选题 Markdown。
 
 ## 对话快捷语
@@ -31,9 +31,8 @@
 
 ## 可选入口（非默认）
 
-- 对话或直接改仓库文件：默认路径。
-- `node scripts/rpost.mjs`：本地脚本入口，同样写上述文件。
-- Actions 默认保留 `render.yml`（渲染）与 `pages.yml`（部署）；选题、写作通过对话或本地脚本完成。公众号草稿由 `wechat-draft.yml` 或 `npm run wechat:draft` 处理。
+- 对话或直接改仓库文件：默认路径。选题、写作不再走 DeepSeek 本地脚本。
+- Actions 默认保留 `render.yml`（渲染）与 `pages.yml`（部署）。公众号草稿由 `wechat-draft.yml` 或 `npm run wechat:draft` 处理。
 
 ## 提交前依赖检查
 
@@ -47,7 +46,7 @@
 - 前端改动运行 `npm run build` 和 `npm run lint -w apps/console`；纯文档改动核对内容与路径即可，阅读权限改动还需运行 `npm run test:access`，排期改动还需运行 `npm run test:queue`。
 - 构建产物位于根目录 `dist/`，生产 base 为 `/r-post/`；修改路由时同步检查 `vite.config.ts` 中供 Pages 直接访问的静态入口。
 - 不直接维护 `apps/console/public/` 的同步副本，不提交真实凭据或 `.env`，不使用会将 Token 打进浏览器包的 `VITE_GH_TOKEN`。
-- 开始工作先查看 git status，保留已有改动及未跟踪的历史文章资料；完成后说明验证结果。
+- 开始工作先查看 git status，保留已有改动；完成后说明验证结果。
 
 ## 网页阅读权限
 
@@ -59,9 +58,9 @@
 
 ## 公众号排期
 
-- 源文件：`wechat/queue.json`。只记文章文件夹 `id` 和上传状态，顺序即篇序。
+- 源文件：`wechat/queue.json` 只记待传 `id` 和顺序；`wechat/wechat_draft.json` 只追加本流水线 `draft/add` 成功的稿，不收录后台手建草稿。失败不写。
 - 网页主页加入/移出；`/queue` 调整顺序。保存通过 GitHub Contents API 提交，不改 `content/index.json`。
 - 上传草稿用已渲染 Markdown，经 `markmuse-wechat` 转 HTML，再向 token 中控取 `access_token`，按顺序每两篇调用一次微信 `draft/add`。末尾剩一篇则单独一期。
-- 中控账号名、作者、默认地址写在 `wechat/config.json`。唯一密钥是 `WECHAT_API_KEY`（`wechat/.env` 或 Actions secret）。Actions 若要连非本机中控，再加 secret `WECHAT_TOKEN_URL`。
-- 本地：复制 `wechat/env.example` 为 `wechat/.env`，中控可跑在本机，然后 `npm run wechat:draft`。中控只监听本机时不要走 Actions。
+- 中控账号名、作者写在 `wechat/config.json`。`WECHAT_API_KEY` 和 `WECHAT_TOKEN_URL` 只放 `wechat/.env` 或 Actions secret，公开仓库不要提交地址。条目清单见 `wechat/tips.md`。
+- 本地：复制 `wechat/env.example` 为 `wechat/.env`，中控可跑在本机，然后 `npm run wechat:draft`。中控只监听本机时不要走网页上的上传按钮。
 - 定时群发不在本仓库处理。不把微信密钥放进前端或 `VITE_*`。

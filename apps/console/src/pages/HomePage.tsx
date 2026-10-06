@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { type Article, fetchIndex } from "../lib/content";
-import { addToQueue, fetchQueueFile, removeFromQueue } from "../lib/github-queue";
-import { type WechatQueue, emptyQueue } from "../lib/wechat-queue";
+import { addToQueue, fetchDraftLog, fetchQueueFile, removeFromQueue } from "../lib/github-queue";
+import { draftedIdSet, emptyDraftLog, emptyQueue, type WechatDraftLog, type WechatQueue } from "../lib/wechat-queue";
 
 export default function HomePage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [queue, setQueue] = useState<WechatQueue>(emptyQueue);
+  const [draftLog, setDraftLog] = useState<WechatDraftLog>(emptyDraftLog);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(true);
@@ -24,8 +25,11 @@ export default function HomePage() {
         if (!cancelled) setError(reason instanceof Error ? reason.message : "无法加载文章。");
       }
       try {
-        const record = await fetchQueueFile();
-        if (!cancelled) setQueue(record.queue);
+        const [record, drafts] = await Promise.all([fetchQueueFile(), fetchDraftLog()]);
+        if (!cancelled) {
+          setQueue(record.queue);
+          setDraftLog(drafts);
+        }
       } catch (reason) {
         if (!cancelled) setError(reason instanceof Error ? reason.message : "无法读取排期。");
       } finally {
@@ -36,6 +40,7 @@ export default function HomePage() {
   }, []);
 
   const queued = useMemo(() => new Map(queue.items.map((item) => [item.id, item])), [queue]);
+  const drafted = useMemo(() => draftedIdSet(draftLog), [draftLog]);
 
   const categories = useMemo(() => {
     const unique = new Map<string, string>();
@@ -116,9 +121,8 @@ export default function HomePage() {
                   <div className="article-meta">
                     {article.category && <span>{article.category}</span>}
                     {article.md ? <span className="source-badge soft">已渲染 MD</span> : <span className="source-muted">仅 QMD</span>}
-                    {queuedItem?.status === "drafted" && <span className="source-badge">已进草稿箱</span>}
-                    {queuedItem?.status === "queued" && <span className="source-badge soft">排期中</span>}
-                    {queuedItem?.status === "error" && <span className="source-muted">上次上传失败</span>}
+                    {queuedItem && <span className="source-badge soft">排期中</span>}
+                    {!queuedItem && drafted.has(article.id) && <span className="source-badge">已进草稿箱</span>}
                     {article.tags.slice(0, 3).map((tag) => <span key={tag}>#{tag}</span>)}
                   </div>
                 </div>

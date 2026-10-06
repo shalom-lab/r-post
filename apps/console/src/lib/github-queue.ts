@@ -6,18 +6,21 @@ import {
 } from "./github";
 import {
   addItem,
+  emptyDraftLog,
   emptyQueue,
   moveItem,
+  normalizeDraftLog,
   normalizeQueue,
-  pendingItems,
   removeItem,
   serializeQueue,
+  type WechatDraftLog,
   type WechatQueue,
 } from "./wechat-queue";
 
 const API = "https://api.github.com";
 const VERSION = "2022-11-28";
 export const QUEUE_PATH = "wechat/queue.json";
+export const DRAFT_LOG_PATH = "wechat/wechat_draft.json";
 export const DRAFT_WORKFLOW = "wechat-draft.yml";
 
 function ghHeaders(pat: string): HeadersInit {
@@ -77,17 +80,22 @@ export async function repoContext(settings?: AppSettings) {
   };
 }
 
+async function fetchRepoJson(filePath: string, settings?: AppSettings) {
+  const { owner, repo, pat, branch } = await repoContext(settings);
+  const { response, data } = await ghJson(
+    `${API}/repos/${owner}/${repo}/contents/${filePath}?ref=${encodeURIComponent(branch)}`,
+    pat,
+  );
+  return { response, data };
+}
+
 export type QueueRecord = {
   queue: WechatQueue;
   sha: string | null;
 };
 
 export async function fetchQueueFile(settings?: AppSettings): Promise<QueueRecord> {
-  const { owner, repo, pat, branch } = await repoContext(settings);
-  const { response, data } = await ghJson(
-    `${API}/repos/${owner}/${repo}/contents/${QUEUE_PATH}?ref=${encodeURIComponent(branch)}`,
-    pat,
-  );
+  const { response, data } = await fetchRepoJson(QUEUE_PATH, settings);
   if (response.status === 404) return { queue: emptyQueue(), sha: null };
   if (!response.ok) throw new Error(`无法读取公众号排期（${response.status}）。`);
   const text = decodeBase64(String(data.content || ""));
@@ -95,6 +103,14 @@ export async function fetchQueueFile(settings?: AppSettings): Promise<QueueRecor
     queue: normalizeQueue(JSON.parse(text || "{}")),
     sha: String(data.sha || "") || null,
   };
+}
+
+export async function fetchDraftLog(settings?: AppSettings): Promise<WechatDraftLog> {
+  const { response, data } = await fetchRepoJson(DRAFT_LOG_PATH, settings);
+  if (response.status === 404) return emptyDraftLog();
+  if (!response.ok) throw new Error(`无法读取草稿记录（${response.status}）。`);
+  const text = decodeBase64(String(data.content || ""));
+  return normalizeDraftLog(JSON.parse(text || "{}"));
 }
 
 export async function saveQueueFile(
@@ -152,7 +168,7 @@ export async function moveInQueue(id: string, direction: "up" | "down") {
 
 export async function dispatchDraftUpload() {
   const { owner, repo, pat, branch } = await repoContext();
-  const pending = pendingItems((await fetchQueueFile()).queue);
+  const pending = (await fetchQueueFile()).queue.items;
   if (!pending.length) throw new Error("没有待上传的排期。");
   const { response, data } = await ghJson(
     `${API}/repos/${owner}/${repo}/actions/workflows/${DRAFT_WORKFLOW}/dispatches`,
@@ -165,5 +181,3 @@ export async function dispatchDraftUpload() {
   }
   throw new Error(data.message || `无法触发上传草稿（${response.status}）。`);
 }
-
-export { pendingItems };

@@ -12,5 +12,5 @@ alwaysApply: true
 - Preserve explicit user headings, order, examples, and output requirements.
 - When a candidate becomes an article, update its `article` metadata and regenerate `topics/index.md`.
 - Never create a permanent images folder; rendered Markdown embeds images.
-- Do not add scheduling, rank, or automatic daily writing fields to topics or article manifests. WeChat lineup lives only in `wechat/queue.json`.
+- Do not add scheduling, rank, or automatic daily writing fields to topics or article manifests. WeChat lineup lives in `wechat/queue.json`; uploaded drafts live in `wechat/wechat_draft.json`.
 - Front stages need human approval; post-QMD render is automated. Follow `AGENTS.md`.

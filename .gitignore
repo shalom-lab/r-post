@@ -10,6 +10,4 @@ dist/
 .Rhistory
 .RData
 apps/console/dist/
-content/.last-generate.json
-content/.last-pick.json
 .drafts/
