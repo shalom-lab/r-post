@@ -37,6 +37,7 @@ jobs:
             any::purrr
             any::dplyr
             any::tidyr
+            any::broom
 
       - uses: quarto-dev/quarto-actions/setup@v2
 

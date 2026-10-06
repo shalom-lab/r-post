@@ -1,0 +1,100 @@
+---
+title: "R语言按分组各跑一遍分析：每家医院一个回归"
+description: "四家医院各做一次住院天数对年龄的回归。复制改 filter 容易漏改；split 或 nest + map 写一次，再用 broom::tidy 收成一张表。"
+author: "RPost"
+date: "2026-10-06"
+category: "R tidyverse"
+category-slug: "r-tidyverse"
+tags: ["分组回归", "purrr", "broom", "nest"]
+format: gfm
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+四家医院在同一张表里：医院、年龄（岁）、住院天数（天）。要每家单独做 `lm(住院天数 ~ 年龄)`，看年龄每大 1 岁，天数大约多多少。下面 24 行是模拟数据，每家 6 人。县医院 6 个人年龄都是 60，这一家的年龄斜率会是空的。
+
+```{r}
+stay <- data.frame(
+  hospital = factor(
+    rep(c("市一", "市二", "市三", "县医院"), each = 6),
+    levels = c("市一", "市二", "市三", "县医院")
+  ),
+  age = c(
+    40, 50, 60, 70, 45, 55,
+    42, 58, 63, 71, 49, 66,
+    38, 47, 52, 68, 74, 59,
+    60, 60, 60, 60, 60, 60
+  ),
+  los = c(
+    5.3, 5.5, 7.6, 7.5, 6.1, 6.5,
+    4.8, 5.3, 5.9, 6.3, 5.3, 6.5,
+    5.7, 6.4, 7.2, 8.7, 10.8, 8.6,
+    6.2, 7.1, 5.4, 8.0, 6.8, 7.5
+  )
+)
+table(stay$hospital)
+```
+
+## 复制粘贴改医院名
+
+先把市一抄出来。下一行本该改成市二，名字忘了换。第三行才是改对的市二。
+
+```{r}
+coef(lm(los ~ age, data = subset(stay, hospital == "市一")))[["age"]]
+coef(lm(los ~ age, data = subset(stay, hospital == "市一")))[["age"]]
+coef(lm(los ~ age, data = subset(stay, hospital == "市二")))[["age"]]
+```
+
+前两行都是 0.08，市二实际是 0.05584197。漏改不会报错。这两个数都是斜率：年龄每大 1 岁，住院天数多多少天。市一多 0.08 天，市二多 0.05584197 天。斜率只描述这张模拟表上年龄和天数一起变，不能当成年龄造成住院变长。
+
+## 用 split 每家跑一次
+
+`split` 按医院拆成列表，`lapply` 对每一份跑同一个回归。医院的顺序跟上面因子水平一致。
+
+```{r}
+unlist(lapply(split(stay, stay$hospital), function(d) {
+  coef(lm(los ~ age, data = d))[["age"]]
+}))
+```
+
+市一 0.08000000，市二 0.05584197，市三 0.13350669，县医院是 NA。单位都是「年龄大 1 岁，住院天数多几天」。市三的 0.13350669 大约是 0.134 天。县医院年龄没有高低，`lm` 仍能跑完，年龄这一项是 NA，这家医院还留在结果里。
+
+## 收成一张系数表
+
+依赖 `dplyr`、`tidyr`、`purrr`、`broom`。`nest` 之后每一行是一家医院，`map` 对小表做回归，`tidy` 把系数展开，再只留年龄项。
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(broom)
+
+age_tab <- stay |>
+  group_by(hospital) |>
+  nest() |>
+  mutate(
+    fit = map(data, function(d) lm(los ~ age, data = d)),
+    coef = map(fit, tidy)
+  ) |>
+  select(hospital, coef) |>
+  unnest(coef) |>
+  filter(term == "age")
+age_tab
+```
+
+四行都在。`estimate` 是斜率，和上面那一串是同一个数，表上收成 0.08、0.0558、0.134，县医院仍是 NA。`std.error` 是这 6 个人里这条斜率的标准误，三家是 0.0211、0.0115、0.0177。`statistic` 是估计除以标准误得到的 t，三家是 3.80、4.87、7.54。这是按完整位数除的，用表上印短的 0.08 和 0.0211 手除，对不齐 3.80。`p.value` 是在「真实斜率为 0」时，|t| 至少这么大的概率，三家是 0.0191、0.00825、0.00166。每家只有 6 人，这些 p 只描述这张表。
+
+县医院这一行还在。若接着把 NA 行丢掉，就少一家：
+
+```{r}
+nrow(age_tab)
+nrow(na.omit(age_tab))
+```
+
+4 变 3。`na.omit` 拿掉估计为 NA 的县医院。再对剩下的斜率求平均，平均的是三家，程序不会说少了一家。
+
+很多个 Excel 各读一遍，也是「写一次、对每一份跑」，见 [一百个 Excel 怎么一次读进来](../20260927-batch-read-without-for/20260927-一百个Excel怎么一次读进来.qmd)。
+
+回归写一次，按医院拆开跑。跑出 NA 的那家留在表里，汇总前先数一数有没有少医院。
