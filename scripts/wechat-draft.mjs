@@ -15,11 +15,13 @@ import {
   serializeDraftLog,
   serializeQueue,
 } from "./lib/wechat-queue.mjs";
+import { DEFAULT_THEME, loadThemeCss } from "./lib/wechat-theme-css.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const queuePath = path.join(root, "wechat", "queue.json");
 const draftLogPath = path.join(root, "wechat", "wechat_draft.json");
 const indexPath = path.join(root, "content", "index.json");
+const mdcssDir = path.join(root, "mdcss");
 
 function loadEnvFile(filePath) {
   if (!fs.existsSync(filePath)) return;
@@ -132,6 +134,7 @@ function loadPublishConfig() {
     appName: String(process.env.WECHAT_APP_NAME || raw.appName || "").trim(),
     author: String(raw.author || "").trim(),
     articlesPerDraft: Math.min(2, Math.max(1, Number(raw.articlesPerDraft) || 2)),
+    theme: String(raw.theme || DEFAULT_THEME).trim() || DEFAULT_THEME,
     apiKey: String(process.env.WECHAT_API_KEY || "").trim(),
   };
 }
@@ -205,17 +208,18 @@ async function uploadCover(token, cover) {
   return uploaded.media_id;
 }
 
-async function convertArticle(article) {
+async function convertArticle(article, customCss) {
   if (!article.md) throw new Error(`${article.id} 还没有渲染出 Markdown，不能上传草稿。`);
   const mdPath = path.join(root, "content", article.md);
   if (!fs.existsSync(mdPath)) throw new Error(`找不到 ${article.md}`);
   const markdown = bodyMarkdown(fs.readFileSync(mdPath, "utf8"));
-  const html = await getWeChatHtml(markdown);
+  // Node 侧 getWeChatHtml 内部走 convertDefault(markdown, customCss)，会与默认样式合并
+  const html = await getWeChatHtml(markdown, customCss);
   return { html, mdDir: path.dirname(mdPath) };
 }
 
 async function main() {
-  const { tokenUrl, apiKey, appName, author, articlesPerDraft } = loadPublishConfig();
+  const { tokenUrl, apiKey, appName, author, articlesPerDraft, theme } = loadPublishConfig();
   if (!apiKey) throw new Error("请设置 WECHAT_API_KEY（wechat/.env 或 Actions secret），不要写进仓库。");
   if (!tokenUrl) throw new Error("请设置 WECHAT_TOKEN_URL（wechat/.env 或 Actions secret），不要写进仓库。");
   if (!appName) throw new Error("请在 wechat/config.json 填写 appName（中控 apps.json 里的 name）。");
@@ -229,6 +233,7 @@ async function main() {
     return;
   }
 
+  const customCss = loadThemeCss(mdcssDir, theme);
   const catalog = JSON.parse(fs.readFileSync(indexPath, "utf8"));
   const token = await accessToken(tokenUrl, apiKey, appName);
   const issues = chunkIssues(queue.items, articlesPerDraft);
@@ -242,7 +247,7 @@ async function main() {
     const ids = articles.map((article) => article.id);
     const news = [];
     for (const article of articles) {
-      const converted = await convertArticle(article);
+      const converted = await convertArticle(article, customCss);
       const withImages = await replaceImages(converted.html, converted.mdDir, token);
       news.push({
         article_type: "news",

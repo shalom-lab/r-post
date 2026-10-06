@@ -22,6 +22,7 @@ GitHub：仓库 → Settings → Secrets and variables → Actions。网页上�
 | `appName` | 中控 `apps` 里那条的 `name`，例如 `mp_tumei`。对应请求路径 `/access_token/mp_tumei`。 |
 | `author` | 微信草稿署名。空着就不署名。不是 secret。 |
 | `articlesPerDraft` | 一期几篇。现在是 `2`，脚本还会卡在最多 2 篇。 |
+| `theme` | 正文样式主题名，对应 `mdcss/<主题名>.css`。默认 `前端之巅`。上传时作为 `customCss` 传给 `getWeChatHtml`（与 markmuse 默认样式合并）。 |
 
 `wechat/queue.json` 只是待传排期：文章 id 和顺序。网页主页点「加入排期」写这里。上传成功后会从这里拿掉。
 
