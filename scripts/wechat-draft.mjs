@@ -21,7 +21,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const queuePath = path.join(root, "wechat", "queue.json");
 const draftLogPath = path.join(root, "wechat", "wechat_draft.json");
 const indexPath = path.join(root, "content", "index.json");
-const mdcssDir = path.join(root, "mdcss");
+const themesDir = path.join(root, "custom-md-css");
 
 function loadEnvFile(filePath) {
   if (!fs.existsSync(filePath)) return;
@@ -213,7 +213,7 @@ async function convertArticle(article, customCss) {
   const mdPath = path.join(root, "content", article.md);
   if (!fs.existsSync(mdPath)) throw new Error(`找不到 ${article.md}`);
   const markdown = bodyMarkdown(fs.readFileSync(mdPath, "utf8"));
-  // Node 侧 getWeChatHtml 内部走 convertDefault(markdown, customCss)，会与默认样式合并
+  // Node 推荐 API：getWeChatHtml(markdown, customCss)，会与默认样式合并
   const html = await getWeChatHtml(markdown, customCss);
   return { html, mdDir: path.dirname(mdPath) };
 }
@@ -233,7 +233,7 @@ async function main() {
     return;
   }
 
-  const customCss = loadThemeCss(mdcssDir, theme);
+  const customCss = loadThemeCss(themesDir, theme);
   const catalog = JSON.parse(fs.readFileSync(indexPath, "utf8"));
   const token = await accessToken(tokenUrl, apiKey, appName);
   const issues = chunkIssues(queue.items, articlesPerDraft);

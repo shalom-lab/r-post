@@ -17,7 +17,7 @@ import {
 import { DEFAULT_THEME, loadThemeCss } from "./lib/wechat-theme-css.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const mdcssDir = path.join(root, "mdcss");
+const themesDir = path.join(root, "custom-md-css");
 
 test("wechat body drops title, RPost author, and date byline", () => {
   const md = [
@@ -44,15 +44,15 @@ test("wechat body keeps real opening paragraphs that are not bylines", () => {
   assert.equal(bodyMarkdown(md), "清洗病历备注时，总有一列文字看着乱。\n");
 });
 
-test("default mdcss theme loads 前端之巅 as customCss", () => {
-  const css = loadThemeCss(mdcssDir, DEFAULT_THEME);
+test("default custom-md-css theme loads 前端之巅 as customCss", () => {
+  const css = loadThemeCss(themesDir, DEFAULT_THEME);
   assert.match(css, /\/\* 前端之巅 \*\//);
   assert.match(css, /#markmuse\s*\{/);
   assert.match(css, /#markmuse h2/);
 });
 
-test("missing mdcss theme throws a clear error", () => {
-  assert.throws(() => loadThemeCss(mdcssDir, "不存在的主题"), /找不到主题样式/);
+test("missing custom-md-css theme throws a clear error", () => {
+  assert.throws(() => loadThemeCss(themesDir, "不存在的主题"), /找不到主题样式/);
 });
 
 test("queue keeps first-seen id order and drops duplicates", () => {

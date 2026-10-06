@@ -61,7 +61,7 @@
 - 源文件：`wechat/queue.json` 只记待传 `id` 和顺序；`wechat/wechat_draft.json` 只追加本流水线 `draft/add` 成功的稿，不收录后台手建草稿。失败不写。
 - 网页主页加入/移出；`/queue` 调整顺序。保存通过 GitHub Contents API 提交，不改 `content/index.json`。
 - 上传草稿用已渲染 Markdown，经 `markmuse-wechat` 转 HTML，再向 token 中控取 `access_token`，按顺序每两篇调用一次微信 `draft/add`。末尾剩一篇则单独一期。正文会去掉一级标题和标题下的 `RPost` / 日期行，避免和微信草稿自带的署名、日期冲突。
-- 正文主题 CSS 放在 `mdcss/<主题名>.css`；`wechat/config.json` 的 `theme` 选定主题（默认 `前端之巅`）。上传时读入为 `customCss`，调用 `getWeChatHtml(markdown, customCss)`（内部 `convertDefault`，与默认样式合并）。
+- 正文主题 CSS 放在 `custom-md-css/<主题名>.css`；`wechat/config.json` 的 `theme` 选定主题（默认 `前端之巅`）。上传时读入为 `customCss`，走 Node API：`getWeChatHtml(markdown, customCss)`（与默认样式合并）。
 - 中控账号名、作者写在 `wechat/config.json`。`WECHAT_API_KEY` 和 `WECHAT_TOKEN_URL` 只放 `wechat/.env` 或 Actions secret，公开仓库不要提交地址。条目清单见 `wechat/tips.md`。
 - 本地：复制 `wechat/env.example` 为 `wechat/.env`，中控可跑在本机，然后 `npm run wechat:draft`。中控只监听本机时不要走网页上的上传按钮。
 - 定时群发不在本仓库处理。不把微信密钥放进前端或 `VITE_*`。
