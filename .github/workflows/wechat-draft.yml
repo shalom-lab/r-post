@@ -1,0 +1,34 @@
+name: Upload WeChat drafts
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-draft
+  cancel-in-progress: false
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run wechat:draft
+        env:
+          WECHAT_API_KEY: ${{ secrets.WECHAT_API_KEY }}
+          WECHAT_TOKEN_URL: ${{ secrets.WECHAT_TOKEN_URL }}
+      - name: Record draft media ids
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add wechat/queue.json
+          git diff --staged --quiet || git commit -m "记录已上传的公众号草稿"
+          git push

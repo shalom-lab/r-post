@@ -20,6 +20,7 @@
 topics/index.json          # 选题真相
 prompt-rules/              # 选题与写作风格
 content/posts/YYYYMMDD-slug/  # 定稿 QMD（及渲染后的 Markdown）
+wechat/queue.json          # 公众号推文排期
 AGENTS.md                  # 人机共用操作说明
 ```
 
@@ -29,9 +30,10 @@ AGENTS.md                  # 人机共用操作说明
 ## 自动化
 
 - **默认**：`render.yml` 在 QMD 变更后渲染、嵌图、更新清单；`pages.yml` 部署只读站。
-- **可选**：`topic-generate.yml` / `post-generate.yml` 用 DeepSeek 生成选题或 QMD（可能直推默认分支，日常请先人工定夺）。
+- 选题和写作通过对话或本地脚本完成，不提供生成 Actions。
+- 公众号：主页选定后写入 `wechat/queue.json`。上传草稿用 `npm run wechat:draft`，或配置 `WECHAT_API_KEY` 后跑 `wechat-draft.yml`。中控若只在本机，用本地脚本。账号名和作者在 `wechat/config.json`，不是 secret。
 
-网页阅读不需要 Token。可选 BYOK 字段：`gh-repo-rpost`、`gh-token-rpost`。DeepSeek Key 仅作仓库 Secret `DEEPSEEK_API_KEY`。
+网页阅读需要 Token，并验证其对应账号是否在 `apps/console/src/access-policy.ts` 白名单内。通过后读取静态文章。此门槛不保护公开仓库或静态文件直链。浏览器配置字段：`gh-repo-rpost`、`gh-token-rpost`。可选本地生成脚本使用环境变量 `DEEPSEEK_API_KEY`，不进入网页。
 
 ```bash
 npm install

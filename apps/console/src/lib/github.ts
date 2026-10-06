@@ -1,17 +1,13 @@
+import { allowedGitHubUsers } from "../access-policy";
+
 export const LS_GH_REPO = "gh-repo-rpost";
 export const LS_GH_TOKEN = "gh-token-rpost";
 
-/** Optional DeepSeek workflow filenames (not the default writing path). */
-export const WORKFLOWS = {
-  topic: "topic-generate.yml",
-  post: "post-generate.yml",
-} as const;
+export const SETTINGS_CHANGED = "rpost-settings-changed";
 
 export type AppSettings = {
   repoFull: string;
   pat: string;
-  topicWorkflow: string;
-  postWorkflow: string;
 };
 
 export function parseRepoFull(raw: string): { owner: string; repo: string } {
@@ -58,84 +54,40 @@ export function loadSettings(): AppSettings {
   return {
     repoFull: (localStorage.getItem(LS_GH_REPO) || "").trim(),
     pat: localStorage.getItem(LS_GH_TOKEN) || "",
-    topicWorkflow: WORKFLOWS.topic,
-    postWorkflow: WORKFLOWS.post,
   };
 }
 
 export function saveSettings(s: AppSettings): void {
   localStorage.setItem(LS_GH_REPO, (s.repoFull || "").trim());
-  localStorage.setItem(LS_GH_TOKEN, s.pat || "");
+  localStorage.setItem(LS_GH_TOKEN, s.pat.trim());
+  window.dispatchEvent(new Event(SETTINGS_CHANGED));
 }
 
-function requireRepo(settings: AppSettings) {
-  const repoFull = (settings.repoFull || localStorage.getItem(LS_GH_REPO) || "").trim();
-  const pat = settings.pat || localStorage.getItem(LS_GH_TOKEN) || "";
-  if (!repoFull) {
-    throw new Error(
-      `请先设置仓库：localStorage.setItem("${LS_GH_REPO}", "owner/RPost")`,
-    );
-  }
-  if (!pat) {
-    throw new Error(
-      `请先设置 Token：localStorage.setItem("${LS_GH_TOKEN}", "ghp_xxx")`,
-    );
-  }
-  const { owner, repo } = parseRepoFull(repoFull);
-  return { owner, repo, pat, repoFull };
-}
-
-function ghHeaders(pat: string): HeadersInit {
-  return {
-    Accept: "application/vnd.github+json",
-    Authorization: `Bearer ${pat}`,
-    "X-GitHub-Api-Version": "2022-11-28",
-    "Content-Type": "application/json",
-  };
-}
-
-export async function resolveDefaultBranch(
-  settings: AppSettings,
-): Promise<string> {
-  const { owner, repo, pat } = requireRepo(settings);
-  const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-    headers: ghHeaders(pat),
-  });
-  if (!res.ok) {
-    throw new Error(`读取仓库失败 ${res.status}: ${await res.text()}`);
-  }
-  const data = (await res.json()) as { default_branch?: string };
-  return data.default_branch || "main";
-}
-
-export function actionsWorkflowUrl(
-  settings: AppSettings,
-  workflowFile: string,
-): string {
-  const { owner, repo } = parseRepoFull(
-    settings.repoFull || localStorage.getItem(LS_GH_REPO) || "",
-  );
-  return `https://github.com/${owner}/${repo}/actions/workflows/${workflowFile}`;
-}
-
-/** Probe whether the configured repo is readable (does not expose the token). */
+/** Verify identity against the site policy; never trust a saved success flag. */
 export async function probeGitHubAccess(
   settings?: AppSettings,
 ): Promise<{ ok: boolean; repoFull: string; message: string }> {
+  const s = settings || loadSettings();
   try {
-    const s = settings || loadSettings();
-    const { owner, repo, repoFull } = requireRepo(s);
-    const branch = await resolveDefaultBranch(s);
-    return {
-      ok: true,
-      repoFull,
-      message: `可读 ${owner}/${repo}（默认分支 ${branch}）`,
-    };
-  } catch (e) {
-    return {
-      ok: false,
-      repoFull: loadSettings().repoFull || "",
-      message: (e as Error).message,
-    };
+    const pat = s.pat.trim();
+    if (!pat) throw new Error("请先填写 GitHub Token。");
+    if (!allowedGitHubUsers.length) throw new Error("站点尚未配置允许阅读的 GitHub 账号。");
+    const response = await fetch("https://api.github.com/user", {
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${pat}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+      cache: "no-store",
+    });
+    if (response.status === 401) throw new Error("Token 无效或已失效，请重新填写。");
+    if (!response.ok) throw new Error(`暂时无法验证 GitHub 账号（${response.status}），请稍后重试。`);
+    const user = await response.json() as { login?: string };
+    if (!user.login || !allowedGitHubUsers.some(login => login.toLowerCase() === user.login!.toLowerCase())) {
+      throw new Error("此 GitHub 账号未获准阅读本站。");
+    }
+    return { ok: true, repoFull: s.repoFull, message: `已验证 ${user.login}，可以阅读文章。` };
+  } catch (error) {
+    return { ok: false, repoFull: s.repoFull, message: error instanceof Error ? error.message : "验证失败，请重试。" };
   }
 }

@@ -1,8 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   LS_GH_REPO,
   LS_GH_TOKEN,
-  actionsWorkflowUrl,
   loadSettings,
   probeGitHubAccess,
   saveSettings,
@@ -17,6 +17,7 @@ export default function SettingsPage() {
   async function testConnection() {
     setBusy(true);
     setMessage("");
+    setOk(false);
     try {
       saveSettings(settings);
       const result = await probeGitHubAccess(settings);
@@ -35,45 +36,38 @@ export default function SettingsPage() {
       <header>
         <span className="eyebrow">连接</span>
         <h1>GitHub 连接</h1>
-        <p>可选。Token 只保存在当前浏览器，用来打开仓库 Actions。</p>
+        <p>阅读需要获准账号的有效 GitHub Token。Token 只保存在当前浏览器。查看文章只做身份验证；改公众号排期还需要这个仓库的 Contents 写权限，触发上传草稿还需要 Actions 权限。</p>
       </header>
       <div className="connection-panel">
         <label>
           GitHub 仓库
           <input
+            disabled={busy}
             value={settings.repoFull}
-            onChange={(event) => setSettings({ ...settings, repoFull: event.target.value })}
+            onChange={(event) => { setOk(false); setSettings({ ...settings, repoFull: event.target.value }); }}
             placeholder="owner/repo"
           />
         </label>
         <label>
           GitHub Personal Access Token
           <input
+            disabled={busy}
             type="password"
             value={settings.pat}
-            onChange={(event) => setSettings({ ...settings, pat: event.target.value })}
+            onChange={(event) => { setOk(false); setSettings({ ...settings, pat: event.target.value }); }}
             placeholder="github_pat_..."
             autoComplete="off"
           />
         </label>
-        <button disabled={busy || !settings.repoFull || !settings.pat} onClick={testConnection}>
+        <button disabled={busy} onClick={testConnection}>
           {busy ? "验证中…" : "保存并验证"}
         </button>
+        <button disabled={busy} onClick={() => { const cleared = { ...settings, pat: "" }; saveSettings(cleared); setSettings(cleared); setOk(false); setMessage("已清除 Token。"); }}>清除 Token</button>
         {message && <p className={ok ? "connection-ok" : "connection-error"}>{message}</p>}
-        {ok && (
-          <div className="connection-links">
-            <a href={actionsWorkflowUrl(settings, settings.topicWorkflow)} target="_blank" rel="noreferrer">
-              打开选题 Action
-            </a>
-            <a href={actionsWorkflowUrl(settings, settings.postWorkflow)} target="_blank" rel="noreferrer">
-              打开写作 Action
-            </a>
-          </div>
-        )}
+        {ok && <p><Link to="/">进入文章</Link></p>}
         <details>
-          <summary>本地字段与 AI Key</summary>
+          <summary>本地设置</summary>
           <p><code>{LS_GH_REPO}</code> 与 <code>{LS_GH_TOKEN}</code> 分别保存仓库和 Token。</p>
-          <p>DeepSeek Key 请配置为仓库 Actions Secret：<code>DEEPSEEK_API_KEY</code>，不会进入网页。</p>
         </details>
       </div>
     </section>

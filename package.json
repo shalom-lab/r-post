@@ -6,11 +6,17 @@
     "apps/console"
   ],
   "scripts": {
+    "test:access": "node --test scripts/access.test.mjs",
+    "test:queue": "node --test scripts/wechat-queue.test.mjs",
     "dev": "node scripts/update-index.mjs && node scripts/update-topics-md.mjs && node scripts/sync-public.mjs && npm run dev -w apps/console",
     "build": "node scripts/update-index.mjs && node scripts/update-topics-md.mjs && node scripts/sync-public.mjs && npm run build -w apps/console",
     "sync": "node scripts/update-index.mjs && node scripts/update-topics-md.mjs && node scripts/sync-public.mjs",
     "update-index": "node scripts/update-index.mjs",
     "update-topics": "node scripts/update-topics-md.mjs",
-    "embed-images": "node scripts/embed-images.mjs"
+    "embed-images": "node scripts/embed-images.mjs",
+    "wechat:draft": "node scripts/wechat-draft.mjs"
+  },
+  "dependencies": {
+    "markmuse-wechat": "^1.0.1"
   }
 }
