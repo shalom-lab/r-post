@@ -1,6 +1,57 @@
 {
   "articles": [
     {
+      "id": "20261006-repeat-analysis-by-group",
+      "slug": "20261006-repeat-analysis-by-group",
+      "title": "R语言按分组各跑一遍分析：每家医院一个回归",
+      "description": "四家医院各做一次住院天数对年龄的回归。复制改 filter 容易漏改；split 或 nest + map 写一次，再用 broom::tidy 收成一张表。",
+      "date": "2026-10-06",
+      "category": "R tidyverse",
+      "categorySlug": "r-tidyverse",
+      "tags": [
+        "分组回归",
+        "purrr",
+        "broom",
+        "nest"
+      ],
+      "qmd": "posts/20261006-repeat-analysis-by-group/20261006-R语言按分组各跑一遍分析：每家医院一个回归.qmd",
+      "md": "posts/20261006-repeat-analysis-by-group/20261006-R语言按分组各跑一遍分析：每家医院一个回归.md"
+    },
+    {
+      "id": "20261006-recode-ifelse-case-when",
+      "slug": "20261006-recode-ifelse-case-when",
+      "title": "R语言给变量重新分组：从 ifelse 到 case_when",
+      "description": "BMI 切四档、血压同时看两列、1/2 改成男/女：嵌套 ifelse 容易把边界写错，case_when 从上往下匹配，缺失要单独留成 NA。",
+      "date": "2026-10-06",
+      "category": "R tidyverse",
+      "categorySlug": "r-tidyverse",
+      "tags": [
+        "ifelse",
+        "case_when",
+        "if_else",
+        "BMI"
+      ],
+      "qmd": "posts/20261006-recode-ifelse-case-when/20261006-R语言给变量重新分组：从 ifelse 到 case_when.qmd",
+      "md": "posts/20261006-recode-ifelse-case-when/20261006-R语言给变量重新分组：从 ifelse 到 case_when.md"
+    },
+    {
+      "id": "20261006-dpqr-distributions",
+      "slug": "20261006-dpqr-distributions",
+      "title": "R语言 d/p/q/r 四个函数：查临界值、算 P 值、造模拟数据",
+      "description": "不翻表查正态 1.96，用 pt 把 t 检验的双侧 P 值对上，再用 rnorm 造一批模拟数。计数问「至少 k 个」时要退一格。",
+      "date": "2026-10-06",
+      "category": "R 统计",
+      "categorySlug": "r-stats",
+      "tags": [
+        "概率分布",
+        "qnorm",
+        "t检验",
+        "模拟"
+      ],
+      "qmd": "posts/20261006-dpqr-distributions/20261006-R语言d、p、q、r四个函数：查临界值、算P值、造模拟数据.qmd",
+      "md": "posts/20261006-dpqr-distributions/20261006-R语言d、p、q、r四个函数：查临界值、算P值、造模拟数据.md"
+    },
+    {
       "id": "20261005-friedman-repeated-scores",
       "slug": "20261005-friedman-repeated-scores",
       "title": "R语言：同一批人测了三次，分数还不正态，怎么比？",
@@ -104,5 +155,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-10-06T00:41:02.965Z"
+  "updatedAt": "2026-10-06T02:02:20.661Z"
 }
