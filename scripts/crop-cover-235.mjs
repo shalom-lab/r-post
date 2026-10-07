@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 /**
- * 将封面图居中裁成 900×383（比 900/383），原地覆盖（只保留裁后结果）。
- * 纯 Node（sharp），云端 / 本地 npm ci 后可用。
+ * 封面收成 900×383（比例 900/383 ≈ 2.35:1），原地覆盖。
  *
- * 与 cover/rules.md 两色蒙版一致（16:9 出图，黑带≈未来裁切窗）：
- *   保留高度 = (16/9)/(900/383) = 6128/8100 → 75.65%
- *   上下各裁 = 493/4050 → 12.17%（对应参考图白带）
+ * 行为（兼容豆包直出与其他模型）：
+ * - 已是 900×383 → 跳过
+ * - 比例已约 2.35:1（允许误差）→ **不居中裁构图**，只 resize 到 900×383
+ *   （豆包等直出横封面常走这条）
+ * - 比例差太多（如 16:9）→ 居中裁成 2.35:1，再 resize
  *
  *   node scripts/crop-cover-235.mjs cover/images/<id>.jpg
  *   node scripts/crop-cover-235.mjs
@@ -19,6 +20,8 @@ import sharp from "sharp";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const imagesDir = path.join(root, "cover", "images");
 const RATIO = 900 / 383;
+/** |w/h - RATIO| 不超过此值，视为「已经大约是 2.35:1」 */
+const RATIO_TOL = 0.02;
 const OUT_W = 900;
 const OUT_H = 383;
 
@@ -49,12 +52,34 @@ async function cropOne(filePath) {
   if (!w || !h) throw new Error(`无法读取尺寸: ${filePath}`);
 
   const cur = w / h;
-  let left = 0;
-  let top = 0;
-  let cw = w;
-  let ch = h;
+  const ratioOk = Math.abs(cur - RATIO) <= RATIO_TOL;
+  const sizeOk = w === OUT_W && h === OUT_H;
 
-  if (Math.abs(cur - RATIO) >= 0.005 || w !== OUT_W || h !== OUT_H) {
+  if (ratioOk && sizeOk) {
+    console.log("skip", filePath, `${w}x${h}`, "already 900x383 ~2.35:1");
+    return;
+  }
+
+  const outPath = /\.jpe?g$/i.test(filePath)
+    ? filePath
+    : filePath.replace(/\.[^.]+$/i, ".jpg");
+
+  let pipeline = sharp(filePath);
+
+  if (ratioOk) {
+    // 豆包等：比例已对，只压到成品像素，不裁构图
+    pipeline = pipeline.resize(OUT_W, OUT_H, { fit: "fill" });
+    console.log(
+      "resize-only",
+      filePath,
+      `${w}x${h} (ratio ${cur.toFixed(4)}) → ${OUT_W}x${OUT_H}`,
+    );
+  } else {
+    // 其他模型（如 16:9）：居中裁成 2.35:1 再压
+    let left = 0;
+    let top = 0;
+    let cw = w;
+    let ch = h;
     if (cur > RATIO) {
       cw = Math.round(h * RATIO);
       left = Math.floor((w - cw) / 2);
@@ -66,20 +91,17 @@ async function cropOne(filePath) {
       cw = w;
       left = 0;
     }
-  } else {
-    console.log("skip", filePath, `${w}x${h}`);
-    return;
+    pipeline = pipeline
+      .extract({ left, top, width: cw, height: ch })
+      .resize(OUT_W, OUT_H, { fit: "fill" });
+    console.log(
+      "crop+resize",
+      filePath,
+      `${w}x${h} (ratio ${cur.toFixed(4)}) → ${OUT_W}x${OUT_H}`,
+    );
   }
 
-  const outPath = /\.jpe?g$/i.test(filePath)
-    ? filePath
-    : filePath.replace(/\.[^.]+$/i, ".jpg");
-
-  await sharp(filePath)
-    .extract({ left, top, width: cw, height: ch })
-    .resize(OUT_W, OUT_H, { fit: "fill" })
-    .jpeg({ quality: 90, mozjpeg: true })
-    .toFile(outPath + ".tmp");
+  await pipeline.jpeg({ quality: 90, mozjpeg: true }).toFile(outPath + ".tmp");
 
   fs.renameSync(outPath + ".tmp", outPath);
   if (outPath !== filePath && fs.existsSync(filePath)) fs.unlinkSync(filePath);

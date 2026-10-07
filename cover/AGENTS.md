@@ -10,10 +10,11 @@
 
 | 谁 | 目标 |
 |----|------|
-| 定时 Automation | 只补缺：尚无可用封面的条目；**一律豆包 Seedream** 出图 |
-| 人工对话 | 按用户说的：做 / 重做 / 改某篇，或只同步清单；同样走豆包 |
+| 定时 Automation | 只补缺：尚无可用封面的条目出图 |
+| 人工对话 | 按用户说的：做 / 重做 / 改某篇，或只同步清单 |
 
-出图工具固定为**豆包**（账号「迷城」、新对话 + 图像生成）。禁止用 `GenerateImage` 顶替。
+**出图主路径：豆包 Seedream 直出约 2.35:1 横封面**（账号「迷城」、**新对话** + 图像生成；优先 4.5）。  
+其他大模型也可用，只要能直出（或接近）2.35:1；落盘后统一跑 `crop-cover-235.mjs` 收成成品。不要再走「16:9 + 两色蒙版再裁」的旧 GenerateImage 流程。
 
 **完工标准**
 
@@ -32,9 +33,9 @@
 | `cover.json` | 源数据 |
 | `cover.md` | 预览；禁止手改，脚本生成 |
 | `images/` | 成图（成品须 900×383） |
-| `templates/ref-16x9-black235-white-margins.jpg` | **已停用**（旧 16:9 蒙版，仅保留） |
-| `rules.md` | 作图规范 |
+| `rules.md` | 作图规范（钩子风、豆包提示词、核验） |
 | `content/index.json` | 文章清单；sync 据此挂 `id` / `title` |
+| `templates/ref-16x9-black235-white-margins.jpg` | **已停用**（旧 16:9 蒙版，仅保留） |
 
 ### 相关脚本
 
@@ -42,8 +43,7 @@
 |------|------|
 | `node scripts/sync-cover-list.mjs` | 对照 `content/index.json` 同步封面清单；末尾刷新 `cover.md` |
 | `node scripts/update-cover-md.mjs` | 从 `cover.json` 生成 `cover.md`（勿手改 md） |
-| `node scripts/crop-cover-235.mjs [图…]` | **sharp** 居中裁成 2.35:1 → 900×383，原地覆盖；无参则处理 `cover/images/` 全部 |
-| `node scripts/make-cover-ref-templates.mjs` | **历史**：旧 16:9 蒙版；新流程勿用 |
+| `node scripts/crop-cover-235.mjs [图…]` | 收成 900×383（见下）；无参则处理 `cover/images/` 全部 |
 
 ```bash
 node scripts/sync-cover-list.mjs
@@ -51,6 +51,18 @@ node scripts/update-cover-md.mjs
 node scripts/crop-cover-235.mjs cover/images/<id>.jpg
 npm run crop-cover
 ```
+
+### `crop-cover-235.mjs` 怎么判断
+
+入库前**都要跑一遍**（豆包 / 其他模型都一样）。脚本按比例分支：
+
+| 原图情况 | 行为 |
+|----------|------|
+| 已是 **900×383**，且比例约 2.35:1 | **整段跳过**（不读写） |
+| 比例已约 **2.35:1**（允许误差，默认 \|w/h − 900/383\| ≤ 0.02） | **不居中裁构图**，只 resize 到 900×383（豆包直出常见） |
+| 比例差太多（如 16:9） | **居中裁**成 2.35:1，再 resize（兼容其他模型） |
+
+这样：豆包直出不用被二次裁构图；别的模型出偏了也能收成同一成品尺寸。
 
 ### `cover.json` 字段
 
@@ -79,9 +91,10 @@ npm run crop-cover
 ## 3. 工作要求
 
 - 只在最新 `master` 操作，直接 `git push origin master`；不开分支、不开 PR
-- 只动 `cover/`（及必要时的 sync / update 脚本）；不动正文与排期主线
+- 只动 `cover/`（及必要时的 sync / crop / update 脚本）；不动正文与排期主线
 - 禁止手改 `cover.md`
-- 出图前必须先单独构思 prompt；画面细则遵守 `rules.md`；用豆包直出 2.35:1，不用 GenerateImage 蒙版流程
+- 出图前必须先单独构思 prompt；画面细则遵守 `rules.md`
+- **主路径豆包直出 2.35:1**；其他模型仅作备选，同样要过 crop 脚本与核验
 - 写回：`image` 正确、`active: true`、`prompt` 必填
 - Automation：不覆盖已有可用封面；不接风格偏好；一次约 1～3 篇
 - 有变更则自己 commit + push；无 diff 说明无需推送；不提交密钥与无关文件；push 失败写明报错，不改开 PR 充数
@@ -131,17 +144,15 @@ node scripts/sync-cover-list.mjs
 
 ### Step 5 — 出图、落盘、写回
 
-1. 按 Step 4 的 prompt，用**豆包 Seedream**「新对话」出图（细则见 `rules.md`）：提示词写死 **2.35:1 / 900×383**，只出 1 张终稿
-2. 高清下载（点开大图，或控制台 `EXPECT: 1` 打包脚本）到本机，再拷到 `cover/images/<id>.jpg`
-3. 若原图不是 900×383，跑 sharp 压/裁覆盖：
+1. **优先豆包**：新对话 + 图像生成；提示词写死约 **2.35:1 / 900×383**，只出 1 张终稿（细则见 `rules.md`）。其他模型同理，尽量直出 2.35:1。
+2. 高清下载到本机，拷到 `cover/images/<id>.jpg`
+3. **一律跑** crop 脚本（内部会按比例跳过 / 只压像素 / 或居中裁）：
    ```bash
    node scripts/crop-cover-235.mjs cover/images/<id>.jpg
    ```
 4. 按 `rules.md`「出图后核验」过一眼（尺寸、钩子/专名、水印可接受）
 5. 更新条目：`image`、`active: true`、实际所用 `prompt`、`note` 可选
 6. 跑 `node scripts/update-cover-md.mjs`
-
-禁止再用 `GenerateImage` + 16:9 蒙版出封面。
 
 ### Step 6 — 提交并推送
 
