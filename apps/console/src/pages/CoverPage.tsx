@@ -50,14 +50,12 @@ function CoverCard({
 
   return (
     <article className={`cover-card${!item.active || !src ? " pending" : ""}`}>
-      <div
-        className="cover-card-media"
-        onMouseEnter={() => {
-          if (src) onPreview({ src, title: item.title });
-        }}
-        onMouseLeave={() => onPreview(null)}
-      >
-        {src ? (
+      {src ? (
+        <button
+          type="button"
+          className="cover-card-media"
+          onClick={() => onPreview({ src, title: item.title })}
+        >
           <img
             src={src}
             alt={item.title}
@@ -67,10 +65,12 @@ function CoverCard({
               setSize({ w: img.naturalWidth, h: img.naturalHeight });
             }}
           />
-        ) : (
+        </button>
+      ) : (
+        <div className="cover-card-media">
           <div className="cover-card-empty">尚无封面图</div>
-        )}
-      </div>
+        </div>
+      )}
       <div className="cover-card-body">
         <code className="cover-id" title={item.id}>{item.id}</code>
         <h2 title={item.title}>{item.title}</h2>
@@ -107,6 +107,15 @@ export default function CoverPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    if (!preview) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setPreview(null);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [preview]);
+
   const ready = covers.filter((c) => c.active && c.image).length;
 
   return (
@@ -115,7 +124,7 @@ export default function CoverPage() {
         <span className="eyebrow">公众号</span>
         <h1>封面预览</h1>
         <p>
-          对照 <code>cover/cover.json</code> 看全部封面。悬停小图看大图；点按钮复制 <code>id</code> 或标题。
+          对照 <code>cover/cover.json</code> 看全部封面。点击小图放大；点按钮复制 <code>id</code> 或标题。
           {covers.length > 0 && ` 合计 ${covers.length} · 已启用 ${ready}。`}
         </p>
       </header>
@@ -131,9 +140,11 @@ export default function CoverPage() {
       </div>
 
       {preview && (
-        <div className="cover-hover-preview" aria-hidden="true">
-          <img src={preview.src} alt="" />
-          <p>{preview.title}</p>
+        <div className="cover-lightbox" role="dialog" aria-label={preview.title} onClick={() => setPreview(null)}>
+          <figure className="cover-lightbox-panel" onClick={(event) => event.stopPropagation()}>
+            <img src={preview.src} alt={preview.title} />
+            <figcaption>{preview.title}</figcaption>
+          </figure>
         </div>
       )}
     </section>
