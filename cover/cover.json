@@ -19,26 +19,26 @@
     {
       "id": "20261007-excel-multiheader-unpivotr",
       "title": "R语言Excel两层表头怎么读：先拆格子再拼成长表",
-      "image": null,
-      "active": false,
-      "prompt": null,
-      "note": "images cleared 2026-10-07; awaiting regen"
+      "image": "images/20261007-excel-multiheader-unpivotr.jpg",
+      "active": true,
+      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「两层表头乱成一团？」。脏两层 Excel（基线/随访合并空格）+红叉 vs 长表 id/group/measure/value+绿勾。暖橙+青绿。无代码墙、无水印。",
+      "note": "automation regen 2026-10-07"
     },
     {
       "id": "20261007-bootstrap-bca-skew",
       "title": "R语言住院天数很偏，t 置信区间不够稳时用 bootstrap",
-      "image": null,
-      "active": false,
-      "prompt": null,
-      "note": "images cleared 2026-10-07; awaiting regen"
+      "image": "images/20261007-bootstrap-bca-skew.jpg",
+      "active": true,
+      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「住院天数很偏？」。右偏住院天数直方图+警告「t区间」 vs BCa 徽章+病床。暖橙+青绿。无代码墙、无水印。",
+      "note": "automation regen 2026-10-07"
     },
     {
       "id": "20261006-repeat-analysis-by-group",
       "title": "R语言按分组各跑一遍分析：每家医院一个回归",
-      "image": null,
-      "active": false,
-      "prompt": null,
-      "note": "images cleared 2026-10-07; awaiting regen"
+      "image": "images/20261006-repeat-analysis-by-group.jpg",
+      "active": true,
+      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「复制改名又漏了？」。三张都写市一的便利贴+红叉 vs 四家医院→nest+map→tidy results。暖橙+青绿。无代码墙、无水印。",
+      "note": "automation regen 2026-10-07"
     },
     {
       "id": "20261006-recode-ifelse-case-when",
@@ -105,5 +105,5 @@
       "note": "images cleared 2026-10-07; awaiting regen"
     }
   ],
-  "updatedAt": "2026-10-07T08:10:00.000Z"
+  "updatedAt": "2026-10-07T08:17:07.358Z"
 }

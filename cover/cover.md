@@ -2,7 +2,7 @@
 
 > 由 `cover/cover.json` 生成；改清单后运行 `node scripts/update-cover-md.mjs`。
 >
-> 合计 **13** 篇 · 已启用 **3** · 待制作（inactive）**10**
+> 合计 **13** 篇 · 已启用 **6** · 待制作（inactive）**7**
 
 ## R语言师兄脚本换台电脑就挂：用 renv 锁住包版本
 
@@ -39,38 +39,50 @@ LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略�
 ## R语言Excel两层表头怎么读：先拆格子再拼成长表
 
 - id：`20261007-excel-multiheader-unpivotr`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20261007-excel-multiheader-unpivotr.jpg`
 
-_尚无封面图。_
+![R语言Excel两层表头怎么读：先拆格子再拼成长表](images/20261007-excel-multiheader-unpivotr.jpg)
 
-- prompt：_（未记录）_
+- prompt：
 
-> images cleared 2026-10-07; awaiting regen
+```text
+LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「两层表头乱成一团？」。脏两层 Excel（基线/随访合并空格）+红叉 vs 长表 id/group/measure/value+绿勾。暖橙+青绿。无代码墙、无水印。
+```
+
+> automation regen 2026-10-07
 
 ## R语言住院天数很偏，t 置信区间不够稳时用 bootstrap
 
 - id：`20261007-bootstrap-bca-skew`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20261007-bootstrap-bca-skew.jpg`
 
-_尚无封面图。_
+![R语言住院天数很偏，t 置信区间不够稳时用 bootstrap](images/20261007-bootstrap-bca-skew.jpg)
 
-- prompt：_（未记录）_
+- prompt：
 
-> images cleared 2026-10-07; awaiting regen
+```text
+LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「住院天数很偏？」。右偏住院天数直方图+警告「t区间」 vs BCa 徽章+病床。暖橙+青绿。无代码墙、无水印。
+```
+
+> automation regen 2026-10-07
 
 ## R语言按分组各跑一遍分析：每家医院一个回归
 
 - id：`20261006-repeat-analysis-by-group`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20261006-repeat-analysis-by-group.jpg`
 
-_尚无封面图。_
+![R语言按分组各跑一遍分析：每家医院一个回归](images/20261006-repeat-analysis-by-group.jpg)
 
-- prompt：_（未记录）_
+- prompt：
 
-> images cleared 2026-10-07; awaiting regen
+```text
+LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「复制改名又漏了？」。三张都写市一的便利贴+红叉 vs 四家医院→nest+map→tidy results。暖橙+青绿。无代码墙、无水印。
+```
+
+> automation regen 2026-10-07
 
 ## R语言给变量重新分组：从 ifelse 到 case_when
 
