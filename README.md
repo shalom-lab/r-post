@@ -32,7 +32,7 @@ AGENTS.md                  # 人机共用操作说明
 
 - **默认**：`render.yml` 在 QMD 变更后渲染、嵌图、更新清单；`pages.yml` 部署只读站。
 - 选题和写作通过对话完成，直接改仓库文件。
-- 公众号：主页选定后写入 `wechat/queue.json`。上传草稿用 `npm run wechat:draft`（本机中控）。密钥和中控地址见 `wechat/tips.md`，不要写进仓库。
+- 公众号：主页选定后写入 `wechat/queue.json`。目前只上传草稿（`npm run wechat:draft`），不涉及群发/发布。中控变量见 `wechat/env.example`。
 
 网页阅读需要 Token，并验证其对应账号是否在 `apps/console/src/access-policy.ts` 白名单内。通过后读取静态文章。此门槛不保护公开仓库或静态文件直链。浏览器配置字段：`gh-repo-rpost`、`gh-token-rpost`。
 

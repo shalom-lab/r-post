@@ -1,0 +1,287 @@
+/* 前端 */
+#markmuse {
+  line-height: 1.6;
+  letter-spacing: .034em;
+  color: rgb(63, 63, 63);
+  font-size: 16px;
+  word-break: break-all;
+}
+
+#markmuse p {
+  padding-top: 5px;
+  color: rgb(74, 74, 74);
+  line-height: 1.75em;
+}
+
+/* 一级标题 */
+#markmuse h1 {
+  text-align: center;
+  background-image: url(https://s2.loli.net/2022/01/14/X3gJHmQsAeStUFW.png);
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: 95px;
+  line-height: 95px;
+  margin-top: 38px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(60, 112, 198);
+}
+
+/* 二级 · 居中实心胶囊 */
+#markmuse h2 {
+  display: table;
+  font-size: 1.1em;
+  margin: 1.8rem auto 1rem;
+  padding: 0.38rem 1.25rem;
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+  background: #3c70c6;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* 三级 · 横幅微渐变 */
+#markmuse h3 {
+  display: table;
+  font-size: 15px;
+  font-weight: bold;
+  color: #7a9fd4;
+  margin: 1.2rem 0 0.6rem;
+  padding: 0.22rem 0.7rem;
+  border: none;
+  border-left: 3px solid #7a9fd4;
+  border-radius: 0 4px 4px 0;
+  text-align: left;
+  background-color: #eef3fb;
+  background-image: linear-gradient(90deg, rgba(60, 112, 198, 0.16) 0%, rgba(60, 112, 198, 0.02) 100%);
+}
+
+/* 列表内容 */
+#markmuse ul, #markmuse ol {
+  margin: 1em 0;
+  padding-left: 2em;
+  list-style-type: decimal;
+}
+
+#markmuse li {
+  margin: 0.5em 0;
+  line-height: 1.75em;
+  list-style-type: disc;
+}
+
+/* 引用 */
+#markmuse blockquote {
+  padding: 15px 20px;
+  line-height: 27px;
+  background-color: rgb(239, 239, 239);
+  border-left: 4px solid rgb(60, 112, 198);
+  display: block;
+  margin: 1em 0;
+  border-radius: 0 4px 4px 0;
+}
+
+/* 引用文字 */
+#markmuse blockquote p {
+  padding: 0px;
+  font-size: 15px;
+  color: rgb(89, 89, 89);
+  margin: 0;
+}
+
+/* 链接 */
+#markmuse a {
+  color: rgb(60, 112, 198);
+  text-decoration: none;
+  border-bottom: 1px solid rgb(60, 112, 198);
+}
+
+#markmuse a:hover {
+  border-bottom: 2px solid rgb(60, 112, 198);
+}
+
+/* 加粗 */
+#markmuse strong {
+  line-height: 1.75em;
+  color: rgb(74, 74, 74);
+  font-weight: bold;
+}
+
+/* 斜体 */
+#markmuse em {
+  font-style: italic;
+}
+
+/* 加粗斜体 */
+#markmuse em strong {
+  color: rgb(248, 57, 41);
+  letter-spacing: 0.3em;
+}
+
+/* 删除线 */
+#markmuse del {
+  text-decoration: line-through;
+  color: #999;
+}
+
+/* 分割线 */
+#markmuse hr {
+  height: 1px;
+  padding: 0;
+  border: none;
+  text-align: center;
+  background-image: linear-gradient(to right, rgba(60, 122, 198, 0), rgba(60, 122, 198, 0.75), rgba(60, 122, 198, 0));
+  margin: 2em 0;
+}
+
+/* 图片 */
+#markmuse img {
+  border-radius: 4px;
+  margin-bottom: 25px;
+  max-width: 100%;
+  height: auto;
+}
+
+/* 图片描述文字 */
+#markmuse figcaption {
+  display: block;
+  font-size: 12px;
+  font-family: PingFangSC-Light, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #999;
+  text-align: center;
+  margin-top: -20px;
+  margin-bottom: 25px;
+}
+
+/* 行内代码 */
+#markmuse p code, #markmuse li code {
+  color: rgb(60, 112, 198);
+  background-color: #f5f5f5;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: "SF Mono", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 0.9em;
+}
+
+/* 代码块 */
+#markmuse pre {
+  margin: 1rem 0;
+  padding: 2.5rem 1rem 1rem 1rem;
+  background-color: #2f3539;
+  border-radius: 6px;
+  overflow-x: auto;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+#markmuse pre::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ff5f56;
+  box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+}
+
+#markmuse pre code {
+  background-color: transparent;
+  padding: 0;
+  color: #e8e8e8;
+  font-family: "SF Mono", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 0.9em;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* 表格 */
+#markmuse table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5em 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#markmuse table tr th,
+#markmuse table tr td {
+  font-size: 14px;
+  border: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+#markmuse table tr th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: rgb(60, 112, 198);
+}
+
+#markmuse table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#markmuse table tr:hover {
+  background-color: #f0f8ff;
+}
+
+/* 脚注 */
+#markmuse .footnotes {
+  padding-top: 8px;
+  margin-top: 2em;
+  border-top: 1px solid #e2e8f0;
+}
+
+#markmuse .footnote-word {
+  color: rgb(60, 112, 198);
+}
+
+#markmuse .footnote-ref {
+  color: rgb(60, 112, 198);
+  text-decoration: none;
+}
+
+#markmuse .footnote-item em {
+  color: rgb(60, 112, 198);
+  font-size: 13px;
+  font-style: normal;
+  border-bottom: 1px dashed rgb(60, 112, 198);
+}
+
+#markmuse .footnote-num {
+  color: rgb(60, 112, 198);
+}
+
+#markmuse .footnote-item p {
+  color: rgb(60, 112, 198);
+  font-weight: bold;
+  margin: 0.5em 0;
+}
+
+#markmuse .footnote-item a {
+  color: rgb(60, 112, 198);
+  text-decoration: none;
+}
+
+#markmuse .footnote-item p em {
+  font-size: 14px;
+  font-weight: normal;
+  border-bottom: 1px dashed rgb(60, 112, 198);
+}
+
+/* 数学公式 */
+#markmuse .block-equation svg {
+  max-width: 100%;
+  margin: 1em 0;
+}
+
+#markmuse .inline-equation svg {
+  display: inline-block;
+  vertical-align: middle;
+}

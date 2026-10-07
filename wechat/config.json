@@ -1,5 +1,6 @@
 {
-  "appName": "mp_tumei",
+  "appName": "mp_r",
   "author": "",
-  "articlesPerDraft": 2
+  "articlesPerDraft": 2,
+  "theme": "all"
 }

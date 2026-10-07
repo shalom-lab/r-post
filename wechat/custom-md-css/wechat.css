@@ -1,0 +1,104 @@
+/* 微信 */
+#markmuse {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.8;
+  color: #1f2328;
+  background-color: #f7fbf8;
+  padding: 0 1rem;
+}
+#markmuse h1 {
+  display: table;
+  font-size: 1.65em;
+  margin: 2rem auto 1.2rem;
+  padding: 0.2rem 0.12rem 0.4rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.35;
+  text-align: center;
+  letter-spacing: 0.05em;
+  border: none;
+  background-color: rgba(7, 193, 96, 0.1);
+  background-image: linear-gradient(180deg, transparent 65%, rgba(7, 193, 96, 0.28) 65%);
+}
+/* 二级 · 居中实心胶囊 */
+#markmuse h2 {
+  display: table;
+  font-size: 1.1em;
+  margin: 1.8rem auto 1rem;
+  padding: 0.38rem 1.25rem;
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+  background: #07c160;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+}
+/* 三级 · 横幅微渐变 */
+#markmuse h3 {
+  font-size: 1.05em;
+  margin: 1.3rem 0 0.5rem;
+  padding: 0.28rem 0.75rem;
+  color: #3aa86a;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.04em;
+  background-color: #e8f8ee;
+  background-image: linear-gradient(90deg, rgba(7, 193, 96, 0.12) 0%, rgba(7, 193, 96, 0.02) 100%);
+  border: none;
+  border-left: 4px solid #5ad68a;
+  border-radius: 0 4px 4px 0;
+  text-align: left;
+}
+#markmuse p { margin: 0.85rem 0; line-height: 1.9; }
+#markmuse code {
+  font-family: "SF Mono", Consolas, Menlo, monospace;
+  font-size: 0.88em;
+  padding: 0.15em 0.4em;
+  background: #e8f8ee;
+  color: #067d3e;
+  border-radius: 3px;
+}
+#markmuse pre {
+  margin: 1rem 0;
+  padding: 2.5rem 1rem 1rem 1rem;
+  background: #1a2a22;
+  border-radius: 6px;
+  overflow-x: auto;
+  position: relative;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+#markmuse pre::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ff5f56;
+  box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+}
+#markmuse pre code { display: block; background: transparent; padding: 0; color: #e6f6ea; border: none; }
+#markmuse pre a, #markmuse pre span { text-decoration: none; border-bottom: none; }
+#markmuse blockquote {
+  margin: 1.2rem 0;
+  padding: 0.85rem 1.1rem;
+  border: none;
+  background: rgba(7, 193, 96, 0.08);
+  color: #2d3748;
+  border-radius: 6px;
+  font-style: normal;
+}
+#markmuse a { color: #07c160; text-decoration: none; border-bottom: 1px solid rgba(7, 193, 96, 0.4); }
+#markmuse strong { color: #1a1a1a; }
+#markmuse em { color: #067d3e; }
+#markmuse ul, #markmuse ol { margin: 0.8rem 0; padding-left: 1.7rem; }
+#markmuse li { margin: 0.35rem 0; display: list-item; }
+#markmuse hr { border: none; border-top: 1px solid #d8eee0; margin: 2em 0; }
+#markmuse table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+#markmuse th, #markmuse td { border: 1px solid #d8eee0; padding: 0.5rem 0.8rem; }
+#markmuse th { background: #e8f8ee; color: #067d3e; }
+#markmuse img { max-width: 100%; height: auto; border-radius: 6px; }

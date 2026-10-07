@@ -1,0 +1,14 @@
+[
+  { "id": "default", "name": "默认" },
+  { "id": "warm", "name": "温暖" },
+  { "id": "minimal", "name": "极简" },
+  { "id": "mdnice", "name": "前端" },
+  { "id": "qing", "name": "青瓷" },
+  { "id": "ink", "name": "墨韵" },
+  { "id": "sand", "name": "沙色" },
+  { "id": "bamboo", "name": "竹青" },
+  { "id": "slate", "name": "岩灰" },
+  { "id": "wechat", "name": "微信" },
+  { "id": "violet", "name": "罗兰" },
+  { "id": "rouge", "name": "胭脂" }
+]

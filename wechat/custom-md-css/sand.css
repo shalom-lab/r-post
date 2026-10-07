@@ -1,0 +1,110 @@
+/* 沙色 */
+#markmuse {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.85;
+  color: #3b3228;
+  background-color: #faf6f0;
+  padding: 0 1rem;
+}
+#markmuse h1 {
+  display: table;
+  font-size: 1.65em;
+  margin: 1.8rem auto 1.1rem;
+  padding: 0.2rem 0.12rem 0.4rem;
+  color: #5c3d24;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border: none;
+  background-color: rgba(196, 122, 58, 0.12);
+  background-image: linear-gradient(180deg, transparent 65%, rgba(196, 122, 58, 0.3) 65%);
+}
+/* 二级 · 斜切圆角微标 */
+#markmuse h2 {
+  display: table;
+  font-size: 1.1em;
+  margin: 1.65rem auto 1rem;
+  padding: 0.38rem 1.3rem;
+  color: #fffaf4;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  background: #c47a3a;
+  border-radius: 12px 2px 12px 2px;
+  border: none;
+  text-align: center;
+}
+/* 三级 · 短下划线 */
+#markmuse h3 {
+  display: table;
+  font-size: 1.02em;
+  margin: 1.25rem 0 0.5rem;
+  color: #8a5a32;
+  font-weight: 600;
+  text-align: left;
+  padding: 0 0.1rem 0.26rem;
+  border: none;
+  border-bottom: 2px solid #d49a62;
+  background: none;
+}
+#markmuse p { margin: 0.85rem 0; }
+#markmuse code {
+  font-family: "SF Mono", Consolas, Menlo, monospace;
+  font-size: 0.88em;
+  padding: 0.15em 0.4em;
+  background: #f3e6d4;
+  color: #8a4b1f;
+  border-radius: 2px;
+  border: 1px solid #e2d3c0;
+}
+#markmuse pre {
+  margin: 1rem 0;
+  padding: 2.5rem 1rem 1rem 1rem;
+  background: #3d3428;
+  border-radius: 4px;
+  overflow-x: auto;
+  position: relative;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+#markmuse pre::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ff5f56;
+  box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+}
+#markmuse pre.hljs {
+  background: #3d3428;
+}
+#markmuse pre code.hljs {
+  background: transparent;
+  padding: 0;
+}
+#markmuse pre code { display: block; background: transparent; padding: 0; color: #f4e4c1; border: none; }
+#markmuse pre a, #markmuse pre span { text-decoration: none; border-bottom: none; }
+#markmuse blockquote {
+  margin: 1.1rem 0;
+  padding: 0.65rem 1rem;
+  border-top: 1px solid #e2d3c0;
+  border-bottom: 1px solid #e2d3c0;
+  border-left: 3px solid #c47a3a;
+  border-right: none;
+  background: #f3e6d4;
+  color: #5c4a38;
+  border-radius: 0;
+  font-style: normal;
+}
+#markmuse a { color: #a65b24; text-decoration: none; border-bottom: 1px solid #d9b48c; }
+#markmuse strong { color: #5c3d24; }
+#markmuse em { color: #8a5a32; }
+#markmuse ul, #markmuse ol { margin: 0.8rem 0; padding-left: 1.7rem; }
+#markmuse li { margin: 0.35rem 0; display: list-item; }
+#markmuse hr { border: none; border-top: 2px solid #d9b48c; margin: 2em 0; }
+#markmuse table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+#markmuse th, #markmuse td { border: 1px solid #e2d3c0; padding: 0.5rem 0.8rem; }
+#markmuse th { background: #f3e6d4; color: #5c3d24; }
+#markmuse img { max-width: 100%; height: auto; border-radius: 4px; }

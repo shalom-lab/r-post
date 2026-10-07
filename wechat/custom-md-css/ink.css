@@ -1,0 +1,102 @@
+/* 墨韵 */
+#markmuse {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.9;
+  color: #1c1917;
+  background-color: #f6f4ef;
+  padding: 0 1.1rem;
+}
+#markmuse h1 {
+  font-size: 1.7em;
+  margin: 2rem 0 1.15rem;
+  padding-bottom: 0.8rem;
+  font-weight: 700;
+  color: #161412;
+  text-align: center;
+  letter-spacing: 0.16em;
+  border: none;
+  border-bottom: 1px solid #d7d0c4;
+  background: none;
+}
+/* 二级 · 荧光笔（居中） */
+#markmuse h2 {
+  display: table;
+  font-size: 1.12em;
+  margin: 1.7rem auto 1rem;
+  padding: 0.08rem 0.12rem 0.28rem;
+  color: #b8483a;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border: none;
+  text-align: center;
+  background-color: rgba(184, 72, 58, 0.1);
+  background-image: linear-gradient(180deg, transparent 65%, rgba(184, 72, 58, 0.22) 65%);
+}
+/* 三级 · 横幅微渐变 */
+#markmuse h3 {
+  display: table;
+  font-size: 1.05em;
+  margin: 1.3rem 0 0.5rem;
+  padding: 0.22rem 0.7rem;
+  color: #c46b60;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  border: none;
+  border-left: 3px solid #c46b60;
+  border-radius: 0 4px 4px 0;
+  text-align: left;
+  background-color: #efe8dc;
+  background-image: linear-gradient(90deg, rgba(184, 72, 58, 0.1) 0%, rgba(184, 72, 58, 0.02) 100%);
+}
+#markmuse p { margin: 0.9rem 0; text-align: justify; }
+#markmuse code {
+  font-family: "SF Mono", Consolas, Menlo, monospace;
+  font-size: 0.86em;
+  padding: 0.12em 0.35em;
+  background: #efe8dc;
+  color: #8a3b32;
+  border-radius: 2px;
+}
+#markmuse pre {
+  margin: 1rem 0;
+  padding: 2.5rem 1rem 1rem 1rem;
+  background: #2a2623;
+  border-radius: 6px;
+  overflow-x: auto;
+  position: relative;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+#markmuse pre::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ff5f56;
+  box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+}
+#markmuse pre, #markmuse pre code { font-family: "SF Mono", Consolas, Menlo, monospace; }
+#markmuse pre code { display: block; background: transparent; padding: 0; color: #ede6da; border: none; }
+#markmuse pre a, #markmuse pre span { text-decoration: none; border-bottom: none; }
+#markmuse blockquote {
+  margin: 1.1rem 0;
+  padding: 0.7rem 1rem;
+  border-left: 3px solid #b8483a;
+  color: #4a433c;
+  background: #efe8dc;
+  border-radius: 0 4px 4px 0;
+  font-style: italic;
+}
+#markmuse a { color: #b8483a; text-decoration: none; border-bottom: 1px solid #d7b0aa; }
+#markmuse strong { color: #161412; }
+#markmuse em { color: #5a3d38; }
+#markmuse ul, #markmuse ol { margin: 0.8rem 0; padding-left: 1.6rem; }
+#markmuse li { margin: 0.35rem 0; display: list-item; }
+#markmuse hr { border: none; border-top: 1px solid #d7d0c4; margin: 2.2em 0; }
+#markmuse table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+#markmuse th, #markmuse td { border: none; border-bottom: 1px solid #d7d0c4; padding: 0.5rem 0.2rem; }
+#markmuse th { background: transparent; border-bottom: 2px solid #b8483a; }
+#markmuse img { max-width: 100%; height: auto; }

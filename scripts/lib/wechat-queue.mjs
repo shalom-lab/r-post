@@ -84,6 +84,7 @@ export function normalizeDraftLog(raw) {
     seenMedia.add(mediaId);
     drafts.push({
       source: DRAFT_SOURCE,
+      appName: String(row.appName || "").trim() || null,
       mediaId,
       uploadedAt: row.uploadedAt || null,
       ids,
@@ -99,6 +100,7 @@ export function appendDraft(log, entry) {
   if (!mediaId || next.drafts.some((row) => row.mediaId === mediaId)) return next;
   next.drafts.push({
     source: DRAFT_SOURCE,
+    appName: String(entry.appName || "").trim() || null,
     mediaId,
     uploadedAt: entry.uploadedAt || new Date().toISOString(),
     ids: [...entry.ids],

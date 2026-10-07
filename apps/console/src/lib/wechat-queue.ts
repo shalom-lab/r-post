@@ -9,6 +9,7 @@ export type WechatQueue = {
 
 export type WechatDraft = {
   source: "rpost";
+  appName: string | null;
   mediaId: string;
   uploadedAt: string | null;
   ids: string[];
@@ -61,6 +62,7 @@ export function normalizeDraftLog(raw: unknown): WechatDraftLog {
     seenMedia.add(mediaId);
     drafts.push({
       source: "rpost",
+      appName: item.appName ? String(item.appName) : null,
       mediaId,
       uploadedAt: item.uploadedAt ? String(item.uploadedAt) : null,
       ids,

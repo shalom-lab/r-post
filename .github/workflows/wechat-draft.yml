@@ -23,8 +23,8 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run wechat:draft
         env:
-          WECHAT_API_KEY: ${{ secrets.WECHAT_API_KEY }}
-          WECHAT_TOKEN_URL: ${{ secrets.WECHAT_TOKEN_URL }}
+          TOKEN_CENTER_API_KEY: ${{ secrets.TOKEN_CENTER_API_KEY }}
+          TOKEN_CENTER_URL: ${{ secrets.TOKEN_CENTER_URL }}
       - name: Record draft media ids
         run: |
           git config user.name "github-actions[bot]"
