@@ -145,7 +145,7 @@ node scripts/sync-cover-list.mjs
 ### Step 5 — 出图、落盘、写回
 
 1. **优先豆包**：新对话 + 图像生成；提示词写死约 **2.35:1，至少 1800×766**，只出 1 张终稿（细则见 `rules.md`）。其他模型同理，尽量直出 2.35:1。
-2. 高清下载到本机，拷到 `cover/images/<id>.jpg`
+2. 用控制台 HD 脚本（EXPECT=1）下载**无水印**原图，拷到 `cover/images/<id>.jpg`（禁止页面「保存」带水印）
 3. **一律跑** crop 脚本（内部会按比例跳过 / 只压像素 / 或居中裁）：
    ```bash
    node scripts/crop-cover-235.mjs cover/images/<id>.jpg
