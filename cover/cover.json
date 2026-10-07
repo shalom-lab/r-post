@@ -75,26 +75,26 @@
     {
       "id": "20260927-regex-extract-data",
       "title": "如何用正则从字符串里提取数据",
-      "image": null,
-      "active": false,
-      "prompt": null,
-      "note": "待制作"
+      "image": "images/20260927-regex-extract-data.jpg",
+      "active": true,
+      "prompt": "900×383 横图，浅灰底(#F4F7F6)，顶部居中短青绿条。中央安全区：主标题「正则提取字段」，副标题「发热词 · 地区日期 · 规则串」。中部一条白底圆角文本条，示意字符串，其中「发热」橙色、「华东」「2024-03」青绿高亮。下方三张白底青绿描边卡片：症状/发热、地区/华东、日期/2024-03。一两主色+中性底，留白，像人工信息图，无霓虹/玻璃拟态。",
+      "note": "automation 2026-10-07"
     },
     {
       "id": "20260927-batch-read-without-for",
       "title": "一百个 Excel 怎么一次读进来",
-      "image": null,
-      "active": false,
-      "prompt": null,
-      "note": "待制作"
+      "image": "images/20260927-batch-read-without-for.jpg",
+      "active": true,
+      "prompt": "900×383 横图，浅灰底，顶部居中短青绿条。中央安全区：主标题「批量读 Excel」，副标题「map · list_rbind · walk」。左侧纵向三张白底文件卡 a.xlsx / b.xlsx / c.xlsx，青绿箭头指向右侧「一张长表」结果卡（青绿表头+医院A/B/C三行）。简洁信息图，无风景、无霓虹。",
+      "note": "automation 2026-10-07"
     },
     {
       "id": "20260921-regex-real-world",
       "title": "啥是正则表达式？先会认文本形状",
-      "image": null,
-      "active": false,
-      "prompt": null,
-      "note": "待制作"
+      "image": "images/20260921-regex-real-world.jpg",
+      "active": true,
+      "prompt": "900×383 横图，浅灰底，顶部居中短青绿条。中央安全区：主标题「先认文本形状」，副标题「pattern · 匹配 · 筛选」。下方三张白底青绿描边卡片：随访_地区_日期 / .+_华东_\\d{4}；病程含发热 / 发热|高烧；标签改写 / ALT|AST；pattern 放在浅绿圆角条里；首卡底部橙色短下划线。去 AI 味：无紫粉霓虹、无玻璃拟态。",
+      "note": "automation 2026-10-07"
     },
     {
       "id": "20260921-r-save-five-methods",
@@ -105,5 +105,5 @@
       "note": "待制作"
     }
   ],
-  "updatedAt": "2026-10-07T05:26:58.774Z"
+  "updatedAt": "2026-10-07T05:28:59.234349Z"
 }
