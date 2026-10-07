@@ -22,10 +22,13 @@ GitHub：仓库 → Settings → Secrets and variables → Actions。网页上�
 | `appName` | 中控 `apps` 里那条的 `name`，例如 `mp_tumei`。对应请求路径 `/access_token/mp_tumei`。 |
 | `author` | 微信草稿署名。空着就不署名。不是 secret。 |
 | `articlesPerDraft` | 一期几篇。现在是 `2`，脚本还会卡在最多 2 篇。 |
+| `theme` | 正文样式主题名，对应 `custom-md-css/<主题名>.css`。默认 `前端之巅`。上传时作为 `customCss` 传给 Node API `getWeChatHtml(markdown, customCss)`（与 markmuse 默认样式合并）。 |
 
 `wechat/queue.json` 只是待传排期：文章 id 和顺序。网页主页点「加入排期」写这里。上传成功后会从这里拿掉。
 
 `wechat/wechat_draft.json` 只记 **RPost 自动 `draft/add` 成功** 的稿（`source: "rpost"`、`media_id`、篇目 id、当时标题）。不拉微信草稿箱列表，你在后台手建的草稿不会进这份账。失败不写。不是定时群发记录。
+
+上传前会从已渲染 Markdown 去掉一级标题，以及标题下的 `RPost` / `YYYY-MM-DD` 两行（Quarto 留下的作者与日期）。微信草稿自带署名和日期，正文开头重复会冲突。
 
 ## 网页阅读用的 GitHub Token
 
