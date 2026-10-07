@@ -6,7 +6,7 @@
 
 ## 1. 目标任务
 
-给文章做出可用的公众号头条横图，并推到 `origin/master`。
+给文章做出可用的公众号**大图**（最终 2.35:1 / 900×383；不管小图），并推到 `origin/master`。
 
 | 谁 | 目标 |
 |----|------|
@@ -29,13 +29,26 @@
 |------|------|
 | `cover.json` | 源数据 |
 | `cover.md` | 预览；禁止手改，脚本生成 |
-| `images/` | 成图 |
+| `images/` | 成图（成品须 900×383） |
+| `templates/ref-16x9-black235-white-margins.jpg` | 16:9 两色蒙版：白=裁空，黑=作画（内留 margin） |
 | `rules.md` | 作图规范 |
 | `content/index.json` | 文章清单；sync 据此挂 `id` / `title` |
 
+### 相关脚本
+
+| 命令 | 功能 |
+|------|------|
+| `node scripts/sync-cover-list.mjs` | 对照 `content/index.json` 同步封面清单；末尾刷新 `cover.md` |
+| `node scripts/update-cover-md.mjs` | 从 `cover.json` 生成 `cover.md`（勿手改 md） |
+| `node scripts/crop-cover-235.mjs [图…]` | **sharp** 居中裁成 2.35:1 → 900×383，原地覆盖；无参则处理 `cover/images/` 全部 |
+| `node scripts/make-cover-ref-templates.mjs` | 重生成两色参考蒙版 `templates/ref-16x9-black235-white-margins.jpg` |
+
 ```bash
-node scripts/sync-cover-list.mjs   # 对照 index；末尾刷新 cover.md
-node scripts/update-cover-md.mjs   # 从 cover.json 生成 cover.md
+node scripts/sync-cover-list.mjs
+node scripts/update-cover-md.mjs
+node scripts/crop-cover-235.mjs cover/images/<id>.jpg
+npm run crop-cover
+npm run make-cover-ref
 ```
 
 ### `cover.json` 字段
@@ -43,7 +56,7 @@ node scripts/update-cover-md.mjs   # 从 cover.json 生成 cover.md
 | 字段 | 含义 |
 |------|------|
 | `id` / `title` | 对照文章；`id` 由 sync 写入，勿手编 |
-| `image` | 相对本目录路径；未出图为 `null` |
+| `image` | 相对本目录路径；未出图为 `null`（成品 `images/<id>.jpg`，须为 900×383） |
 | `active` | `true` 可用（Automation 跳过）；`false` 可补 |
 | `prompt` | 实际用过的出图说明；未出图为 `null`；勿整段抄 `rules.md` |
 | `note` | 流水备注，不是 prompt |
@@ -105,21 +118,27 @@ node scripts/sync-cover-list.mjs
 
 ### Step 4 — 构思出图 prompt
 
-不要读完文章就直接出图。规范见 `rules.md`。
+不要只看标题就出图。规范见 `rules.md`（尤其「作图 prompt 怎么写」）。
 
-1. 读 `rules.md`（先通用，再本项目）
-2. 读标题 / 简介 / 分类，必要时扫正文
-3. 写出本次 prompt（构图、色调、主体、画面文字）：
-   - 补缺且已有 `prompt` → 优先沿用，可微调尺寸
-   - 新建 / 重做 → 按 `rules.md` 重新构思
-   - 改封面 → 在现有 prompt 上改，勿换题
-4. 确认符合 `rules.md` 通用项后再出图
+1. 读 `rules.md`（通用 + 本项目风格）
+2. **必读正文**：`content/posts/<id>/` 下 `.qmd`（或 `.md`）——痛点、场景、解法，不只看 `title`
+3. 按 `rules.md` 写出**具体** prompt（钩子、冲突两边、主色、道具均来自本篇）：
+   - 补缺且已有非空 `prompt` → 优先沿用，可微调尺寸
+   - 新建 / 重做 → 重新读正文再构思
+   - 改封面 → 在现有 prompt 上改，勿换题；仍须符合正文
+4. 确认风格与通用项过关后，再出图
 
-### Step 5 — 出图并写回
+### Step 5 — 出图、裁切、写回
 
-1. 出横图 → `images/<id>.jpg`（或 png / webp）
-2. 更新条目：`image`、`active: true`、实际所用 `prompt`、`note` 可选
-3. 跑 `node scripts/update-cover-md.mjs`
+1. 确认参考蒙版存在：`cover/templates/ref-16x9-black235-white-margins.jpg`（没有则 `npm run make-cover-ref`）
+2. 按 Step 4 的 prompt 出图（`GenerateImage`，**强制** `aspect_ratio: "16:9"`，**强制** `reference_image_paths` 指向该蒙版）：**只要大图**；prompt 须写入 `rules.md` 两色布局句（白空、只画黑带、黑带内留 margin）
+3. 成图先落到 `cover/images/<id>.jpg`
+4. **sharp 裁成 2.35:1 / 900×383 并覆盖**：
+   ```bash
+   node scripts/crop-cover-235.mjs cover/images/<id>.jpg
+   ```
+5. 更新条目：`image`、`active: true`、实际所用 `prompt`、`note` 可选
+6. 跑 `node scripts/update-cover-md.mjs`
 
 ### Step 6 — 提交并推送
 

@@ -20,6 +20,7 @@
 topics/index.json          # 选题真相
 prompt-rules/              # 选题与写作风格
 content/posts/YYYYMMDD-slug/  # 定稿 QMD（及渲染后的 Markdown）
+cover/                     # 公众号封面（见 cover/AGENTS.md、cover/rules.md）
 wechat/queue.json          # 公众号待传排期
 wechat/wechat_draft.json   # 已成功上传的微信草稿
 AGENTS.md                  # 人机共用操作说明
@@ -27,6 +28,12 @@ AGENTS.md                  # 人机共用操作说明
 
 - `topics/index.md`、`content/index.json`、`apps/console/public/` 是生成或同步产物，不要当源文件改。
 - 分类固定为 `r-plot`、`r-stats`、`r-base`、`r-tidyverse`、`r-code-management`。
+
+## 封面（公众号大图）
+
+- 成品只要 **900×383** 大图；出图用 16:9 + 两色参考蒙版（白=裁空、黑=作画，黑带内留 margin），再 `npm run crop-cover` 裁成 2.35:1。
+- 清单与预览：`cover/cover.json`（源）、`cover/cover.md`（生成，勿手改）；成图在 `cover/images/`。
+- 作图规范：`cover/rules.md`；流程：`cover/AGENTS.md`。蒙版丢失时可 `npm run make-cover-ref` 重生成。
 
 ## 自动化
 

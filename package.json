@@ -15,10 +15,13 @@
     "update-topics": "node scripts/update-topics-md.mjs",
     "update-cover": "node scripts/update-cover-md.mjs",
     "sync-cover": "node scripts/sync-cover-list.mjs",
+    "crop-cover": "node scripts/crop-cover-235.mjs",
+    "make-cover-ref": "node scripts/make-cover-ref-templates.mjs",
     "embed-images": "node scripts/embed-images.mjs",
     "wechat:draft": "node scripts/wechat-draft.mjs"
   },
   "dependencies": {
-    "markmuse-wechat": "^1.0.1"
+    "markmuse-wechat": "^1.0.1",
+    "sharp": "^0.35.5"
   }
 }
