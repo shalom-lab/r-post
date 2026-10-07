@@ -150,7 +150,7 @@ node scripts/sync-cover-list.mjs
    ```bash
    node scripts/crop-cover-235.mjs cover/images/<id>.jpg
    ```
-4. 按 `rules.md`「出图后核验」过一眼（尺寸、钩子/专名、水印可接受）
+4. 按 `rules.md`「出图后核验」过一眼（尺寸、无水印、钩子与专名、元素是否过少）
 5. 更新条目：`image`、`active: true`、实际所用 `prompt`、`note` 可选
 6. 跑 `node scripts/update-cover-md.mjs`
 
