@@ -40,6 +40,17 @@ for (const item of covers) {
     lines.push("");
     lines.push("_尚无封面图。_");
   }
+  if (item.prompt) {
+    lines.push("");
+    lines.push("- prompt：");
+    lines.push("");
+    lines.push("```text");
+    lines.push(String(item.prompt).trimEnd());
+    lines.push("```");
+  } else {
+    lines.push("");
+    lines.push("- prompt：_（未记录）_");
+  }
   if (item.note) {
     lines.push("");
     lines.push(`> ${item.note}`);

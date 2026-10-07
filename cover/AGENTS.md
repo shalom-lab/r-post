@@ -13,10 +13,20 @@
 
 | 路径 | 作用 |
 |------|------|
-| `cover.json` | 源数据：`id` ↔ `image`、`active` |
+| `cover.json` | 源数据：`id` ↔ `image`、`active`、`prompt` |
 | `cover.md` | 预览一览；**生成物，禁止手改**（含 Agent 直接编辑） |
 | `images/` | 成图文件 |
 | `AGENTS.md` | 本说明 |
+
+### `cover.json` 字段
+
+| 字段 | 含义 |
+|------|------|
+| `id` / `title` | 对照文章；`id` 由 sync 从 `content/index.json` 挂上，勿手编 |
+| `image` | 相对本目录的成图路径；未出图为 `null` |
+| `active` | 是否可用（见下表） |
+| `prompt` | **出图时实际用过的说明**（构图、配色、画面上的字）。未出图为 `null`；出图 / 改 / 重做后写入或覆盖。不要把本文件「制作要求」整段抄进去 |
+| `note` | 流水备注（如 `automation 2026-10-07`），不是 prompt |
 
 **`cover.md` 只能由脚本生成。** 要改内容就改 `cover.json`（或跑 sync），再执行：
 
@@ -39,8 +49,8 @@ node scripts/sync-cover-list.mjs
 | `true` | 已有可用封面，`image` 指向真实文件 | **跳过，一律不做** |
 | `false` | 无图或作废待补，`image` 可为 `null` | 可以制作 |
 
-- 新文章入库后先登记为 **`active: false`**，禁止无图却标 `true`。
-- 若 `active: true` 但文件丢失：改回 `false`，`image: null`，`note` 写明原因，下次补做。
+- 新文章入库后先登记为 **`active: false`**、`prompt: null`，禁止无图却标 `true`。
+- 若 `active: true` 但文件丢失：改回 `false`，`image: null`，`note` 写明原因；**保留原 `prompt`** 便于下次按同一说明补做。
 
 ---
 
@@ -62,9 +72,9 @@ node scripts/sync-cover-list.mjs
 
 1. 读 `cover/cover.json`，筛出 `active !== true` 或 `image` 为空的条目。
 2. **已有封面（active + 文件在）→ 跳过。**
-3. 对每条待补：读对应文章标题 / 简介 / 分类（`content/index.json` 或 post 正文），按下方「制作要求」出一张横图。
+3. 对每条待补：读对应文章标题 / 简介 / 分类（`content/index.json` 或 post 正文），按下方「制作要求」出一张横图；若该条已有非空 `prompt`，优先按原 prompt 补图（可微调尺寸说明）。
 4. 保存到 `cover/images/<id>.jpg`（或 `.png` / `.webp`），路径写入 `image`（相对 `cover/`，如 `images/20261006-dpqr-distributions.jpg`）。
-5. 将该条设为 `active: true`，`note` 可写 `automation <日期>`。
+5. 将该条设为 `active: true`，**把本次实际使用的出图说明写入 `prompt`**（必填，不可仍为 `null`），`note` 可写 `automation <日期>`。
 6. 全部处理完后：`node scripts/update-cover-md.mjs`。
 7. 一次任务可限制篇数（如最多 1～3 篇），避免超时；剩下的下次再跑。
 8. **收工必做：在 `master` 上 `git commit` 并 `git push origin master`**（见下方「提交与推送」）。没有改动则不必空提交。
@@ -87,7 +97,7 @@ node scripts/sync-cover-list.mjs
 
 ### 完工标准
 
-- 封面文件已在 **`origin/master` 的 `cover/images/`**，且 `cover.json` 对应条目为 `active: true`。
+- 封面文件已在 **`origin/master` 的 `cover/images/`**，且 `cover.json` 对应条目为 `active: true`、**`prompt` 非空**。
 - 只推到 feature 分支、或只开了未合并 PR → **未完工**。
 
 ### 操作步骤
@@ -121,9 +131,9 @@ node scripts/sync-cover-list.mjs
 
 | 用户说法 | 行为 |
 |----------|------|
-| 「做封面 \<id 或标题\>」 | 该篇无论是否已有图：按要求做（无则新建；有则等同重做，需覆盖或换文件） |
-| 「重做封面 \<…\>」 | 强制新出一版，更新 `image` / `active` |
-| 「改封面：…」（如更冷色、少字） | 在现主题上改，勿换题 |
+| 「做封面 \<id 或标题\>」 | 该篇无论是否已有图：按要求做（无则新建；有则等同重做，需覆盖或换文件），并写入 `prompt` |
+| 「重做封面 \<…\>」 | 强制新出一版，更新 `image` / `active` / `prompt`（覆盖旧 prompt） |
+| 「改封面：…」（如更冷色、少字） | 在现主题与现有 `prompt` 上改，勿换题；改完覆盖 `prompt` |
 | 「同步封面清单」 | 只跑 sync，不自动出图 |
 
 人工对话同样：**改完 JSON/图片 → 跑脚本生成 `cover.md`（勿手改 md）→ 在 `master` 上自己 commit 并 `git push origin master`（不要开 PR）**。

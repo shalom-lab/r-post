@@ -5,6 +5,7 @@
       "title": "R语言师兄脚本换台电脑就挂：用 renv 锁住包版本",
       "image": "images/20261007-renv-lockfile.jpg",
       "active": true,
+      "prompt": null,
       "note": "automation 2026-10-07"
     },
     {
@@ -12,6 +13,7 @@
       "title": "R语言里两个数明明一样，用 == 却是 FALSE",
       "image": "images/20261007-float-equality-near.jpg",
       "active": true,
+      "prompt": null,
       "note": "automation 2026-10-07"
     },
     {
@@ -19,6 +21,7 @@
       "title": "R语言Excel两层表头怎么读：先拆格子再拼成长表",
       "image": "images/20261007-excel-multiheader-unpivotr.jpg",
       "active": true,
+      "prompt": null,
       "note": "automation 2026-10-07"
     },
     {
@@ -26,6 +29,7 @@
       "title": "R语言住院天数很偏，t 置信区间不够稳时用 bootstrap",
       "image": "images/20261007-bootstrap-bca-skew.jpg",
       "active": true,
+      "prompt": null,
       "note": "automation 2026-10-07"
     },
     {
@@ -33,6 +37,7 @@
       "title": "R语言按分组各跑一遍分析：每家医院一个回归",
       "image": "images/20261006-repeat-analysis-by-group.jpg",
       "active": true,
+      "prompt": null,
       "note": "automation 2026-10-07"
     },
     {
@@ -40,6 +45,7 @@
       "title": "R语言给变量重新分组：从 ifelse 到 case_when",
       "image": "images/20261006-recode-ifelse-case-when.jpg",
       "active": true,
+      "prompt": null,
       "note": "automation 2026-10-07"
     },
     {
@@ -47,6 +53,7 @@
       "title": "R语言 d/p/q/r 四个函数：查临界值、算 P 值、造模拟数据",
       "image": "images/20261006-dpqr-distributions.jpg",
       "active": true,
+      "prompt": null,
       "note": "automation 2026-10-07"
     },
     {
@@ -54,6 +61,7 @@
       "title": "R语言：同一批人测了三次，分数还不正态，怎么比？",
       "image": "images/20261005-friedman-repeated-scores.jpg",
       "active": true,
+      "prompt": null,
       "note": "automation 2026-10-07"
     },
     {
@@ -61,6 +69,7 @@
       "title": "R 语言里随访宽表怎么转成长表",
       "image": "images/20260927-wide-to-long.jpg",
       "active": true,
+      "prompt": null,
       "note": "automation 2026-10-07"
     },
     {
@@ -68,6 +77,7 @@
       "title": "如何用正则从字符串里提取数据",
       "image": null,
       "active": false,
+      "prompt": null,
       "note": "待制作"
     },
     {
@@ -75,6 +85,7 @@
       "title": "一百个 Excel 怎么一次读进来",
       "image": null,
       "active": false,
+      "prompt": null,
       "note": "待制作"
     },
     {
@@ -82,6 +93,7 @@
       "title": "啥是正则表达式？先会认文本形状",
       "image": null,
       "active": false,
+      "prompt": null,
       "note": "待制作"
     },
     {
@@ -89,8 +101,9 @@
       "title": "分析做到一半如何存临时数据？",
       "image": null,
       "active": false,
+      "prompt": null,
       "note": "待制作"
     }
   ],
-  "updatedAt": "2026-10-07T05:23:56.280Z"
+  "updatedAt": "2026-10-07T05:26:58.774Z"
 }

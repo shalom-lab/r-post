@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * 对照 content/index.json 同步 cover/cover.json：
- * - 新文章 → 追加，active: false
- * - 已有 → 更新 title；active:true 且图片丢失 → 降为 inactive
+ * - 新文章 → 追加，active: false，prompt: null
+ * - 已有 → 更新 title、补齐缺失的 prompt:null；active:true 且图片丢失 → 降为 inactive（保留 prompt）
  * - 不删除 cover.json 里多出的旧 id（仅 note 提示）
  *
  *   node scripts/sync-cover-list.mjs
@@ -42,6 +42,7 @@ for (const a of articles) {
       title: a.title,
       image: null,
       active: false,
+      prompt: null,
       note: "待制作",
     });
     added += 1;
@@ -51,6 +52,7 @@ for (const a of articles) {
   const row = {
     ...prev,
     title: a.title || prev.title,
+    prompt: prev.prompt != null && String(prev.prompt).trim() ? String(prev.prompt) : null,
   };
 
   if (row.active && !imageExists(row.image)) {
