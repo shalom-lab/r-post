@@ -21,7 +21,7 @@
       "id": "20261007-float-equality-near",
       "slug": "20261007-float-equality-near",
       "title": "R语言里两个数明明一样，用 == 却是 FALSE",
-      "description": "BMI 算出来看着是 24，== 却筛不着；0.1 分箱在边界错格。主招用 all.equal，可选 dplyr::near，分箱可走整数。",
+      "description": "BMI 算出来看着是 24，== 却筛不着；0.1 分箱在边界错格。首选 all.equal，可选 dplyr::near，分箱可走整数。",
       "date": "2026-10-07",
       "category": "R 基础",
       "categorySlug": "r-base",
@@ -37,7 +37,7 @@
     {
       "id": "20261007-excel-multiheader-unpivotr",
       "slug": "20261007-excel-multiheader-unpivotr",
-      "title": "R语言Excel两层表头怎么读：先拆格子再拼列名",
+      "title": "R语言Excel两层表头怎么读：先拆格子再拼成长表",
       "description": "组名在上一行、指标在下一行，合并单元格留下空位：用 unpivotr 拆成格子，behead 取表头，再拼成长表。",
       "date": "2026-10-07",
       "category": "R tidyverse",
@@ -48,8 +48,8 @@
         "behead",
         "长表"
       ],
-      "qmd": "posts/20261007-excel-multiheader-unpivotr/20261007-R语言Excel两层表头怎么读：先拆格子再拼列名.qmd",
-      "md": "posts/20261007-excel-multiheader-unpivotr/20261007-R语言Excel两层表头怎么读：先拆格子再拼列名.md"
+      "qmd": "posts/20261007-excel-multiheader-unpivotr/20261007-R语言Excel两层表头怎么读：先拆格子再拼成长表.qmd",
+      "md": "posts/20261007-excel-multiheader-unpivotr/20261007-R语言Excel两层表头怎么读：先拆格子再拼成长表.md"
     },
     {
       "id": "20261007-bootstrap-bca-skew",
@@ -223,5 +223,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-10-07T02:02:27.037Z"
+  "updatedAt": "2026-10-07T02:09:30.514Z"
 }
