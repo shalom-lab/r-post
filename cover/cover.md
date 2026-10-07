@@ -2,7 +2,7 @@
 
 > 由 `cover/cover.json` 生成；改清单后运行 `node scripts/update-cover-md.mjs`。
 >
-> 合计 **13** 篇 · 已启用 **9** · 待制作（inactive）**4**
+> 合计 **13** 篇 · 已启用 **12** · 待制作（inactive）**1**
 
 ## R语言师兄脚本换台电脑就挂：用 renv 锁住包版本
 
@@ -151,38 +151,50 @@ LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略�
 ## 如何用正则从字符串里提取数据
 
 - id：`20260927-regex-extract-data`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20260927-regex-extract-data.jpg`
 
-_尚无封面图。_
+![如何用正则从字符串里提取数据](images/20260927-regex-extract-data.jpg)
 
-- prompt：_（未记录）_
+- prompt：
 
-> images cleared 2026-10-07; awaiting regen
+```text
+LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。生活感横图。钩子「从乱字里捞出来」。桌面便签乱字里荧光笔圈出发热/地区/日期。暖橙+青绿。无代码墙、无水印。
+```
+
+> automation fill 2026-10-07
 
 ## 一百个 Excel 怎么一次读进来
 
 - id：`20260927-batch-read-without-for`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20260927-batch-read-without-for.jpg`
 
-_尚无封面图。_
+![一百个 Excel 怎么一次读进来](images/20260927-batch-read-without-for.jpg)
 
-- prompt：_（未记录）_
+- prompt：
 
-> images cleared 2026-10-07; awaiting regen
+```text
+LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。生活感横图。钩子「一百份一次收齐」。散落文件夹+红叉 vs 收进同一文件筐+绿勾。暖橙+青绿。无代码墙、无水印。
+```
+
+> automation fill 2026-10-07
 
 ## 啥是正则表达式？先会认文本形状
 
 - id：`20260921-regex-real-world`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20260921-regex-real-world.jpg`
 
-_尚无封面图。_
+![啥是正则表达式？先会认文本形状](images/20260921-regex-real-world.jpg)
 
-- prompt：_（未记录）_
+- prompt：
 
-> images cleared 2026-10-07; awaiting regen
+```text
+LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。生活感横图。钩子「先会认形状」。参差纸条上透明模板框住同形状标签。暖橙+青绿。无代码墙、无水印。
+```
+
+> automation fill 2026-10-07
 
 ## 分析做到一半如何存临时数据？
 

@@ -75,26 +75,26 @@
     {
       "id": "20260927-regex-extract-data",
       "title": "如何用正则从字符串里提取数据",
-      "image": null,
-      "active": false,
-      "prompt": null,
-      "note": "images cleared 2026-10-07; awaiting regen"
+      "image": "images/20260927-regex-extract-data.jpg",
+      "active": true,
+      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。生活感横图。钩子「从乱字里捞出来」。桌面便签乱字里荧光笔圈出发热/地区/日期。暖橙+青绿。无代码墙、无水印。",
+      "note": "automation fill 2026-10-07"
     },
     {
       "id": "20260927-batch-read-without-for",
       "title": "一百个 Excel 怎么一次读进来",
-      "image": null,
-      "active": false,
-      "prompt": null,
-      "note": "images cleared 2026-10-07; awaiting regen"
+      "image": "images/20260927-batch-read-without-for.jpg",
+      "active": true,
+      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。生活感横图。钩子「一百份一次收齐」。散落文件夹+红叉 vs 收进同一文件筐+绿勾。暖橙+青绿。无代码墙、无水印。",
+      "note": "automation fill 2026-10-07"
     },
     {
       "id": "20260921-regex-real-world",
       "title": "啥是正则表达式？先会认文本形状",
-      "image": null,
-      "active": false,
-      "prompt": null,
-      "note": "images cleared 2026-10-07; awaiting regen"
+      "image": "images/20260921-regex-real-world.jpg",
+      "active": true,
+      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。生活感横图。钩子「先会认形状」。参差纸条上透明模板框住同形状标签。暖橙+青绿。无代码墙、无水印。",
+      "note": "automation fill 2026-10-07"
     },
     {
       "id": "20260921-r-save-five-methods",
@@ -105,5 +105,5 @@
       "note": "images cleared 2026-10-07; awaiting regen"
     }
   ],
-  "updatedAt": "2026-10-07T08:20:42.579Z"
+  "updatedAt": "2026-10-07T08:23:25.496Z"
 }
