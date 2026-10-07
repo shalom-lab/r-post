@@ -34,7 +34,7 @@
 
 - 目录：`cover/`。无封面不挡写作、渲染、排期。
 - **定时 Automation**：先 `npm run sync-cover`，再只给 `active: false` 的补图；已有封面跳过。改/重做由人说话触发。
-- 封面任务**干完有变更时，Agent 自己 commit and push**（细则见 `cover/AGENTS.md`「提交与推送」）。
+- 封面任务**干完有变更时，Agent 在 `master` 上自己 commit，并 `git push origin master`**（不要开 PR；细则见 `cover/AGENTS.md`「提交与推送」）。
 - 细则只维护 **`cover/AGENTS.md`**，不要把长规范抄回本文件。
 
 ## 可选入口（非默认）
