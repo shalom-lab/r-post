@@ -145,7 +145,7 @@ node scripts/sync-cover-list.mjs
 ### Step 5 — 出图（先 5 候选，用户点头再落盘）
 
 1. 同篇写 **5** 条不同 prompt，各出 1 张（≥1800×766，控制台无水印）；**暂不**写 `cover/images/` / `cover.json`。
-2. 横向拼联系表发给用户挑选。
+2. 纵向拼联系表发给用户挑选。
 3. 用户选定后，再拷入 `cover/images/<id>.jpg` → crop → 写回 json → `update-cover-md` → push。
 
 ### Step 5b —（旧）单次出图、落盘、写回（仅用户明确说跳过候选时）
