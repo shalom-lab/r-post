@@ -1,6 +1,34 @@
 {
   "covers": [
     {
+      "id": "20261007-renv-lockfile",
+      "title": "R语言师兄脚本换台电脑就挂：用 renv 锁住包版本",
+      "image": "images/20261007-renv-lockfile.jpg",
+      "active": true,
+      "note": "automation 2026-10-07"
+    },
+    {
+      "id": "20261007-float-equality-near",
+      "title": "R语言里两个数明明一样，用 == 却是 FALSE",
+      "image": "images/20261007-float-equality-near.jpg",
+      "active": true,
+      "note": "automation 2026-10-07"
+    },
+    {
+      "id": "20261007-excel-multiheader-unpivotr",
+      "title": "R语言Excel两层表头怎么读：先拆格子再拼成长表",
+      "image": "images/20261007-excel-multiheader-unpivotr.jpg",
+      "active": true,
+      "note": "automation 2026-10-07"
+    },
+    {
+      "id": "20261007-bootstrap-bca-skew",
+      "title": "R语言住院天数很偏，t 置信区间不够稳时用 bootstrap",
+      "image": null,
+      "active": false,
+      "note": "待制作"
+    },
+    {
       "id": "20261006-repeat-analysis-by-group",
       "title": "R语言按分组各跑一遍分析：每家医院一个回归",
       "image": null,
@@ -64,5 +92,5 @@
       "note": "待制作"
     }
   ],
-  "updatedAt": "2026-10-07T04:33:48.592Z"
+  "updatedAt": "2026-10-07T04:52:52.260Z"
 }

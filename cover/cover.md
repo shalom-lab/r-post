@@ -2,7 +2,47 @@
 
 > 由 `cover/cover.json` 生成；改清单后运行 `node scripts/update-cover-md.mjs`。
 >
-> 合计 **9** 篇 · 已启用 **0** · 待制作（inactive）**9**
+> 合计 **13** 篇 · 已启用 **3** · 待制作（inactive）**10**
+
+## R语言师兄脚本换台电脑就挂：用 renv 锁住包版本
+
+- id：`20261007-renv-lockfile`
+- 状态：**启用**
+- 文件：`images/20261007-renv-lockfile.jpg`
+
+![R语言师兄脚本换台电脑就挂：用 renv 锁住包版本](images/20261007-renv-lockfile.jpg)
+
+> automation 2026-10-07
+
+## R语言里两个数明明一样，用 == 却是 FALSE
+
+- id：`20261007-float-equality-near`
+- 状态：**启用**
+- 文件：`images/20261007-float-equality-near.jpg`
+
+![R语言里两个数明明一样，用 == 却是 FALSE](images/20261007-float-equality-near.jpg)
+
+> automation 2026-10-07
+
+## R语言Excel两层表头怎么读：先拆格子再拼成长表
+
+- id：`20261007-excel-multiheader-unpivotr`
+- 状态：**启用**
+- 文件：`images/20261007-excel-multiheader-unpivotr.jpg`
+
+![R语言Excel两层表头怎么读：先拆格子再拼成长表](images/20261007-excel-multiheader-unpivotr.jpg)
+
+> automation 2026-10-07
+
+## R语言住院天数很偏，t 置信区间不够稳时用 bootstrap
+
+- id：`20261007-bootstrap-bca-skew`
+- 状态：**inactive**
+- 文件：（无）
+
+_尚无封面图。_
+
+> 待制作
 
 ## R语言按分组各跑一遍分析：每家医院一个回归
 
