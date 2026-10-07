@@ -99,11 +99,11 @@
     {
       "id": "20260921-r-save-five-methods",
       "title": "分析做到一半如何存临时数据？",
-      "image": null,
-      "active": false,
-      "prompt": null,
-      "note": "待制作"
+      "image": "images/20260921-r-save-five-methods.jpg",
+      "active": true,
+      "prompt": "900×383 横图，浅灰底(#F4F7F6)，顶部居中短青绿条。中央安全区：主标题「中途存临时数据」，副标题「RDS · Excel · CSV · save · image」。下方五张白底青绿描边小卡片横排：RDS/接着跑、Excel/给同事、CSV/跨工具、save()/多对象、image/整会话；save() 卡顶条用橙色点缀，其余青绿。底部浅绿圆角条「做到一半 · 先存再走」。一两主色+中性底，留白，像人工信息图，无霓虹/玻璃拟态。",
+      "note": "automation 2026-10-07"
     }
   ],
-  "updatedAt": "2026-10-07T05:28:59.234349Z"
+  "updatedAt": "2026-10-07T05:31:46.054Z"
 }

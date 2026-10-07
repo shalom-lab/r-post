@@ -2,7 +2,7 @@
 
 > 由 `cover/cover.json` 生成；改清单后运行 `node scripts/update-cover-md.mjs`。
 >
-> 合计 **13** 篇 · 已启用 **12** · 待制作（inactive）**1**
+> 合计 **13** 篇 · 已启用 **13** · 待制作（inactive）**0**
 
 ## R语言师兄脚本换台电脑就挂：用 renv 锁住包版本
 
@@ -163,11 +163,15 @@
 ## 分析做到一半如何存临时数据？
 
 - id：`20260921-r-save-five-methods`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20260921-r-save-five-methods.jpg`
 
-_尚无封面图。_
+![分析做到一半如何存临时数据？](images/20260921-r-save-five-methods.jpg)
 
-- prompt：_（未记录）_
+- prompt：
 
-> 待制作
+```text
+900×383 横图，浅灰底(#F4F7F6)，顶部居中短青绿条。中央安全区：主标题「中途存临时数据」，副标题「RDS · Excel · CSV · save · image」。下方五张白底青绿描边小卡片横排：RDS/接着跑、Excel/给同事、CSV/跨工具、save()/多对象、image/整会话；save() 卡顶条用橙色点缀，其余青绿。底部浅绿圆角条「做到一半 · 先存再走」。一两主色+中性底，留白，像人工信息图，无霓虹/玻璃拟态。
+```
+
+> automation 2026-10-07
