@@ -2,7 +2,7 @@
 
 > 由 `cover/cover.json` 生成；改清单后运行 `node scripts/update-cover-md.mjs`。
 >
-> 合计 **13** 篇 · 已启用 **3** · 待制作（inactive）**10**
+> 合计 **13** 篇 · 已启用 **6** · 待制作（inactive）**7**
 
 ## R语言师兄脚本换台电脑就挂：用 renv 锁住包版本
 
@@ -37,32 +37,32 @@
 ## R语言住院天数很偏，t 置信区间不够稳时用 bootstrap
 
 - id：`20261007-bootstrap-bca-skew`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20261007-bootstrap-bca-skew.jpg`
 
-_尚无封面图。_
+![R语言住院天数很偏，t 置信区间不够稳时用 bootstrap](images/20261007-bootstrap-bca-skew.jpg)
 
-> 待制作
+> automation 2026-10-07
 
 ## R语言按分组各跑一遍分析：每家医院一个回归
 
 - id：`20261006-repeat-analysis-by-group`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20261006-repeat-analysis-by-group.jpg`
 
-_尚无封面图。_
+![R语言按分组各跑一遍分析：每家医院一个回归](images/20261006-repeat-analysis-by-group.jpg)
 
-> 待制作
+> automation 2026-10-07
 
 ## R语言给变量重新分组：从 ifelse 到 case_when
 
 - id：`20261006-recode-ifelse-case-when`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20261006-recode-ifelse-case-when.jpg`
 
-_尚无封面图。_
+![R语言给变量重新分组：从 ifelse 到 case_when](images/20261006-recode-ifelse-case-when.jpg)
 
-> 待制作
+> automation 2026-10-07
 
 ## R语言 d/p/q/r 四个函数：查临界值、算 P 值、造模拟数据
 

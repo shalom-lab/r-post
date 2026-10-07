@@ -24,23 +24,23 @@
     {
       "id": "20261007-bootstrap-bca-skew",
       "title": "R语言住院天数很偏，t 置信区间不够稳时用 bootstrap",
-      "image": null,
-      "active": false,
-      "note": "待制作"
+      "image": "images/20261007-bootstrap-bca-skew.jpg",
+      "active": true,
+      "note": "automation 2026-10-07"
     },
     {
       "id": "20261006-repeat-analysis-by-group",
       "title": "R语言按分组各跑一遍分析：每家医院一个回归",
-      "image": null,
-      "active": false,
-      "note": "待制作"
+      "image": "images/20261006-repeat-analysis-by-group.jpg",
+      "active": true,
+      "note": "automation 2026-10-07"
     },
     {
       "id": "20261006-recode-ifelse-case-when",
       "title": "R语言给变量重新分组：从 ifelse 到 case_when",
-      "image": null,
-      "active": false,
-      "note": "待制作"
+      "image": "images/20261006-recode-ifelse-case-when.jpg",
+      "active": true,
+      "note": "automation 2026-10-07"
     },
     {
       "id": "20261006-dpqr-distributions",
@@ -92,5 +92,5 @@
       "note": "待制作"
     }
   ],
-  "updatedAt": "2026-10-07T04:52:52.260Z"
+  "updatedAt": "2026-10-07T05:19:14.103Z"
 }
