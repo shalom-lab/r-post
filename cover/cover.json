@@ -5,8 +5,8 @@
       "title": "R语言师兄脚本换台电脑就挂：用 renv 锁住包版本",
       "image": "images/20261007-renv-lockfile.jpg",
       "active": true,
-      "prompt": "比例 2.35:1，成品至少 1800×766（可更高），横版封面，无水印；只出 1 张终稿，不要中间稿、不要多图拼版。\nYouTube 缩略图风格，高对比，主体特写，背景干净。\n大字钩子：「换电脑就挂？」\n画面只要两件东西：左边一台摔裂的笔记本电脑；右边一把金属挂锁锁住一份文件。\n暖橙 vs 青绿。不要代码、不要包名、不要第三件道具、不要小标签堆砌。",
-      "note": "redo youtube-style 2026-10-07; doubao 3008x1280 console HD no watermark; chat 38445859630129154"
+      "prompt": "比例 2.35:1，至少 1800×766，横版封面，无水印；只出 1 张。\n文章场景：师兄项目拷过来，缺包装齐后同一行 dplyr 结果仍差一截，根因是包版本漂移。解法：renv.lock 锁包名+版本，换机 restore。数据另存，不管 R 小版本。\n封面钩子必须是问题导向。五维 conceptual/duotone/flat-vector/title-only/bold。隐喻锁+双屏数字。构图右主体左留白。\n大字钩子：「换台电脑，结果还对吗？」",
+      "note": "pick q1 问题导向钩子「换台电脑，结果还对吗？」; doubao-download ext HD no watermark; chat 38445722695994370; 2026-10-07"
     },
     {
       "id": "20261007-float-equality-near",
@@ -105,5 +105,5 @@
       "note": "doubao keep 3008x1280 2026-10-07"
     }
   ],
-  "updatedAt": "2026-10-07T17:13:48+08:00"
+  "updatedAt": "2026-10-07T19:00:37+08:00"
 }
