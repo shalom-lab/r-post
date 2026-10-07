@@ -48,6 +48,13 @@
 - 不直接维护 `apps/console/public/` 的同步副本，不提交真实凭据或 `.env`，不使用会将 Token 打进浏览器包的 `VITE_GH_TOKEN`。
 - 开始工作先查看 git status，保留已有改动；完成后说明验证结果。
 
+## Cursor Cloud specific instructions
+
+- 依赖用 `npm ci`。开发服务用 `npm run dev`，地址是 http://localhost:5173/r-post/ 。Vite 只监听 IPv6 的 localhost，`127.0.0.1:5173` 会拒绝连接。
+- 文章和排期在连接页验证通过前停在「连接后阅读」。Token 写在浏览器 localStorage，不是环境变量；没有现成密钥也能启动站点、跑 `npm run test:access` 和 `npm run test:queue`。
+- `npm run dev` / `npm run build` 会改 `content/index.json` 的 `updatedAt`。只有时间戳变化时不要提交。
+- Quarto 渲染在 Actions（`render.yml`），本地环境不装 R。公众号上传需要 `TOKEN_CENTER_URL` 和 `TOKEN_CENTER_API_KEY`，默认开发流程不用。
+
 ## 网页阅读权限
 
 - 允许的个人账号在 `apps/console/src/access-policy.ts` 配置，空列表拒绝所有账号；访问者不能通过连接页修改白名单。
