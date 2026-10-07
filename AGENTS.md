@@ -28,14 +28,6 @@
 - 「写选题 …」→ 直接写当日 `YYYYMMDD-slug` QMD（边写边做 Post-content 检查），并更新该选题的 `article`。
 - 「写一篇……」→ 同上：检查过了就推；用户说改就直接改线上文。
 - 「渲染」→ 仅在需要本地核验时；默认依赖 `render.yml`。
-- 「做封面 / 重做封面 / 改封面 …」→ 见 `cover/AGENTS.md`（人工触发）；定时补缺也只读该文件。
-
-## 封面（可选）
-
-- 目录：`cover/`。无封面不挡写作、渲染、排期。
-- **定时 Automation**：先 `npm run sync-cover`，再只给 `active: false` 的补图；已有封面跳过。改/重做由人说话触发。
-- 封面任务**干完有变更时，Agent 在 `master` 上自己 commit，并 `git push origin master`**（不要开 PR；细则见 `cover/AGENTS.md`「提交与推送」）。
-- 细则只维护 **`cover/AGENTS.md`**，不要把长规范抄回本文件。
 
 ## 可选入口（非默认）
 
