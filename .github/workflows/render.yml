@@ -38,6 +38,8 @@ jobs:
             any::dplyr
             any::tidyr
             any::broom
+            any::boot
+            any::unpivotr
 
       - uses: quarto-dev/quarto-actions/setup@v2
 
