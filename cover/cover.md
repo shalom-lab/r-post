@@ -16,12 +16,15 @@
 
 ```text
 比例 2.35:1，至少 1800×766，横版封面，无水印；只出 1 张。
-文章场景：师兄项目拷过来，缺包装齐后同一行 dplyr 结果仍差一截，根因是包版本漂移。解法：renv.lock 锁包名+版本，换机 restore。数据另存，不管 R 小版本。
-封面钩子必须是问题导向。五维 conceptual/duotone/flat-vector/title-only/bold。隐喻锁+双屏数字。构图右主体左留白。
-大字钩子：「换台电脑，结果还对吗？」
+文章场景：师兄项目拷过来，缺包装齐后同一行 dplyr 结果仍差一截，根因是包版本漂移。解法：renv.lock 锁包名+版本，换机 restore。数据另存，不管 R 小版本。封面钩子必须是问题导向：点出场景/痛点，读者一眼懂文章在解决啥；禁止空口号。
+五维：Type=conceptual；Palette=duotone；Rendering=flat-vector；Text=title-only；Mood=bold；Font=display。
+隐喻物件：锁+双屏数字
+构图：右主体左留白：右侧两扁插窗口 72 vs 72.41（角标 dplyr 版本不同）；左下几何挂锁+renv.lock。大字钩子问题居中偏左。
+大字立体钩子（问题导向，必须清晰可读）：「换台电脑，结果还对吗？」
+不要代码墙、九宫格、软木板咖啡闹钟散纸；钩子不要重复印刷。
 ```
 
-> pick q1 问题导向钩子「换台电脑，结果还对吗？」; doubao-download ext HD no watermark; chat 38445722695994370; 2026-10-07
+> pick q1 问题导向「换台电脑，结果还对吗？」; doubao-download ext HD no watermark; chat 38445722695994370
 
 ## R语言里两个数明明一样，用 == 却是 FALSE
 
