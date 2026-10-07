@@ -2,7 +2,7 @@
 
 > 由 `cover/cover.json` 生成；改清单后运行 `node scripts/update-cover-md.mjs`。
 >
-> 合计 **13** 篇 · 已启用 **12** · 待制作（inactive）**1**
+> 合计 **13** 篇 · 已启用 **13** · 待制作（inactive）**0**
 
 ## R语言师兄脚本换台电脑就挂：用 renv 锁住包版本
 
@@ -199,11 +199,15 @@ LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。生活感横�
 ## 分析做到一半如何存临时数据？
 
 - id：`20260921-r-save-five-methods`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20260921-r-save-five-methods.jpg`
 
-_尚无封面图。_
+![分析做到一半如何存临时数据？](images/20260921-r-save-five-methods.jpg)
 
-- prompt：_（未记录）_
+- prompt：
 
-> images cleared 2026-10-07; awaiting regen
+```text
+LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「做到一半怎么存？」。左侧：下班桌面+半截表格+红叉；右侧：RDS/Excel/CSV/save()/image 五标签文件夹+绿勾；中间橙箭头。暖橙+青绿。无代码墙、无水印。
+```
+
+> automation 2026-10-07

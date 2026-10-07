@@ -99,11 +99,11 @@
     {
       "id": "20260921-r-save-five-methods",
       "title": "分析做到一半如何存临时数据？",
-      "image": null,
-      "active": false,
-      "prompt": null,
-      "note": "images cleared 2026-10-07; awaiting regen"
+      "image": "images/20260921-r-save-five-methods.jpg",
+      "active": true,
+      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「做到一半怎么存？」。左侧：下班桌面+半截表格+红叉；右侧：RDS/Excel/CSV/save()/image 五标签文件夹+绿勾；中间橙箭头。暖橙+青绿。无代码墙、无水印。",
+      "note": "automation 2026-10-07"
     }
   ],
-  "updatedAt": "2026-10-07T08:23:25.496Z"
+  "updatedAt": "2026-10-07T08:25:15.920Z"
 }
