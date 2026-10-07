@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
- * 封面收成 900×383（比例 900/383 ≈ 2.35:1），原地覆盖。
+ * 封面收成约 2.35:1 高清成品，原地覆盖。
  *
- * 行为（兼容豆包直出与其他模型）：
- * - 已是 900×383 → 跳过
- * - 比例已约 2.35:1（允许误差）→ **不居中裁构图**，只 resize 到 900×383
- *   （豆包等直出横封面常走这条）
- * - 比例差太多（如 16:9）→ 居中裁成 2.35:1，再 resize
+ * 目标像素：**至少** 1800×766（900×383 的 2 倍；比例同 900/383）。
+ * 豆包直出常见 ~3008×1280：比例对且已达目标 → **整段跳过**，保留更高清原图。
+ *
+ * - 已 ≥1800×766 且比例约 2.35:1 → 跳过
+ * - 比例约 2.35:1 但偏小 → 只 resize 到 1800×766（不裁构图）
+ * - 比例差太多（如 16:9）→ 居中裁成 2.35:1，再 resize 到 1800×766
  *
  *   node scripts/crop-cover-235.mjs cover/images/<id>.jpg
- *   node scripts/crop-cover-235.mjs
  *   npm run crop-cover
  */
 import fs from "node:fs";
@@ -19,11 +19,12 @@ import sharp from "sharp";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const imagesDir = path.join(root, "cover", "images");
+/** 与历史微信大图 900×383 同比例 */
 const RATIO = 900 / 383;
-/** |w/h - RATIO| 不超过此值，视为「已经大约是 2.35:1」 */
 const RATIO_TOL = 0.02;
-const OUT_W = 900;
-const OUT_H = 383;
+/** 入库最低清晰度（2×）；更大且比例对的原图直接保留 */
+const OUT_W = 1800;
+const OUT_H = 766;
 
 function listDefault() {
   return fs
@@ -53,10 +54,15 @@ async function cropOne(filePath) {
 
   const cur = w / h;
   const ratioOk = Math.abs(cur - RATIO) <= RATIO_TOL;
-  const sizeOk = w === OUT_W && h === OUT_H;
+  const bigEnough = w >= OUT_W && h >= OUT_H;
 
-  if (ratioOk && sizeOk) {
-    console.log("skip", filePath, `${w}x${h}`, "already 900x383 ~2.35:1");
+  if (ratioOk && bigEnough) {
+    console.log(
+      "skip",
+      filePath,
+      `${w}x${h}`,
+      `already ≥${OUT_W}x${OUT_H} ~2.35:1`,
+    );
     return;
   }
 
@@ -67,7 +73,6 @@ async function cropOne(filePath) {
   let pipeline = sharp(filePath);
 
   if (ratioOk) {
-    // 豆包等：比例已对，只压到成品像素，不裁构图
     pipeline = pipeline.resize(OUT_W, OUT_H, { fit: "fill" });
     console.log(
       "resize-only",
@@ -75,7 +80,6 @@ async function cropOne(filePath) {
       `${w}x${h} (ratio ${cur.toFixed(4)}) → ${OUT_W}x${OUT_H}`,
     );
   } else {
-    // 其他模型（如 16:9）：居中裁成 2.35:1 再压
     let left = 0;
     let top = 0;
     let cw = w;
@@ -101,7 +105,7 @@ async function cropOne(filePath) {
     );
   }
 
-  await pipeline.jpeg({ quality: 90, mozjpeg: true }).toFile(outPath + ".tmp");
+  await pipeline.jpeg({ quality: 92, mozjpeg: true }).toFile(outPath + ".tmp");
 
   fs.renameSync(outPath + ".tmp", outPath);
   if (outPath !== filePath && fs.existsSync(filePath)) fs.unlinkSync(filePath);
