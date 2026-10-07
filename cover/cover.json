@@ -5,16 +5,16 @@
       "title": "R语言师兄脚本换台电脑就挂：用 renv 锁住包版本",
       "image": "images/20261007-renv-lockfile.jpg",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「换电脑就挂？」。碎笔记本+红叉+dplyr/ggplot2 vs 挂锁锁 renv.lock。暖橙+青绿。无代码墙、无水印。",
-      "note": "ref white+black + inset margin 2026-10-07"
+      "prompt": "比例 2.35:1，成品像素 900×383，横版封面，无水印；只出 1 张终稿，不要中间稿。\n油管/B站缩略图风，高对比大字钩子：「换电脑就挂？」\n冲突画面：左侧拷来的脚本碎裂、dplyr 版本对不上；右侧一把挂锁锁住 renv.lock 文件，包版本整齐归位。暖橙+青绿。\n不要代码墙、公式墙、水印、二维码、小图拼版。",
+      "note": "doubao trial keep 2026-10-07"
     },
     {
       "id": "20261007-float-equality-near",
       "title": "R语言里两个数明明一样，用 == 却是 FALSE",
       "image": "images/20261007-float-equality-near.jpg",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「明明一样却是 FALSE」。两枚24球+大红FALSE。青绿+橙。无代码墙、无水印。",
-      "note": "ref white+black + inset margin 2026-10-07"
+      "prompt": "比例 2.35:1，成品像素 900×383，横版封面，无水印；只出 1 张终稿，不要中间稿。\n油管/B站缩略图风，高对比大字钩子：「明明一样，== 却是 FALSE」\n冲突画面：两边打印都是 24 的 BMI，中间 == 裂开打大红叉；旁边 all.equal / near 亮起绿勾。高对比插画。\n不要代码墙、公式墙、水印、二维码、小图拼版。",
+      "note": "doubao trial keep 2026-10-07"
     },
     {
       "id": "20261007-excel-multiheader-unpivotr",
@@ -101,9 +101,9 @@
       "title": "分析做到一半如何存临时数据？",
       "image": "images/20260921-r-save-five-methods.jpg",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「做到一半怎么存？」。左侧：下班桌面+半截表格+红叉；右侧：RDS/Excel/CSV/save()/image 五标签文件夹+绿勾；中间橙箭头。暖橙+青绿。无代码墙、无水印。",
-      "note": "automation 2026-10-07"
+      "prompt": "比例 2.35:1，成品像素 900×383，横版封面，无水印；只出 1 张终稿，不要中间稿。\n油管/B站缩略图风，高对比大字钩子：「做到一半，怎么存？」\n冲突画面：左侧分析做到一半的乱桌（半截清洗表、时钟、下班压力）；右侧五条清晰保存路径图标——RDS、Excel、CSV、save()、save.image()，暖橙对青绿。\n不要代码墙、公式墙、水印、二维码、小图拼版、虚线外框。",
+      "note": "doubao trial keep 2026-10-07"
     }
   ],
-  "updatedAt": "2026-10-07T08:25:15.920Z"
+  "updatedAt": "2026-10-07T16:43:06+08:00"
 }

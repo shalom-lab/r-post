@@ -10,8 +10,10 @@
 
 | 谁 | 目标 |
 |----|------|
-| 定时 Automation | 只补缺：尚无可用封面的条目出图 |
-| 人工对话 | 按用户说的：做 / 重做 / 改某篇，或只同步清单 |
+| 定时 Automation | 只补缺：尚无可用封面的条目；**一律豆包 Seedream** 出图 |
+| 人工对话 | 按用户说的：做 / 重做 / 改某篇，或只同步清单；同样走豆包 |
+
+出图工具固定为**豆包**（账号「迷城」、新对话 + 图像生成）。禁止用 `GenerateImage` 顶替。
 
 **完工标准**
 
@@ -41,14 +43,13 @@
 | `node scripts/sync-cover-list.mjs` | 对照 `content/index.json` 同步封面清单；末尾刷新 `cover.md` |
 | `node scripts/update-cover-md.mjs` | 从 `cover.json` 生成 `cover.md`（勿手改 md） |
 | `node scripts/crop-cover-235.mjs [图…]` | **sharp** 居中裁成 2.35:1 → 900×383，原地覆盖；无参则处理 `cover/images/` 全部 |
-| `node scripts/make-cover-ref-templates.mjs` | 重生成两色参考蒙版 `templates/ref-16x9-black235-white-margins.jpg` |
+| `node scripts/make-cover-ref-templates.mjs` | **历史**：旧 16:9 蒙版；新流程勿用 |
 
 ```bash
 node scripts/sync-cover-list.mjs
 node scripts/update-cover-md.mjs
 node scripts/crop-cover-235.mjs cover/images/<id>.jpg
 npm run crop-cover
-npm run make-cover-ref
 ```
 
 ### `cover.json` 字段
@@ -136,8 +137,9 @@ node scripts/sync-cover-list.mjs
    ```bash
    node scripts/crop-cover-235.mjs cover/images/<id>.jpg
    ```
-4. 更新条目：`image`、`active: true`、实际所用 `prompt`、`note` 可选
-5. 跑 `node scripts/update-cover-md.mjs`
+4. 按 `rules.md`「出图后核验」过一眼（尺寸、钩子/专名、水印可接受）
+5. 更新条目：`image`、`active: true`、实际所用 `prompt`、`note` 可选
+6. 跑 `node scripts/update-cover-md.mjs`
 
 禁止再用 `GenerateImage` + 16:9 蒙版出封面。
 
