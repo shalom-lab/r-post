@@ -45,23 +45,23 @@
     {
       "id": "20261006-dpqr-distributions",
       "title": "R语言 d/p/q/r 四个函数：查临界值、算 P 值、造模拟数据",
-      "image": null,
-      "active": false,
-      "note": "待制作"
+      "image": "images/20261006-dpqr-distributions.jpg",
+      "active": true,
+      "note": "automation 2026-10-07"
     },
     {
       "id": "20261005-friedman-repeated-scores",
       "title": "R语言：同一批人测了三次，分数还不正态，怎么比？",
-      "image": null,
-      "active": false,
-      "note": "待制作"
+      "image": "images/20261005-friedman-repeated-scores.jpg",
+      "active": true,
+      "note": "automation 2026-10-07"
     },
     {
       "id": "20260927-wide-to-long",
       "title": "R 语言里随访宽表怎么转成长表",
-      "image": null,
-      "active": false,
-      "note": "待制作"
+      "image": "images/20260927-wide-to-long.jpg",
+      "active": true,
+      "note": "automation 2026-10-07"
     },
     {
       "id": "20260927-regex-extract-data",
@@ -92,5 +92,5 @@
       "note": "待制作"
     }
   ],
-  "updatedAt": "2026-10-07T05:19:14.103Z"
+  "updatedAt": "2026-10-07T05:23:56.280Z"
 }

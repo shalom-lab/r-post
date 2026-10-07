@@ -2,7 +2,7 @@
 
 > 由 `cover/cover.json` 生成；改清单后运行 `node scripts/update-cover-md.mjs`。
 >
-> 合计 **13** 篇 · 已启用 **6** · 待制作（inactive）**7**
+> 合计 **13** 篇 · 已启用 **9** · 待制作（inactive）**4**
 
 ## R语言师兄脚本换台电脑就挂：用 renv 锁住包版本
 
@@ -67,32 +67,32 @@
 ## R语言 d/p/q/r 四个函数：查临界值、算 P 值、造模拟数据
 
 - id：`20261006-dpqr-distributions`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20261006-dpqr-distributions.jpg`
 
-_尚无封面图。_
+![R语言 d/p/q/r 四个函数：查临界值、算 P 值、造模拟数据](images/20261006-dpqr-distributions.jpg)
 
-> 待制作
+> automation 2026-10-07
 
 ## R语言：同一批人测了三次，分数还不正态，怎么比？
 
 - id：`20261005-friedman-repeated-scores`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20261005-friedman-repeated-scores.jpg`
 
-_尚无封面图。_
+![R语言：同一批人测了三次，分数还不正态，怎么比？](images/20261005-friedman-repeated-scores.jpg)
 
-> 待制作
+> automation 2026-10-07
 
 ## R 语言里随访宽表怎么转成长表
 
 - id：`20260927-wide-to-long`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20260927-wide-to-long.jpg`
 
-_尚无封面图。_
+![R 语言里随访宽表怎么转成长表](images/20260927-wide-to-long.jpg)
 
-> 待制作
+> automation 2026-10-07
 
 ## 如何用正则从字符串里提取数据
 
