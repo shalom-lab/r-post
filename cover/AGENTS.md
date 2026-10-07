@@ -30,7 +30,7 @@
 | `cover.json` | 源数据 |
 | `cover.md` | 预览；禁止手改，脚本生成 |
 | `images/` | 成图（成品须 900×383） |
-| `templates/ref-16x9-black235-white-margins.jpg` | 16:9 两色蒙版：白=裁空，黑=作画（内留 margin） |
+| `templates/ref-16x9-black235-white-margins.jpg` | **已停用**（旧 16:9 蒙版，仅保留） |
 | `rules.md` | 作图规范 |
 | `content/index.json` | 文章清单；sync 据此挂 `id` / `title` |
 
@@ -80,7 +80,7 @@ npm run make-cover-ref
 - 只在最新 `master` 操作，直接 `git push origin master`；不开分支、不开 PR
 - 只动 `cover/`（及必要时的 sync / update 脚本）；不动正文与排期主线
 - 禁止手改 `cover.md`
-- 出图前必须先单独构思 prompt；画面细则遵守 `rules.md`
+- 出图前必须先单独构思 prompt；画面细则遵守 `rules.md`；用豆包直出 2.35:1，不用 GenerateImage 蒙版流程
 - 写回：`image` 正确、`active: true`、`prompt` 必填
 - Automation：不覆盖已有可用封面；不接风格偏好；一次约 1～3 篇
 - 有变更则自己 commit + push；无 diff 说明无需推送；不提交密钥与无关文件；push 失败写明报错，不改开 PR 充数
@@ -128,17 +128,18 @@ node scripts/sync-cover-list.mjs
    - 改封面 → 在现有 prompt 上改，勿换题；仍须符合正文
 4. 确认风格与通用项过关后，再出图
 
-### Step 5 — 出图、裁切、写回
+### Step 5 — 出图、落盘、写回
 
-1. 确认参考蒙版存在：`cover/templates/ref-16x9-black235-white-margins.jpg`（没有则 `npm run make-cover-ref`）
-2. 按 Step 4 的 prompt 出图（`GenerateImage`，**强制** `aspect_ratio: "16:9"`，**强制** `reference_image_paths` 指向该蒙版）：**只要大图**；prompt 须写入 `rules.md` 两色布局句（白空、只画黑带、黑带内留 margin）
-3. 成图先落到 `cover/images/<id>.jpg`
-4. **sharp 裁成 2.35:1 / 900×383 并覆盖**：
+1. 按 Step 4 的 prompt，用**豆包 Seedream**「新对话」出图（细则见 `rules.md`）：提示词写死 **2.35:1 / 900×383**，只出 1 张终稿
+2. 高清下载（点开大图，或控制台 `EXPECT: 1` 打包脚本）到本机，再拷到 `cover/images/<id>.jpg`
+3. 若原图不是 900×383，跑 sharp 压/裁覆盖：
    ```bash
    node scripts/crop-cover-235.mjs cover/images/<id>.jpg
    ```
-5. 更新条目：`image`、`active: true`、实际所用 `prompt`、`note` 可选
-6. 跑 `node scripts/update-cover-md.mjs`
+4. 更新条目：`image`、`active: true`、实际所用 `prompt`、`note` 可选
+5. 跑 `node scripts/update-cover-md.mjs`
+
+禁止再用 `GenerateImage` + 16:9 蒙版出封面。
 
 ### Step 6 — 提交并推送
 
