@@ -1,0 +1,68 @@
+{
+  "covers": [
+    {
+      "id": "20261006-repeat-analysis-by-group",
+      "title": "R语言按分组各跑一遍分析：每家医院一个回归",
+      "image": null,
+      "active": false,
+      "note": "待制作"
+    },
+    {
+      "id": "20261006-recode-ifelse-case-when",
+      "title": "R语言给变量重新分组：从 ifelse 到 case_when",
+      "image": null,
+      "active": false,
+      "note": "待制作"
+    },
+    {
+      "id": "20261006-dpqr-distributions",
+      "title": "R语言 d/p/q/r 四个函数：查临界值、算 P 值、造模拟数据",
+      "image": null,
+      "active": false,
+      "note": "待制作"
+    },
+    {
+      "id": "20261005-friedman-repeated-scores",
+      "title": "R语言：同一批人测了三次，分数还不正态，怎么比？",
+      "image": null,
+      "active": false,
+      "note": "待制作"
+    },
+    {
+      "id": "20260927-wide-to-long",
+      "title": "R 语言里随访宽表怎么转成长表",
+      "image": null,
+      "active": false,
+      "note": "待制作"
+    },
+    {
+      "id": "20260927-regex-extract-data",
+      "title": "如何用正则从字符串里提取数据",
+      "image": null,
+      "active": false,
+      "note": "待制作"
+    },
+    {
+      "id": "20260927-batch-read-without-for",
+      "title": "一百个 Excel 怎么一次读进来",
+      "image": null,
+      "active": false,
+      "note": "待制作"
+    },
+    {
+      "id": "20260921-regex-real-world",
+      "title": "啥是正则表达式？先会认文本形状",
+      "image": null,
+      "active": false,
+      "note": "待制作"
+    },
+    {
+      "id": "20260921-r-save-five-methods",
+      "title": "分析做到一半如何存临时数据？",
+      "image": null,
+      "active": false,
+      "note": "待制作"
+    }
+  ],
+  "updatedAt": "2026-10-07T04:33:48.592Z"
+}

@@ -13,6 +13,8 @@
     "sync": "node scripts/update-index.mjs && node scripts/update-topics-md.mjs && node scripts/sync-public.mjs",
     "update-index": "node scripts/update-index.mjs",
     "update-topics": "node scripts/update-topics-md.mjs",
+    "update-cover": "node scripts/update-cover-md.mjs",
+    "sync-cover": "node scripts/sync-cover-list.mjs",
     "embed-images": "node scripts/embed-images.mjs",
     "wechat:draft": "node scripts/wechat-draft.mjs"
   },

@@ -28,6 +28,14 @@
 - 「写选题 …」→ 直接写当日 `YYYYMMDD-slug` QMD（边写边做 Post-content 检查），并更新该选题的 `article`。
 - 「写一篇……」→ 同上：检查过了就推；用户说改就直接改线上文。
 - 「渲染」→ 仅在需要本地核验时；默认依赖 `render.yml`。
+- 「做封面 / 重做封面 / 改封面 …」→ 见 `cover/AGENTS.md`（人工触发）；定时补缺也只读该文件。
+
+## 封面（可选）
+
+- 目录：`cover/`。无封面不挡写作、渲染、排期。
+- **定时 Automation**：先 `npm run sync-cover`，再只给 `active: false` 的补图；已有封面跳过。改/重做由人说话触发。
+- 封面任务**干完有变更时，Agent 自己 commit and push**（细则见 `cover/AGENTS.md`「提交与推送」）。
+- 细则只维护 **`cover/AGENTS.md`**，不要把长规范抄回本文件。
 
 ## 可选入口（非默认）
 
@@ -60,7 +68,7 @@
 
 - 源文件：`wechat/queue.json` 只记待传 `id` 和顺序；`wechat/wechat_draft.json` 只追加本流水线 `draft/add` 成功的稿，不收录后台手建草稿。失败不写。
 - 网页主页加入/移出；`/queue` 调整顺序。保存通过 GitHub Contents API 提交，不改 `content/index.json`。
-- 上传草稿用已渲染 Markdown，经 `markmuse-wechat` 转 HTML，再向 token 中控取 `access_token`，按顺序每两篇调用一次微信 `draft/add`。末尾剩一篇则单独一期。
-- 中控账号名、作者写在 `wechat/config.json`。`WECHAT_API_KEY` 和 `WECHAT_TOKEN_URL` 只放 `wechat/.env` 或 Actions secret，公开仓库不要提交地址。条目清单见 `wechat/tips.md`。
+- 上传草稿读已渲染 Markdown（不重新跑 Quarto），经 `markmuse-wechat` 转 HTML；正文会去掉标题下的 `RPost` 和日期行。主题 CSS 在 `wechat/custom-md-css/`，由 `wechat/config.json` 的 `theme` 选用（`all` 则每个主题各传一期，标题前加主题名）。再向 token 中控取 `access_token`，按顺序每两篇调用一次微信 `draft/add`。末尾剩一篇则单独一期。
+- 中控账号名、作者写在 `wechat/config.json`。只要 `TOKEN_CENTER_URL` / `TOKEN_CENTER_API_KEY`（`.env` 或 Actions secret）去中控拿 token。新建草稿走微信固定 `draft/add`，不必再配 URL。群发/发布尚未做。见 `wechat/tips.md`。
 - 本地：复制 `wechat/env.example` 为 `wechat/.env`，中控可跑在本机，然后 `npm run wechat:draft`。中控只监听本机时不要走网页上的上传按钮。
 - 定时群发不在本仓库处理。不把微信密钥放进前端或 `VITE_*`。
