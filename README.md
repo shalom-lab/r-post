@@ -32,7 +32,7 @@ AGENTS.md                  # 人机共用操作说明
 ## 封面（公众号大图）
 
 - 成品只要 **900×383** 大图；出图用 16:9 + 两色参考蒙版（白=裁空、黑=作画，黑带内留 margin），再 `npm run crop-cover` 裁成 2.35:1。
-- 清单与预览：`cover/cover.json`（源）、`cover/cover.md`（生成，勿手改）；成图在 `cover/images/`。
+- 清单与预览：`cover/cover.json`（源）、`cover/cover.md`（生成，勿手改）；成图在 `cover/images/`。网页「封面」页（`/covers`）读同步后的 `public/cover/`。
 - 作图规范：`cover/rules.md`；流程：`cover/AGENTS.md`。蒙版丢失时可 `npm run make-cover-ref` 重生成。
 
 ## 自动化

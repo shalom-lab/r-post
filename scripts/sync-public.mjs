@@ -29,7 +29,15 @@ fs.rmSync(topicsDest, { recursive: true, force: true });
 fs.mkdirSync(topicsDest, { recursive: true });
 fs.copyFileSync(path.join(root, "topics", "index.md"), path.join(topicsDest, "index.md"));
 
+// 封面预览：清单 + 成图
+const coverDest = path.join(pub, "cover");
+fs.rmSync(coverDest, { recursive: true, force: true });
+fs.mkdirSync(coverDest, { recursive: true });
+fs.copyFileSync(path.join(root, "cover", "cover.json"), path.join(coverDest, "cover.json"));
+const coverImages = path.join(root, "cover", "images");
+if (fs.existsSync(coverImages)) copyDir(coverImages, path.join(coverDest, "images"));
+
 // 清理旧管理台静态数据
 fs.rmSync(path.join(pub, "rules"), { recursive: true, force: true });
 fs.rmSync(path.join(pub, "prompt-rules"), { recursive: true, force: true });
-console.log("已同步 content/ 与 topics/index.md → apps/console/public/");
+console.log("已同步 content/、topics/index.md、cover/ → apps/console/public/");

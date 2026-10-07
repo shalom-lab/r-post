@@ -1,6 +1,7 @@
 import RequireAccess from "./RequireAccess";
 import { Link, NavLink, Navigate, Route, Routes } from "react-router-dom";
 import ArticlePage from "./pages/ArticlePage";
+import CoverPage from "./pages/CoverPage";
 import HomePage from "./pages/HomePage";
 import QueuePage from "./pages/QueuePage";
 import SettingsPage from "./pages/SettingsPage";
@@ -24,6 +25,7 @@ export default function App() {
         <div className="reader-actions">
           <nav className="reader-nav" aria-label="主导航">
             <NavLink to="/" end>文章</NavLink>
+            <NavLink to="/covers">封面</NavLink>
             <NavLink to="/queue">排期</NavLink>
             <NavLink to="/settings">连接</NavLink>
           </nav>
@@ -38,6 +40,7 @@ export default function App() {
           <Route path="/articles" element={<Navigate to="/" replace />} />
           <Route path="/article/:id" element={<RequireAccess><ArticlePage /></RequireAccess>} />
           <Route path="/topics" element={<Navigate to="/" replace />} />
+          <Route path="/covers" element={<RequireAccess><CoverPage /></RequireAccess>} />
           <Route path="/queue" element={<RequireAccess><QueuePage /></RequireAccess>} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
