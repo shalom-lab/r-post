@@ -2,7 +2,7 @@
 
 > 由 `cover/cover.json` 生成；改清单后运行 `node scripts/update-cover-md.mjs`。
 >
-> 合计 **13** 篇 · 已启用 **6** · 待制作（inactive）**7**
+> 合计 **13** 篇 · 已启用 **9** · 待制作（inactive）**4**
 
 ## R语言师兄脚本换台电脑就挂：用 renv 锁住包版本
 
@@ -87,38 +87,50 @@ LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略�
 ## R语言给变量重新分组：从 ifelse 到 case_when
 
 - id：`20261006-recode-ifelse-case-when`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20261006-recode-ifelse-case-when.jpg`
 
-_尚无封面图。_
+![R语言给变量重新分组：从 ifelse 到 case_when](images/20261006-recode-ifelse-case-when.jpg)
 
-- prompt：_（未记录）_
+- prompt：
 
-> images cleared 2026-10-07; awaiting regen
+```text
+LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「切 BMI 档写乱了？」。左侧嵌套套娃+三枚 ifelse 芯片+红戳「肥胖→正常」+红叉；右侧 case_when 芯片+偏瘦/正常/超重/肥胖阶梯+绿勾。暖橙+青绿。无代码墙、无水印。
+```
+
+> automation fill 2026-10-07
 
 ## R语言 d/p/q/r 四个函数：查临界值、算 P 值、造模拟数据
 
 - id：`20261006-dpqr-distributions`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20261006-dpqr-distributions.jpg`
 
-_尚无封面图。_
+![R语言 d/p/q/r 四个函数：查临界值、算 P 值、造模拟数据](images/20261006-dpqr-distributions.jpg)
 
-- prompt：_（未记录）_
+- prompt：
 
-> images cleared 2026-10-07; awaiting regen
+```text
+LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「不翻表查 1.96？」。翻飞统计表+红叉 vs qnorm→1.96 徽章+d/p/q/r 芯片+骰子+正态曲线轮廓+绿勾。暖橙+青绿。无代码墙、无水印。
+```
+
+> automation fill 2026-10-07
 
 ## R语言：同一批人测了三次，分数还不正态，怎么比？
 
 - id：`20261005-friedman-repeated-scores`
-- 状态：**inactive**
-- 文件：（无）
+- 状态：**启用**
+- 文件：`images/20261005-friedman-repeated-scores.jpg`
 
-_尚无封面图。_
+![R语言：同一批人测了三次，分数还不正态，怎么比？](images/20261005-friedman-repeated-scores.jpg)
 
-- prompt：_（未记录）_
+- prompt：
 
-> images cleared 2026-10-07; awaiting regen
+```text
+LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「三次疼痛分不正态？」。同一病人三表盘术前/术后1天/术后7天+ANOVA 红叉 vs Friedman+Wilcoxon 奖牌排名+绿勾。暖橙+青绿。无代码墙、无水印。
+```
+
+> automation fill 2026-10-07
 
 ## R 语言里随访宽表怎么转成长表
 
