@@ -69,8 +69,8 @@
       "title": "R 语言里随访宽表怎么转成长表",
       "image": "images/20260927-wide-to-long.jpg",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「宽表怎么拧成长表」。宽表 vs 长表+箭头。青绿+橙。无水印。",
-      "note": "ref white+black + inset margin 2026-10-07"
+      "prompt": "比例 2.35:1，至少 1800×766，横版封面，无水印；禁止 16:9；只出 1 张终稿。\nYouTube 缩略图风，超粗立体钩子，轻微浮动柔光。核心：随访宽表→长表。\n大字钩子：「三人三次随访，怎么变成一人多行？」\n画面描述：诊所桌一角，血压记录本摊开成宽表（姓名一行、v1 v2 v3 横格）；旁边直立的病历夹里同一人记录变成多页竖翻（一人多行）。钩子压在画面上半。暖临床灯光，青绿点缀即可但不抢戏。",
+      "note": "pick q1-opt D 诊所病历; doubao-download after ext reload; chat 38445842652880642; hook 三人三次随访怎么变成一人多行"
     },
     {
       "id": "20260927-regex-extract-data",
