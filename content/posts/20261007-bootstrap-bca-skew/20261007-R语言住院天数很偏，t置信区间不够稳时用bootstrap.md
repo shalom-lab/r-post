@@ -1,0 +1,105 @@
+# R语言住院天数很偏，t 置信区间不够稳时用 bootstrap
+RPost
+2026-10-07
+
+一组住院天数：多数人住几天，少数人住几十天。均值仍有人要报，但分布明显右偏。`t.test()`
+给出的均值置信区间，默认当抽样分布近似对称。偏得厉害时，这个近似会歪。
+
+依赖：`boot`。下文 bootstrap 重复次数固定为 **1999**。
+
+## 右偏的住院天数
+
+用伽马分布造 50 个正整数天数，多数短、尾巴长：
+
+``` r
+set.seed(20261007)
+los <- pmax(1L, round(rgamma(50, shape = 0.7, scale = 7)))
+summary(los)
+```
+
+       Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+       1.00    2.00    4.00    7.04    7.75   29.00 
+
+``` r
+mean(los)
+```
+
+    [1] 7.04
+
+``` r
+median(los)
+```
+
+    [1] 4
+
+均值约 7.0，中位数 4，最大 29。均值被长住院往右拉。
+
+## 先看 t 置信区间
+
+``` r
+t.test(los)$conf.int
+```
+
+    [1] 4.901702 9.178298
+    attr(,"conf.level")
+    [1] 0.95
+
+大约从 4.90 到 9.18。这是按 t 分布、假设均值的抽样分布近似对称时的 95%
+区间。
+
+## 再用 BCa bootstrap
+
+有放回重抽样 1999 次，每次算均值，用 BCa（bias-corrected and
+accelerated）校正偏度和偏差：
+
+``` r
+library(boot)
+set.seed(20261007)
+boot_mean <- boot(
+  los,
+  statistic = function(d, i) mean(d[i]),
+  R = 1999
+)
+boot.ci(boot_mean, type = "bca", conf = 0.95)
+```
+
+    BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+    Based on 1999 bootstrap replicates
+
+    CALL : 
+    boot.ci(boot.out = boot_mean, conf = 0.95, type = "bca")
+
+    Intervals : 
+    Level       BCa          
+    95%   ( 5.286,  9.685 )  
+    Calculations and Intervals on Original Scale
+
+BCa 大约从 5.29 到 9.69。和 t
+区间比，两端都往右移了一截：右偏样本里，均值的抽样分布也常右偏，BCa
+按重抽样形状改边界，t 区间仍按对称近似切。
+
+只报均值、且分布明显偏时，优先看 BCa；`boot.ci(..., type = "perc")`
+是百分位法，校正更少，偏态下一般不如 BCa。
+
+## 覆盖率：更好，仍可能远低于 95%
+
+名义上写「95%」，实际有多少次区间盖住真均值，是另一回事。对很偏的分布，[freerangestats
+的模拟](https://freerangestats.info/blog/2026/09/20/clt-boot-comparison)
+比较了渐近正态区间和 BCa：BCa
+往往好于只靠中心极限定理的区间，尤其在样本量较小的时候；但覆盖率仍常明显低于
+95%，有时样本量到上千也够呛。
+
+本文不跑迷你仿真。带走一句即可：BCa 是常用改进，不是「盖住概率就是
+0.95」的保证。
+
+## 何时仍不够
+
+- 样本很小（比如十来个），重抽样也只是在这十来个点里打转，区间可以很宽或很飘。
+- 极值极少、却决定均值时，BCa
+  对均值的区间仍可能不稳；若关心的是「典型住院多久」，中位数及其区间更贴题，本文不展开。
+- 要的是预测区间或个体差异，不是均值的置信区间，换问题，不要硬套
+  `boot.ci`。
+
+右偏住院天数报均值时：`t.test` 作对照，`boot` +
+`boot.ci(..., type = "bca")` 作主报；把 `R` 写进脚本（本文
+1999），并记住覆盖率常常到不了名义上的 95%。

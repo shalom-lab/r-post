@@ -1,6 +1,74 @@
 {
   "articles": [
     {
+      "id": "20261007-renv-lockfile",
+      "slug": "20261007-renv-lockfile",
+      "title": "R语言师兄脚本换台电脑就挂：用 renv 锁住包版本",
+      "description": "换机器、换库，dplyr 行为可能对不上。renv 用 lockfile 记下包版本；它不管 R 小版本，也不锁 sample 算法。数据怎么存仍看五法分工。",
+      "date": "2026-10-07",
+      "category": "R 代码管理",
+      "categorySlug": "r-code-management",
+      "tags": [
+        "renv",
+        "lockfile",
+        "可复现",
+        "包版本"
+      ],
+      "qmd": "posts/20261007-renv-lockfile/20261007-R语言师兄脚本换台电脑就挂：用renv锁住包版本.qmd",
+      "md": "posts/20261007-renv-lockfile/20261007-R语言师兄脚本换台电脑就挂：用renv锁住包版本.md"
+    },
+    {
+      "id": "20261007-float-equality-near",
+      "slug": "20261007-float-equality-near",
+      "title": "R语言里两个数明明一样，用 == 却是 FALSE",
+      "description": "BMI 算出来看着是 24，== 却筛不着；0.1 分箱在边界错格。主招用 all.equal，可选 dplyr::near，分箱可走整数。",
+      "date": "2026-10-07",
+      "category": "R 基础",
+      "categorySlug": "r-base",
+      "tags": [
+        "浮点",
+        "all.equal",
+        "near",
+        "比较"
+      ],
+      "qmd": "posts/20261007-float-equality-near/20261007-R语言里两个数明明一样用==却是FALSE.qmd",
+      "md": "posts/20261007-float-equality-near/20261007-R语言里两个数明明一样用==却是FALSE.md"
+    },
+    {
+      "id": "20261007-excel-multiheader-unpivotr",
+      "slug": "20261007-excel-multiheader-unpivotr",
+      "title": "R语言Excel两层表头怎么读：先拆格子再拼列名",
+      "description": "组名在上一行、指标在下一行，合并单元格留下空位：用 unpivotr 拆成格子，behead 取表头，再拼成长表。",
+      "date": "2026-10-07",
+      "category": "R tidyverse",
+      "categorySlug": "r-tidyverse",
+      "tags": [
+        "unpivotr",
+        "表头",
+        "behead",
+        "长表"
+      ],
+      "qmd": "posts/20261007-excel-multiheader-unpivotr/20261007-R语言Excel两层表头怎么读：先拆格子再拼列名.qmd",
+      "md": "posts/20261007-excel-multiheader-unpivotr/20261007-R语言Excel两层表头怎么读：先拆格子再拼列名.md"
+    },
+    {
+      "id": "20261007-bootstrap-bca-skew",
+      "slug": "20261007-bootstrap-bca-skew",
+      "title": "R语言住院天数很偏，t 置信区间不够稳时用 bootstrap",
+      "description": "住院天数右偏时，均值的 t 置信区间常不对称地偏一截；用 boot 做 BCa 区间。覆盖率往往好一些，仍可能远低于名义 95%。",
+      "date": "2026-10-07",
+      "category": "R 统计",
+      "categorySlug": "r-stats",
+      "tags": [
+        "bootstrap",
+        "BCa",
+        "置信区间",
+        "偏态"
+      ],
+      "qmd": "posts/20261007-bootstrap-bca-skew/20261007-R语言住院天数很偏，t置信区间不够稳时用bootstrap.qmd",
+      "md": "posts/20261007-bootstrap-bca-skew/20261007-R语言住院天数很偏，t置信区间不够稳时用bootstrap.md"
+    },
+    {
       "id": "20261006-repeat-analysis-by-group",
       "slug": "20261006-repeat-analysis-by-group",
       "title": "R语言按分组各跑一遍分析：每家医院一个回归",
@@ -155,5 +223,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-10-06T02:02:20.661Z"
+  "updatedAt": "2026-10-07T01:57:31.376Z"
 }
