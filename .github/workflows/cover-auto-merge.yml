@@ -1,0 +1,72 @@
+name: Auto-merge cover PRs
+
+# Cursor Automation 只能开 PR、不能直推 master。
+# 本 workflow 把「只改封面」的 cursor[bot] PR 自动合入 master，避免图停在 Draft 分支。
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: cover-auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  auto-merge:
+    if: >
+      github.event.pull_request.base.ref == 'master' &&
+      github.event.pull_request.user.login == 'cursor[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure PR only touches cover paths
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          files=$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files" --paginate --jq '.[].filename')
+          if [ -z "${files}" ]; then
+            echo "No files in PR; skip."
+            exit 1
+          fi
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              cover/*|scripts/sync-cover-list.mjs|scripts/update-cover-md.mjs) ;;
+              *)
+                echo "Refusing auto-merge: unexpected path $f"
+                exit 1
+                ;;
+            esac
+          done <<< "${files}"
+          echo "All changed paths are cover-related."
+
+      - name: Mark ready and squash-merge into master
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          n="${{ github.event.pull_request.number }}"
+          if [ "${{ github.event.pull_request.draft }}" = "true" ]; then
+            gh pr ready "$n"
+          fi
+          for i in 1 2 3 4 5 6; do
+            state=$(gh pr view "$n" --json mergeable,mergeStateStatus -q '.mergeable + ":" + .mergeStateStatus')
+            echo "attempt ${i}: ${state}"
+            case "${state}" in
+              MERGEABLE:CLEAN|MERGEABLE:HAS_HOOKS|MERGEABLE:UNSTABLE)
+                gh pr merge "$n" --squash --delete-branch
+                exit 0
+                ;;
+              UNKNOWN:*|*:UNKNOWN)
+                sleep 5
+                ;;
+              *)
+                sleep 5
+                ;;
+            esac
+          done
+          gh pr merge "$n" --squash --delete-branch

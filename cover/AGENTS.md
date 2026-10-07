@@ -67,7 +67,8 @@ node scripts/sync-cover-list.mjs
 5. 将该条设为 `active: true`，`note` 可写 `automation <日期>`。
 6. 全部处理完后：`node scripts/update-cover-md.mjs`。
 7. 一次任务可限制篇数（如最多 1～3 篇），避免超时；剩下的下次再跑。
-8. **收工必做：自己 `git commit` 并 `git push`**（见下方「提交与推送」）。没有改动则不必空提交。
+8. **收工必做：按下方「提交、推送与合入 master」落地**。没有改动则不必空提交。
+9. 开工前先 `git fetch origin master`，以 **最新 `master` 上的 `cover/`** 为准；若已有未合并的封面 PR，先复用/更新那条，**禁止**对同一批缺图再开重复 PR。
 
 ### 3. Automation 禁止事项
 
@@ -75,13 +76,29 @@ node scripts/sync-cover-list.mjs
 - 不响应用户风格偏好（那是人工对话）。
 - 不改 `content/posts/`、不跑写作 / 排期主线。
 - **禁止手改 `cover.md`**；只改 `cover.json` / `images/`，再用脚本生成 md。
-- **做完活却不 commit / push**（有变更时）。
+- **做完活却不 commit / push / 不开合入 `master` 的 PR**（有变更时）。
+- 把「只推到 feature 分支、Draft 挂着」当成完工——**图不在 `master` 上等于没做完**。
 
 ---
 
-## 提交与推送（每次干完必做）
+## 提交、推送与合入 master（每次干完必做）
 
 无论是定时补缺，还是人触发的做 / 改 / 重做封面：**有文件变更就必须由 Agent 自己提交并推送**，不要等用户再说「commit and push」。
+
+### 完工标准
+
+- **封面文件出现在 `origin/master` 的 `cover/images/` 下**，且对应条目在 `master` 的 `cover.json` 里为 `active: true`。
+- 只停在 Agent 自己的 feature 分支、或只开了未合并 Draft PR → **未完工**。
+
+### 为什么不能直推 `master`
+
+Cursor Cloud / Automation Agent **默认在 feature 分支工作**，工作区里的 GitHub token 通常也**没有**直接 push / merge `master` 的权限。因此落地路径是：
+
+1. Agent：commit → push 到封面专用分支 → 开 **指向 `master`** 的 PR（尽量非 Draft / ready）。
+2. 仓库：`.github/workflows/cover-auto-merge.yml` 在 PR **只改封面相关路径**且作者为 `cursor[bot]` 时自动 squash 合入 `master`。
+3. 若自动合入未触发或失败：结果里写明 PR 链接，并说明需人工点 Merge；**不要**声称已进仓库主分支。
+
+### 操作步骤
 
 1. 先确认：只改过 `cover.json` / `images/`（或 sync 脚本），且已跑 `update-cover-md.mjs` 生成最新 `cover.md`——**没有直接编辑过 `cover.md`**。
 2. 只暂存封面相关路径，例如：
@@ -93,9 +110,10 @@ node scripts/sync-cover-list.mjs
    - `cover: add 20261006-dpqr-distributions`
    - `cover: sync list and fill 2 missing covers`
    - `cover: redo 20260927-wide-to-long`
-4. `git push` 到当前跟踪的远程分支（通常 `origin` 当前分支）。
-5. 若工作区干净（同步后无新图、无 diff）→ 跳过 commit，在结果里说明「无需推送」。
-6. 不要提交 `.env`、密钥、`node_modules/`、无关改动。
+4. `git push` 到当前远程分支；再开/更新 **base = `master`** 的 PR。PR 里不要夹带 `cover/` 与上述脚本以外的文件，否则自动合入会拒绝。
+5. 若工具允许：把 Draft 标成 ready，便于 `cover-auto-merge` 合入。
+6. 若工作区干净（同步后无新图、无 diff）→ 跳过 commit，在结果里说明「无需推送」。
+7. 不要提交 `.env`、密钥、`node_modules/`、无关改动。
 
 ---
 

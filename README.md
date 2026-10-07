@@ -31,7 +31,7 @@ AGENTS.md                  # 人机共用操作说明
 ## 自动化
 
 - **默认**：`render.yml` 在 QMD 变更后渲染、嵌图、更新清单；`pages.yml` 部署只读站。
-- **封面**：Cursor Automation `RPost-cover` 在 `master` push 或定时跑；先同步清单，再只给未启用封面补图。细则见 `cover/AGENTS.md`。
+- **封面**：Cursor Automation `RPost-cover` 在 `master` push 或定时跑；先同步清单，再只给未启用封面补图。Agent 开 PR 后由 `cover-auto-merge.yml` 合入 `master`（图不在 `master` 上等于未完工）。细则见 `cover/AGENTS.md`。
 - 选题和写作通过对话完成，直接改仓库文件。
 - 公众号：主页选定后写入 `wechat/queue.json`。目前只上传草稿（`npm run wechat:draft`），不涉及群发/发布。中控变量见 `wechat/env.example`。
 
