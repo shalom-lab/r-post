@@ -1,3 +1,5 @@
+import { cachedFetchText } from "./local-cache";
+
 export type Article = {
   id: string;
   slug: string;
@@ -16,6 +18,12 @@ export type ContentIndex = {
   updatedAt: string;
 };
 
+export const CONTENT_INDEX_CACHE_KEY = "content/index.json";
+
+export function contentBodyCacheKey(relativePath: string): string {
+  return `content/${relativePath.replace(/^\//, "")}`;
+}
+
 export function assetUrl(relativePath: string): string {
   const base = import.meta.env.BASE_URL || "./";
   return `${base}${relativePath.replace(/^\//, "")}`
@@ -24,14 +32,23 @@ export function assetUrl(relativePath: string): string {
 }
 
 export async function fetchIndex(): Promise<ContentIndex> {
-  const response = await fetch(assetUrl("content/index.json"), { cache: "no-store" });
-  if (!response.ok) throw new Error(`无法加载文章清单（${response.status}）`);
-  return response.json() as Promise<ContentIndex>;
+  const text = await cachedFetchText(
+    CONTENT_INDEX_CACHE_KEY,
+    assetUrl("content/index.json"),
+    {
+      metaFromBody: (body) => {
+        try {
+          return String((JSON.parse(body) as ContentIndex).updatedAt || "");
+        } catch {
+          return "";
+        }
+      },
+    },
+  );
+  return JSON.parse(text) as ContentIndex;
 }
 
 export async function fetchContent(relativePath: string): Promise<string> {
-  const response = await fetch(assetUrl(`content/${relativePath}`), { cache: "no-store" });
-  if (!response.ok) throw new Error(`无法加载文章（${response.status}）`);
-  return response.text();
+  const key = contentBodyCacheKey(relativePath);
+  return cachedFetchText(key, assetUrl(`content/${relativePath}`));
 }
-

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { coverImageUrl, fetchCovers, type CoverItem } from "../lib/covers";
+import { COVER_INDEX_CACHE_KEY, coverImageUrl, fetchCovers, type CoverItem } from "../lib/covers";
+import { CACHE_UPDATED } from "../lib/local-cache";
 
 async function copyText(text: string) {
   await navigator.clipboard.writeText(text);
@@ -101,10 +102,30 @@ export default function CoverPage() {
   const [preview, setPreview] = useState<Preview | null>(null);
 
   useEffect(() => {
-    fetchCovers()
-      .then((index) => setCovers(index.covers))
-      .catch((reason: Error) => setError(reason.message))
-      .finally(() => setLoading(false));
+    let cancelled = false;
+    async function loadCovers() {
+      try {
+        const index = await fetchCovers();
+        if (!cancelled) {
+          setCovers(index.covers);
+          setError("");
+        }
+      } catch (reason) {
+        if (!cancelled) setError(reason instanceof Error ? reason.message : "无法加载封面。");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    void loadCovers();
+    function onCache(event: Event) {
+      const key = (event as CustomEvent<{ key?: string }>).detail?.key;
+      if (key === COVER_INDEX_CACHE_KEY) void loadCovers();
+    }
+    window.addEventListener(CACHE_UPDATED, onCache);
+    return () => {
+      cancelled = true;
+      window.removeEventListener(CACHE_UPDATED, onCache);
+    };
   }, []);
 
   useEffect(() => {

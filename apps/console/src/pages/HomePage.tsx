@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { type Article, fetchIndex } from "../lib/content";
+import { CONTENT_INDEX_CACHE_KEY, type Article, fetchIndex } from "../lib/content";
 import { addToQueue, fetchDraftLog, fetchQueueFile, removeFromQueue } from "../lib/github-queue";
+import { CACHE_UPDATED } from "../lib/local-cache";
 import { draftedIdSet, emptyDraftLog, emptyQueue, type WechatDraftLog, type WechatQueue } from "../lib/wechat-queue";
 
 export default function HomePage() {
@@ -17,13 +18,19 @@ export default function HomePage() {
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+    async function loadArticles() {
       try {
         const index = await fetchIndex();
-        if (!cancelled) setArticles(index.articles.filter((article) => article.qmd));
+        if (!cancelled) {
+          setArticles(index.articles.filter((article) => article.qmd));
+          setError("");
+        }
       } catch (reason) {
         if (!cancelled) setError(reason instanceof Error ? reason.message : "无法加载文章。");
       }
+    }
+    (async () => {
+      await loadArticles();
       try {
         const [record, drafts] = await Promise.all([fetchQueueFile(), fetchDraftLog()]);
         if (!cancelled) {
@@ -36,7 +43,15 @@ export default function HomePage() {
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+    function onCache(event: Event) {
+      const key = (event as CustomEvent<{ key?: string }>).detail?.key;
+      if (key === CONTENT_INDEX_CACHE_KEY) void loadArticles();
+    }
+    window.addEventListener(CACHE_UPDATED, onCache);
+    return () => {
+      cancelled = true;
+      window.removeEventListener(CACHE_UPDATED, onCache);
+    };
   }, []);
 
   const queued = useMemo(() => new Map(queue.items.map((item) => [item.id, item])), [queue]);

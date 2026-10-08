@@ -1,4 +1,5 @@
 import { assetUrl } from "./content";
+import { cachedFetchText } from "./local-cache";
 
 export type CoverItem = {
   id: string;
@@ -14,10 +15,23 @@ export type CoverIndex = {
   updatedAt: string | null;
 };
 
+export const COVER_INDEX_CACHE_KEY = "cover/cover.json";
+
 export async function fetchCovers(): Promise<CoverIndex> {
-  const response = await fetch(assetUrl("cover/cover.json"), { cache: "no-store" });
-  if (!response.ok) throw new Error(`无法加载封面清单（${response.status}）`);
-  const data = (await response.json()) as CoverIndex;
+  const text = await cachedFetchText(
+    COVER_INDEX_CACHE_KEY,
+    assetUrl("cover/cover.json"),
+    {
+      metaFromBody: (body) => {
+        try {
+          return String((JSON.parse(body) as CoverIndex).updatedAt || "");
+        } catch {
+          return "";
+        }
+      },
+    },
+  );
+  const data = JSON.parse(text) as CoverIndex;
   return {
     covers: Array.isArray(data.covers) ? data.covers : [],
     updatedAt: data.updatedAt ?? null,

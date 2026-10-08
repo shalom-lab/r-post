@@ -7,6 +7,7 @@ import {
   probeGitHubAccess,
   saveSettings,
 } from "../lib/github";
+import { cacheClear } from "../lib/local-cache";
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState(loadSettings);
@@ -63,11 +64,32 @@ export default function SettingsPage() {
           {busy ? "验证中…" : "保存并验证"}
         </button>
         <button disabled={busy} onClick={() => { const cleared = { ...settings, pat: "" }; saveSettings(cleared); setSettings(cleared); setOk(false); setMessage("已清除 Token。"); }}>清除 Token</button>
+        <button
+          disabled={busy}
+          onClick={() => {
+            void (async () => {
+              setBusy(true);
+              try {
+                await cacheClear();
+                setOk(true);
+                setMessage("已清除文章/封面本地缓存。下次打开会重新拉取。");
+              } catch (reason) {
+                setOk(false);
+                setMessage(reason instanceof Error ? reason.message : "清除缓存失败。");
+              } finally {
+                setBusy(false);
+              }
+            })();
+          }}
+        >
+          清除阅读缓存
+        </button>
         {message && <p className={ok ? "connection-ok" : "connection-error"}>{message}</p>}
         {ok && <p><Link to="/">进入文章</Link></p>}
         <details>
           <summary>本地设置</summary>
           <p><code>{LS_GH_REPO}</code> 与 <code>{LS_GH_TOKEN}</code> 分别保存仓库和 Token。</p>
+          <p>文章清单、正文、封面清单缓存在浏览器 IndexedDB；有更新会后台校验并刷新。Token 不进 IndexedDB。</p>
         </details>
       </div>
     </section>

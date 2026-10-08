@@ -2,7 +2,14 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
-import { type Article, fetchContent, fetchIndex } from "../lib/content";
+import {
+  CONTENT_INDEX_CACHE_KEY,
+  contentBodyCacheKey,
+  type Article,
+  fetchContent,
+  fetchIndex,
+} from "../lib/content";
+import { CACHE_UPDATED } from "../lib/local-cache";
 
 /** Old serial article ids → new YYYYMMDD-slug folder ids (keep old links alive). */
 const LEGACY_ARTICLE_REDIRECTS: Record<string, string> = {
@@ -33,11 +40,16 @@ export default function ArticlePage() {
   useEffect(() => {
     if (!id || legacyTarget) return;
     let cancelled = false;
-    (async () => {
+    let watchedKeys = new Set<string>([CONTENT_INDEX_CACHE_KEY]);
+
+    async function loadArticle() {
       try {
         const index = await fetchIndex();
         const found = index.articles.find((item) => item.id === id);
         if (!found?.qmd) throw new Error("找不到这篇文章的 QMD");
+
+        watchedKeys = new Set([CONTENT_INDEX_CACHE_KEY, contentBodyCacheKey(found.qmd)]);
+        if (found.md) watchedKeys.add(contentBodyCacheKey(found.md));
 
         const qmdBody = await fetchContent(found.qmd);
         let mdBody = "";
@@ -61,9 +73,17 @@ export default function ArticlePage() {
       } catch (reason) {
         if (!cancelled) setError((reason as Error).message);
       }
-    })();
+    }
+
+    void loadArticle();
+    function onCache(event: Event) {
+      const key = (event as CustomEvent<{ key?: string }>).detail?.key;
+      if (key && watchedKeys.has(key)) void loadArticle();
+    }
+    window.addEventListener(CACHE_UPDATED, onCache);
     return () => {
       cancelled = true;
+      window.removeEventListener(CACHE_UPDATED, onCache);
     };
   }, [id, legacyTarget]);
 
