@@ -27,42 +27,42 @@
     {
       "id": "20261007-bootstrap-bca-skew",
       "title": "R语言住院天数很偏，t 置信区间不够稳时用 bootstrap",
-      "image": "images/20261007-bootstrap-bca-skew.jpg",
+      "image": "images/20261007-bootstrap-bca-skew-imagegen-v1.png",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「住院天数很偏？」。右偏住院天数直方图+警告「t区间」 vs BCa 徽章+病床。暖橙+青绿。无代码墙、无水印。",
-      "note": "automation regen 2026-10-07"
+      "prompt": "Create one beautiful Chinese editorial cover for an R statistics article, 2.35:1 ultrawide target 1800×766. Art direction: poetic contemporary screenprint landscape, dusty lavender dusk sky, deep aubergine ink, apricot sunlight, visible fine print grain. NOT a paper-card spreadsheet layout. Main image on right: a sculptural histogram-like skyline whose tallest bars cluster LEFT and gradually become fewer shorter bars extending far RIGHT, clearly a right-skewed distribution, shaped like an abstract hospital cityscape without literal medical symbols. A delicate looping ribbon around a small set of dots below evokes repeated resampling; it stays secondary, elegant and sparse. Left large beautifully typeset Chinese headline exact two lines \"住院天数很偏\" / \"区间怎么估？\", dark aubergine on light lavender with one orange underline. Secondary text exact \"试试 BCa bootstrap\". Small footer exact \"有放回重抽样 · 估计均值区间\". Put a tasteful small \"1999\" beside the looping dots as the number of bootstrap repetitions. Editorial art, airy and imaginative, high legibility at half size, comfortable 6 percent safe margins, balanced asymmetrical composition. Article compares t confidence intervals against BCa bootstrap for right-skewed hospital stays; BCa is an improvement, NOT a guarantee of nominal coverage. Do not show guarantees, no 95% stamp, no fabricated confidence bounds, no normal bell curve, no formula wall, no watermarks, no stock medical cross, no additional copy. Chinese must be exact.",
+      "note": "内置 imagegen；1800×766；逐篇阅读正文后制作，文字与内容已核验。"
     },
     {
       "id": "20261006-repeat-analysis-by-group",
       "title": "R语言按分组各跑一遍分析：每家医院一个回归",
-      "image": "images/20261006-repeat-analysis-by-group.jpg",
+      "image": "images/20261006-repeat-analysis-by-group-imagegen-v1.png",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「复制改名又漏了？」。三张都写市一的便利贴+红叉 vs 四家医院→nest+map→tidy results。暖橙+青绿。无代码墙、无水印。",
-      "note": "automation regen 2026-10-07"
+      "prompt": "One finished Chinese R article editorial cover, 1800×766 target, 2.35:1 ultrawide. Topic: run the same lm(los ~ age) separately for four hospitals with nest/map/tidy, collect a result row per hospital. The fourth hospital has all ages 60 so slope NA and must remain in the summary. Style: brilliant modern transit-map poster, flat vector-like screenprinted artwork, pristine warm-white background, thick flowing subway lines in cobalt, coral, mustard and teal, round station markers, elegant black geometric sans-serif Chinese typography. NOT a literal app UI, not a paper-card illustration, not photorealistic. Top left HUGE title exact two lines \"每家医院\" / \"各跑一个回归\". Below smaller exact \"代码写一次，结果收成表\". On the right and across lower half, a single clean starting station labeled \"同一套分析\" branches into exactly FOUR independent colored lines. Each line passes ONE stop labelled respectively \"市一\", \"市二\", \"市三\", \"县医院\". Lines remain separate and then terminate aligned vertically at a results terminus named \"汇总\", with four matching colored final row labels \"市一  0.080\", \"市二  0.056\", \"市三  0.134\", \"县医院  NA\". NA row must be clearly present, no crossing-out and no disappearance. A small understated legend by results exact \"年龄斜率\". Small bottom left pill \"nest() → map() → tidy()\". Sweeping smooth routes, precise diagrammatic logic, spacious sophisticated magazine typography, no unnecessary tiny stations or map background, no hospital buildings, no medical crosses, no invented values, no watermark. Use all four colors for the four routes consistently. All type legible at 900×383, 6 percent safe margins.\n\nRevision instruction: Repair only the background and title legibility of this cover. The prior output has a transparent or near-black background that hides black text. Produce a finished fully OPAQUE cover with a solid warm-white background (#F7F4ED) covering the entire canvas, no transparency anywhere. Preserve the four colored routes and their labels, values and diagram geometry. Ensure black Chinese headline at upper left reads clearly and exactly \"每家医院\" on first line and \"各跑一个回归\" on second, subtitle \"代码写一次，结果收成表\". Preserve nest() → map() → tidy(), 市一 0.080, 市二 0.056, 市三 0.134, 县医院 NA, 年龄斜率 and 汇总. Clean the rough white halos so this looks like an elegant flat transit map poster. 2.35:1 ultrawide target 1800×766. Do not add or remove route lines or change other content. Essential titles must sit fully inside the canvas and be readable. Opaque ivory background is critical.",
+      "note": "内置 imagegen；1800×766；逐篇阅读正文后制作，文字与内容已核验。"
     },
     {
       "id": "20261006-recode-ifelse-case-when",
       "title": "R语言给变量重新分组：从 ifelse 到 case_when",
-      "image": "images/20261006-recode-ifelse-case-when.jpg",
+      "image": "images/20261006-recode-ifelse-case-when-imagegen-v1.png",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「切 BMI 档写乱了？」。左侧嵌套套娃+三枚 ifelse 芯片+红戳「肥胖→正常」+红叉；右侧 case_when 芯片+偏瘦/正常/超重/肥胖阶梯+绿勾。暖橙+青绿。无代码墙、无水印。",
-      "note": "automation fill 2026-10-07"
+      "prompt": "Create one finished Chinese editorial cover, target 1800×766, ultra-wide 2.35:1. R article about recoding variables with case_when, correct BMI interval boundaries and retaining missing values. Art direction: sophisticated vintage letterpress label maker and archival filing composition, burnt-orange background, black ink, butter-yellow labels, small sage accent, tactile ink impressions, no cream paper-card template. Headline very large across top left exact \"变量重新分组\" and second line \"边界别分错\". Below a bold typeset code headline \"ifelse → case_when\". Right half a handsome front-facing vintage wooden sorting cabinet with four horizontal slots, each has EXACTLY one printed cream label and a numbered ticket entering its slot. Top slot label \"偏瘦\", ticket \"17.2\"; second \"正常\", ticket \"18.5\"; third \"超重\", ticket \"24\"; bottom \"肥胖\", ticket \"28\". A fifth separate slim gray envelope adjacent to cabinet clearly says \"NA\" and small \"缺失\", never put NA in 正常. The four numeric examples are BMI, add small cabinet header \"BMI\". Minimal loose labels on left lower edge to connect to the title, no other numbers or inequalities. Small bottom left line exact \"条件有顺序，缺失单独留\". Strong editorial hierarchy, memorable warm analog craft aesthetic, handsome Chinese typography, not messy scrapbook. Deep rich shadows, fine print grain, ample 6 percent safe margins, instantly readable at half size. No human bodies, no medical advice imagery, no robots, no watermarks, no extra text.",
+      "note": "内置 imagegen；1800×766；逐篇阅读正文后制作，文字与内容已核验。"
     },
     {
       "id": "20261006-dpqr-distributions",
       "title": "R语言 d/p/q/r 四个函数：查临界值、算 P 值、造模拟数据",
-      "image": "images/20261006-dpqr-distributions.jpg",
+      "image": "images/20261006-dpqr-distributions-imagegen-v1.png",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「不翻表查 1.96？」。翻飞统计表+红叉 vs qnorm→1.96 徽章+d/p/q/r 芯片+骰子+正态曲线轮廓+绿勾。暖橙+青绿。无代码墙、无水印。",
-      "note": "automation fill 2026-10-07"
+      "prompt": "Create ONE polished ultrawide Chinese editorial cover 2.35:1 target 1800×766 for R statistics article explaining d p q r distribution function prefixes. Art direction: premium retro-futuristic scientific instrument, brushed brushed aluminum and pale mint enamel, small amber indicator lights, precision black typography, four beautiful circular instrument windows integrated in a single seamless horizontal console. Warm studio product photography with sharp readable engraved markings, not an app UI, no paper cards, no blueprint. Top third large centered title exact \"d / p / q / r\" and beside it Chinese \"四个字母，用好概率分布\". Below in remaining area, four well-spaced round gauges in one physical console. Each has huge lowercase letter and exact caption: d \"密度 / 概率\"; p \"累积概率\"; q \"分位数\"; r \"随机抽样\". d window shows a smooth bell curve with one vertical marker of its height, no shaded point probability. p window shows a bell curve with left area shaded. q window shows a bell curve with a vertical marker near the right tail and readable \"1.96\" underneath. r window shows a sparse scatter of dots with no trend line. These are conceptual miniature pictograms, no detailed axes. Under q only, precise small engraved text \"qnorm(0.975) ≈ 1.96\". Main bottom strapline \"查临界值 · 算 P 值 · 造模拟数据\". Mint-silver palette with restrained coral and amber details, sophisticated typography, beautiful material detail, ample safe margins, all four letters and captions read instantly at 900×383. No other numbers, no wrong equals, no arbitrary formulas, no watermarks, no medical cross, no extra buttons or labels. The single console has smooth elegant geometry, the four windows are part of one image not a collage.",
+      "note": "内置 imagegen；1800×766；逐篇阅读正文后制作，文字与内容已核验。"
     },
     {
       "id": "20261005-friedman-repeated-scores",
       "title": "R语言：同一批人测了三次，分数还不正态，怎么比？",
-      "image": "images/20261005-friedman-repeated-scores.jpg",
+      "image": "images/20261005-friedman-repeated-scores-imagegen-v1.png",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「三次疼痛分不正态？」。同一病人三表盘术前/术后1天/术后7天+ANOVA 红叉 vs Friedman+Wilcoxon 奖牌排名+绿勾。暖橙+青绿。无代码墙、无水印。",
-      "note": "automation fill 2026-10-07"
+      "prompt": "Create ONE finished Chinese editorial cover for an R statistics article, 1800×766 target, 2.35:1 ultrawide. Style: sophisticated hand-drawn ligne-claire comic editorial illustration, ink contours, soft sky-blue and apricot blocks, indigo lettering, understated halftone texture, warm humane character illustration with exceptionally clean typography. A SINGLE continuous composition with a graceful filmstrip of three equal portrait frames running across the right 58 percent; left 42 percent bold friendly Chinese headline exact two lines \"同一批人测三次\" / \"分数偏，怎么比？\". Beneath headline a clear contrasting apricot badge \"Friedman 检验\". On right show THE SAME adult man with short black hair and teal cardigan, identical recognizable face and clothes, at three observation times. Neutral calm expressive face, no exaggerated suffering. Frame labels exact \"术前\", \"术后1天\", \"术后7天\". A small cream numeric ticket under each frame shows respectively \"8\", \"4\", \"5\", representing example pain scores for one patient, NOT aggregate medians. A single flowing indigo thread connects his three wrist tags, each reading \"01\", making same-person linkage unmistakable. Elegant, playful graphic rhythm, no axes or detailed scientific plot. Bottom caption exact \"先整体比较，再两两配对\" and small code label \"friedman.test()\". Article uses Friedman for repeated nonnormal scores then paired Wilcoxon with Holm correction; do not imply independent groups or that everyone improves. The three frames are integrated illustration elements within ONE cover, not three cover variants. Plenty of breathing room, accurate Chinese text, all crucial text within 6 percent margins, readable at half size. No photoreal faces, medical devices, fake logos, watermarks, formula walls or extra labels.",
+      "note": "内置 imagegen；1800×766；逐篇阅读正文后制作，文字与内容已核验。"
     },
     {
       "id": "20260927-wide-to-long",
@@ -105,5 +105,5 @@
       "note": "doubao keep 3008x1280 2026-10-07"
     }
   ],
-  "updatedAt": "2026-10-08T02:09:42.423Z"
+  "updatedAt": "2026-10-08T05:00:49.876Z"
 }
