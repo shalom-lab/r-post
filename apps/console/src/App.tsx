@@ -1,4 +1,5 @@
 import RequireAccess from "./RequireAccess";
+import ToastHost from "./ToastHost";
 import { Link, NavLink, Navigate, Route, Routes } from "react-router-dom";
 import ArticlePage from "./pages/ArticlePage";
 import CoverPage from "./pages/CoverPage";
@@ -47,6 +48,7 @@ export default function App() {
         </Routes>
       </main>
       <footer className="reader-footer">RPost · 个人文稿后台</footer>
+      <ToastHost />
     </div>
   );
 }

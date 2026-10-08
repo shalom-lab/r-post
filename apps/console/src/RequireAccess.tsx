@@ -1,39 +1,71 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { LS_GH_REPO, LS_GH_TOKEN, SETTINGS_CHANGED, probeGitHubAccess } from "./lib/github";
+import { showToast } from "./lib/toast";
 
 export default function RequireAccess({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
-  const [access, setAccess] = useState({ path: "", ok: false, message: "正在验证访问权限…" });
+  const [access, setAccess] = useState({ path: "", ok: false });
+  const unlockedRef = useRef(false);
+
   useEffect(() => {
     let generation = 0;
     let disposed = false;
-    async function check() {
+
+    async function check(reason: "route" | "settings" | "focus") {
       const current = ++generation;
-      setAccess({ path: pathname, ok: false, message: "正在验证访问权限…" });
+      const alreadyUnlocked = unlockedRef.current;
+      if (!alreadyUnlocked) {
+        setAccess({ path: pathname, ok: false });
+        if (reason !== "focus") showToast("正在验证访问权限…", "info");
+      }
       const result = await probeGitHubAccess();
-      if (!disposed && current === generation) setAccess({ path: pathname, ok: result.ok, message: result.message });
+      if (disposed || current !== generation) return;
+      unlockedRef.current = result.ok;
+      setAccess({ path: pathname, ok: result.ok });
+      if (result.ok) {
+        if (!alreadyUnlocked) showToast(result.message || "已通过验证", "ok");
+      } else {
+        showToast(result.message || "验证失败，请填写或更新 Token", "error");
+      }
     }
-    function storage(event: StorageEvent) {
-      if (!event.key || event.key === LS_GH_REPO || event.key === LS_GH_TOKEN) void check();
+
+    function onSettingsChanged() {
+      void check("settings");
     }
-    void check();
-    window.addEventListener(SETTINGS_CHANGED, check);
-    window.addEventListener("storage", storage);
-    window.addEventListener("focus", check);
+    function onStorage(event: StorageEvent) {
+      if (!event.key || event.key === LS_GH_REPO || event.key === LS_GH_TOKEN) void check("settings");
+    }
+    function onFocus() {
+      void check("focus");
+    }
+
+    void check("route");
+    window.addEventListener(SETTINGS_CHANGED, onSettingsChanged);
+    window.addEventListener("storage", onStorage);
+    window.addEventListener("focus", onFocus);
     return () => {
       disposed = true;
-      window.removeEventListener(SETTINGS_CHANGED, check);
-      window.removeEventListener("storage", storage);
-      window.removeEventListener("focus", check);
+      window.removeEventListener(SETTINGS_CHANGED, onSettingsChanged);
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("focus", onFocus);
     };
   }, [pathname]);
-  if (access.path !== pathname || !access.ok) return (
-    <section className="connection-page">
-      <h1>连接后阅读</h1>
-      <p>{access.path === pathname ? access.message : "正在验证访问权限…"}</p>
-      <Link to="/settings">填写或更新 Token</Link>
-    </section>
-  );
+
+  if (access.path !== pathname || !access.ok) {
+    return (
+      <section className="connection-page">
+        <header>
+          <span className="eyebrow">访问</span>
+          <h1>连接后阅读</h1>
+          <p>验证状态在右上角提示。通过后自动进入；未通过请先填写 Token。</p>
+        </header>
+        <p className="connection-links">
+          <Link to="/settings">填写或更新 Token</Link>
+        </p>
+      </section>
+    );
+  }
+
   return children;
 }
