@@ -1,177 +1,43 @@
 # 公众号封面制作
 
-本目录负责文章封面。作图规范见 `rules.md`。无封面不挡写作 / 渲染 / 排期；微信草稿只用 `active: true` 且文件存在的条目。
+本目录负责文章封面。流程以本文件为准，设计与核验见 `rules.md`。以后由 Codex 阅读文章、构思并使用内置 imagegen 完成封面；可以尝试不同风格，核心是贴合内容、美观、易读。
 
----
+## 用户明确的审美要求
 
-## 1. 目标任务
+**“天马行空，参差百态，又美观但有不同；各美其美。”**
 
-给文章做出可用的公众号**大图**（最终约 2.35:1，至少 1800×766（更大原图可保留）；不管小图），并推到 `origin/master`。
+- 按清单顺序一篇一篇制作，每篇先读正文，再独立构思，让内容决定适合它的美感。
+- 主动探索不同风格，拉开构图、字体、配色、材质与表现手法的差异，不只给同一模板换颜色。
+- YouTube、小红书、摄影、漫画、拼贴、极简、复古、立体插画等都可以尝试，不设风格上限。
+- “100 个 Excel”封面是用户认可的完成度参考，**不是强制风格参考**；不默认拿它做图像参考，也不把后续封面都做成同一系列。
+- 天马行空仍须贴合文章、文字准确、版面易读；每张都要美观，不能为了不同而随意堆砌。
+- 默认由 Codex 自行选择设计并完成核验，不要求用户逐篇先选风格。
 
-| 谁 | 目标 |
-|----|------|
-| 定时 Automation | 只补缺：尚无可用封面的条目出图 |
-| 人工对话 | 按用户说的：做 / 重做 / 改某篇，或只同步清单 |
+## 默认流程
 
-**出图主路径：豆包 Seedream 直出约 2.35:1 横封面**（账号「迷城」、**新对话** + 图像生成；优先 4.5）。  
-其他大模型也可用，只要能直出（或接近）2.35:1；落盘后统一跑 `crop-cover-235.mjs` 收成成品。不要再走「16:9 + 两色蒙版再裁」的旧 GenerateImage 流程。
+1. 查看 `git status`，保留已有改动；定位用户指定的文章，标题有歧义时先确认是哪篇。
+2. **必读正文**：阅读 `content/posts/<id>/` 下的 QMD，缺失时读 Markdown。不能只看标题、摘要或历史出图 prompt。
+3. 提炼具体场景、读者的问题、核心操作和结果，主动探索适合本篇的视觉表达（包括 YouTube、小红书等风格），不长期套用同一模板，按 `rules.md` 写专用 prompt。
+4. 使用 imagegen 技能及内置图像生成工具。每篇默认直接生成 **1 张成品**；用户要求多版时再做候选，不设置固定候选数量或先选后存环节。
+5. 默认成品 **1800×766 像素**（900×383 的两倍，约 **2.35:1**）。提示词明确横版比例，生成后核对真实像素；高清原图可另存。
+6. 查看成图，核验文字、数据、图形逻辑、构图与缩小后的可读性。内容错误用图像生成工具修正；尺寸处理不得损坏关键内容。
+7. 合格后直接保存、登记并展示。用户说改就继续改，不另设审批步骤。明确只要预览时，按预览范围交付。
 
-**完工标准**
+## 文件与清单
 
-- 成图在 `origin/master` 的 `cover/images/`
-- 对应条目：`active: true`，`prompt` 非空，`image` 指向真实文件
-- 只推 feature 分支或未合并 PR → 未完工
+- 成品统一放 `cover/images/<id>.png` 或 `.jpg`，扩展名必须符合真实格式。重做优先保存带版本号的新文件，再更新引用。
+- `cover/cover.json` 是源数据；`cover/cover.md` 是生成视图，禁止手改。
+- `id`、`title` 与 `content/index.json` 对齐；需要同步时运行 `node scripts/sync-cover-list.mjs`。
+- 有合格成图才设 `active: true`；`image` 写相对 `cover/` 的真实路径；`prompt` 保存实际发给图像生成工具的完整提示词；`note` 只记版本或必要说明。
+- 文件丢失时设 `active: false`、`image: null`，保留历史 prompt 并记录原因。
+- 清单更新后运行 `node scripts/update-cover-md.mjs`，核对路径与生成 diff。
+- 已有 `crop-cover-235.mjs` 会跳过尺寸足够的图片，不能保证输出恰好 1800×766，且可能裁剪或转换格式。仅在确实需要时对已检查构图的明确文件使用，不无参批处理。
 
----
+## 任务范围与交付
 
-## 2. 背景信息
-
-### 文件
-
-| 路径 | 作用 |
-|------|------|
-| `cover.json` | 源数据 |
-| `cover.md` | 预览；禁止手改，脚本生成 |
-| `images/` | 成图（约 2.35:1，至少 1800×766） |
-| `rules.md` | 作图规范（钩子风、豆包提示词、核验） |
-| `content/index.json` | 文章清单；sync 据此挂 `id` / `title` |
-| `templates/ref-16x9-black235-white-margins.jpg` | **已停用**（旧 16:9 蒙版，仅保留） |
-
-### 相关脚本
-
-| 命令 | 功能 |
-|------|------|
-| `node scripts/sync-cover-list.mjs` | 对照 `content/index.json` 同步封面清单；末尾刷新 `cover.md` |
-| `node scripts/update-cover-md.mjs` | 从 `cover.json` 生成 `cover.md`（勿手改 md） |
-| `node scripts/crop-cover-235.mjs [图…]` | 收成 ≥1800×766（见下）；无参则处理 `cover/images/` 全部 |
-
-```bash
-node scripts/sync-cover-list.mjs
-node scripts/update-cover-md.mjs
-node scripts/crop-cover-235.mjs cover/images/<id>.jpg
-npm run crop-cover
-```
-
-### `crop-cover-235.mjs` 怎么判断
-
-入库前**都要跑一遍**（豆包 / 其他模型都一样）。脚本按比例分支：
-
-| 原图情况 | 行为 |
-|----------|------|
-| 已 **≥1800×766**，且比例约 2.35:1 | **整段跳过**（保留更高清，如豆包 ~3008×1280） |
-| 比例已约 **2.35:1**（\|w/h − 900/383\| ≤ 0.02）但偏小 | **不居中裁构图**，只 resize 到 1800×766 |
-| 比例差太多（如 16:9） | **居中裁**成 2.35:1，再 resize 到 1800×766（兼容其他模型） |
-
-这样：豆包直出不用被二次裁构图；别的模型出偏了也能收成同一成品尺寸。
-
-### `cover.json` 字段
-
-| 字段 | 含义 |
-|------|------|
-| `id` / `title` | 对照文章；`id` 由 sync 写入，勿手编 |
-| `image` | 相对本目录路径；未出图为 `null`（成品 `images/<id>.jpg`，至少 1800×766） |
-| `active` | `true` 可用（Automation 跳过）；`false` 可补 |
-| `prompt` | 实际用过的出图说明；未出图为 `null`；勿整段抄 `rules.md` |
-| `note` | 流水备注，不是 prompt |
-
-- 新条目：`active: false`，`prompt: null`；禁止无图标 `true`
-- 文件丢失：改回 `false`、`image: null`，`note` 写原因，保留原 `prompt`
-
-### 人工触发
-
-| 说法 | 含义 |
-|------|------|
-| 做封面 \<id 或标题\> | 做一张；已有图也重做 |
-| 重做封面 \<…\> | 新出一版，覆盖图与 prompt |
-| 改封面：… | 在现有 prompt 上改，勿换题 |
-| 同步封面清单 | 只 sync，不出图 |
-
----
-
-## 3. 工作要求
-
-- 只在最新 `master` 操作，直接 `git push origin master`；不开分支、不开 PR
-- 只动 `cover/`（及必要时的 sync / crop / update 脚本）；不动正文与排期主线
-- 禁止手改 `cover.md`
-- 出图前必须先单独构思 prompt；画面细则遵守 `rules.md`
-- **主路径豆包直出 2.35:1**；其他模型仅作备选，同样要过 crop 脚本与核验
-- 写回：`image` 正确、`active: true`、`prompt` 必填
-- Automation：不覆盖已有可用封面；不接风格偏好；一次约 1～3 篇
-- 有变更则自己 commit + push；无 diff 说明无需推送；不提交密钥与无关文件；push 失败写明报错，不改开 PR 充数
-
----
-
-## 4. 工作流程
-
-共用一套步骤；入口不同只影响「选哪条、prompt 新建还是沿用」。
-
-### Step 1 — 拉最新 master
-
-```bash
-git fetch origin master && git checkout master && git pull origin master
-```
-
-### Step 2 — 同步清单（需要时）
-
-```bash
-node scripts/sync-cover-list.mjs
-```
-
-- 按 `content/index.json` 追加新条目（默认 `active: false`）
-- 可更新已有 `title`
-- 除非图片文件不存在，否则不把 `active: true` 改成 `false`
-- 仅「同步封面清单」：有 diff → 跳到 Step 6；无 diff → 结束
-
-### Step 3 — 选定条目
-
-| 入口 | 选哪些 |
-|------|--------|
-| Automation | `active` 非 true 或 `image` 空；已有可用封面则跳过 |
-| 做 / 重做 / 改封面 | 用户点名的那篇 |
-| 同步封面清单 | 不选 |
-
-### Step 4 — 构思出图 prompt
-
-不要只看标题就出图。规范见 `rules.md`（尤其「作图 prompt 怎么写」）。
-
-1. 读 `rules.md`（通用 + 本项目风格）
-2. **必读正文**：`content/posts/<id>/` 下 `.qmd`（或 `.md`）——痛点、场景、解法，不只看 `title`
-3. 按 `rules.md` 写出**具体** prompt（钩子、冲突两边、主色、道具均来自本篇）：
-   - 补缺且已有非空 `prompt` → 优先沿用，可微调尺寸
-   - 新建 / 重做 → 重新读正文再构思
-   - 改封面 → 在现有 prompt 上改，勿换题；仍须符合正文
-4. 确认风格与通用项过关后，再出图
-
-### Step 5 — 出图（先 5 候选，用户点头再落盘）
-
-1. 同篇写 **5** 条不同 prompt，各出 1 张（≥1800×766，控制台无水印）；**暂不**写 `cover/images/` / `cover.json`。
-2. 纵向拼联系表发给用户挑选。
-3. 用户选定后，再拷入 `cover/images/<id>.jpg` → crop → 写回 json → `update-cover-md` → push。
-
-### Step 5b —（旧）单次出图、落盘、写回（仅用户明确说跳过候选时）
-
-1. **优先豆包**：新对话 + 图像生成；提示词写死约 **2.35:1，至少 1800×766**，只出 1 张终稿（细则见 `rules.md`）。其他模型同理，尽量直出 2.35:1。
-2. 用控制台 HD 脚本（EXPECT=1）下载**无水印**原图，拷到 `cover/images/<id>.jpg`（禁止页面「保存」带水印）
-3. **一律跑** crop 脚本（内部会按比例跳过 / 只压像素 / 或居中裁）：
-   ```bash
-   node scripts/crop-cover-235.mjs cover/images/<id>.jpg
-   ```
-4. 按 `rules.md`「出图后核验」过一眼（尺寸、无水印、钩子与专名、元素是否过少）
-5. 更新条目：`image`、`active: true`、实际所用 `prompt`、`note` 可选
-6. 跑 `node scripts/update-cover-md.mjs`
-
-### Step 6 — 提交并推送
-
-1. 确认只改封面相关，且 `cover.md` 由脚本生成
-2. 暂存 `cover.json`、`cover.md`、`images/*`（及改过的脚本）
-3. 提交说明如：`cover: add <id>` / `cover: redo <id>`
-4. `git push origin master`
-
-### 入口接法
-
-| 入口 | 步骤 |
-|------|------|
-| 定时 Automation | Step 1 → Step 2 → Step 3（补缺）→ Step 4 → Step 5 → Step 6 |
-| 做封面 / 重做封面 | Step 1 → Step 3 → Step 4 → Step 5 → Step 6（需要时加 Step 2） |
-| 改封面 | Step 1 → Step 3 → Step 4（微调）→ Step 5 → Step 6 |
-| 同步封面清单 | Step 1 → Step 2 →（有 diff）Step 6 |
+- “做 / 重做 / 改封面”：处理用户点名文章；“同步封面清单”：只同步，不出图。
+- 已有自动化补缺任务只处理缺少可用图片的条目，不覆盖已有可用封面；本规范不新建定时任务。
+- 无封面不阻塞写作、渲染或排期。微信草稿只使用 `active: true` 且文件存在的条目。
+- 封面任务不修改正文与排期。只修改规范时，不顺带重做或替换历史图片。
+- 提交发布遵循仓库及当前用户要求，只包含本次相关文件，保留其他未提交改动；不得为切换分支覆盖已有工作。
+- 完成时展示图片或提供文件链接，说明实际尺寸、核验结果及登记 / 发布状态；未推送不得声称已上线。

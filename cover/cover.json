@@ -3,26 +3,26 @@
     {
       "id": "20261007-renv-lockfile",
       "title": "R语言师兄脚本换台电脑就挂：用 renv 锁住包版本",
-      "image": "images/20261007-renv-lockfile.jpg",
+      "image": "images/20261007-renv-lockfile-imagegen-v1.png",
       "active": true,
-      "prompt": "比例 2.35:1，至少 1800×766，横版封面，无水印；只出 1 张。\n文章场景：师兄项目拷过来，缺包装齐后同一行 dplyr 结果仍差一截，根因是包版本漂移。解法：renv.lock 锁包名+版本，换机 restore。数据另存，不管 R 小版本。封面钩子必须是问题导向：点出场景/痛点，读者一眼懂文章在解决啥；禁止空口号。\n五维：Type=conceptual；Palette=duotone；Rendering=flat-vector；Text=title-only；Mood=bold；Font=display。\n隐喻物件：锁+双屏数字\n构图：右主体左留白：右侧两扁插窗口 72 vs 72.41（角标 dplyr 版本不同）；左下几何挂锁+renv.lock。大字钩子问题居中偏左。\n大字立体钩子（问题导向，必须清晰可读）：「换台电脑，结果还对吗？」\n不要代码墙、九宫格、软木板咖啡闹钟散纸；钩子不要重复印刷。",
-      "note": "pick q1 问题导向「换台电脑，结果还对吗？」; doubao-download ext HD no watermark; chat 38445722695994370"
+      "prompt": "Use case ads-marketing. Create ONE finished Chinese WeChat editorial cover at target 1800×766 pixels, 2.35:1 ultrawide. Topic: R renv records package names and versions in renv.lock and restores those versions on another computer. It does not reinstall R or save analysis data. Art direction: sophisticated midnight-blue Swiss engineering poster, precise electric-cyan linework, silver embossed details, luminous warm amber accents, lightly textured technical drafting paper, confident contemporary condensed Chinese sans typography. This should feel like a collectible architectural blueprint poster, NOT a cream paper-card design. Very large headline across upper left verbatim on two lines: \"换台电脑\" / \"包版本照旧\". Main illustration integrated to the right: two elegant outlined laptop silhouettes, a central tall amber-edged manifest document labeled exactly \"renv.lock\", with a single row \"dplyr 1.1.4\", and the two laptops each showing a small matching cyan package cube labeled \"dplyr 1.1.4\". Fine directed circuit-like paths travel from the manifest to both matching cubes, expressing exact package-version restoration. Subtle large typographic word \"renv\" in the background lower right as a graphic element, no extra words. Small bottom left label exact \"记录版本 · 按锁恢复\". Small code strip exact \"snapshot() → restore()\". Balanced typography, controlled negative space, visually striking engineering precision, no clutter, no photoreal broken computer, no huge padlock cliché, no code wall, no watermark. All crucial text inside 6 percent safe margins, clear at 900×383. No implication that renv guarantees identical data results or locks R itself.",
+      "note": "内置 imagegen；1800×766；逐篇阅读正文后制作，文字与内容已核验。"
     },
     {
       "id": "20261007-float-equality-near",
       "title": "R语言里两个数明明一样，用 == 却是 FALSE",
-      "image": "images/20261007-float-equality-near.jpg",
+      "image": "images/20261007-float-equality-near-imagegen-v1.png",
       "active": true,
-      "prompt": "比例 2.35:1，成品像素 900×383，横版封面，无水印；只出 1 张终稿，不要中间稿。\n油管/B站缩略图风，高对比大字钩子：「明明一样，== 却是 FALSE」\n冲突画面：两边打印都是 24 的 BMI，中间 == 裂开打大红叉；旁边 all.equal / near 亮起绿勾。高对比插画。\n不要代码墙、公式墙、水印、二维码、小图拼版。",
-      "note": "doubao keep 3008x1280 2026-10-07"
+      "prompt": "Use case ads-marketing. ONE finished Chinese R tutorial cover, target 1800×766 pixels, 2.35:1 ultrawide. Topic floating point equality: 0.1+0.2==0.3 is FALSE because of binary rounding; isTRUE(all.equal(...)) or dplyr::near compare with tolerance. Visually adventurous premium typographic pop-art poster with oversized typography, fluorescent acid-yellow background, matte near-black chunky sans-serif type, vivid hot-pink accents, subtle risograph print texture and stylish offset shadows. No cream paper card aesthetic, no technical blueprint, no stock computer. Large headline at upper left exact two lines \"明明一样\" / \"怎么是 FALSE？\". Center-right an enormous sculptural black equation \"0.1 + 0.2\" above \"== 0.3\", with a hot-pink diagonal ink stamp \"FALSE\" beside it. Under the equation a precise small monospace line \"0.30000000000000004\" with only final 4 circled in pink, revealing the tiny hidden discrepancy. At lower left place a short controlled black-on-yellow subline exactly \"浮点比较，要留一点余地\". A compact black footer tag with white text exact \"isTRUE(all.equal(...))\" and a separate smaller pink tag \"near()\". These labels indicate methods, not executable full code. Bold graphic balance, tightly art-directed, generous space around text, important elements inside 6 percent margins, superb thumbnail legibility. No extra equations, no contradictory TRUE label on exact equality, no gradients or scattered icons, no watermarks, no random copy. Chinese must be exact.",
+      "note": "内置 imagegen；1800×766；逐篇阅读正文后制作，文字与内容已核验。"
     },
     {
       "id": "20261007-excel-multiheader-unpivotr",
       "title": "R语言Excel两层表头怎么读：先拆格子再拼成长表",
-      "image": "images/20261007-excel-multiheader-unpivotr.jpg",
+      "image": "images/20261007-excel-multiheader-unpivotr-imagegen-v1.png",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。油管缩略图。钩子「两层表头乱成一团？」。脏两层 Excel（基线/随访合并空格）+红叉 vs 长表 id/group/measure/value+绿勾。暖橙+青绿。无代码墙、无水印。",
-      "note": "automation regen 2026-10-07"
+      "prompt": "Create one finished Chinese editorial cover for R article, 1800×766 target, ultra-wide 2.35:1. Topic: Excel has TWO header rows: merged group headers 基线 / 随访 over metric headers 收缩压 / 舒张压; unpivotr as_cells() and behead() unpack cells and assign headers, yielding tidy long table. Visual style: delightful tactile stop-motion clay and painted wooden educational blocks, soft blush pink background, peach, deep forest green and lilac blocks, museum-quality still life with soft window lighting and beautiful realistic material texture. Distinct from paper-card, neon, and blueprint designs. Bold rounded dark forest green Chinese headline at upper left verbatim \"两层表头\" and beneath \"拆开就好读\". Supporting line bottom left exact \"先拆格子，再拼成长表\". Small neat code label \"as_cells() → behead()\". Right two-thirds of composition features a carefully constructed sculptural spreadsheet made of stacked clay tiles: two broad top header blocks labelled 基线 and 随访, each over two smaller blocks labelled 收缩压 and 舒张压. Below, a single row of four corresponding number tiles 120,80,118,78, in that exact order. Some tiles lift upward in a gentle exploded-view, physically revealing the two header tiers; subtle color-coded small ribbons lead to a compact orderly output tile column with ONLY four rows, exact labels \"基线 · 收缩压 · 120\", \"基线 · 舒张压 · 80\", \"随访 · 收缩压 · 118\", \"随访 · 舒张压 · 78\". Avoid over-detailed UI; main art is physical clay spreadsheet being neatly disassembled and reassembled. Ensure typography is large enough and headers legible, clear separation of headline and visual, no text overlapping, 6 percent safe margins. No people, watermark, extra slogans, messy decorative icons, code walls or shiny plastic. Elegant playful magazine still life, not kindergarten infographic.",
+      "note": "内置 imagegen；1800×766；逐篇阅读正文后制作，文字与内容已核验。"
     },
     {
       "id": "20261007-bootstrap-bca-skew",
@@ -75,26 +75,26 @@
     {
       "id": "20260927-regex-extract-data",
       "title": "如何用正则从字符串里提取数据",
-      "image": "images/20260927-regex-extract-data.jpg",
+      "image": "images/20260927-regex-extract-data-imagegen-v1.png",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。生活感横图。钩子「从乱字里捞出来」。桌面便签乱字里荧光笔圈出发热/地区/日期。暖橙+青绿。无代码墙、无水印。",
-      "note": "automation fill 2026-10-07"
+      "prompt": "Create a finished Chinese editorial cover for an R programming article about extracting data with regular expressions. Ultrawide 2.35:1, target exact 1800×766 pixels. Use case ads-marketing. Part of a premium editorial series: warm ivory paper grain background, huge dark navy Chinese serif typography, dimensional paper strips and cards, beautiful soft studio shadows and generous negative space. This edition uses warm burnt-orange accents with small teal highlights. Left 48 percent headline, right 52 percent a tactile sculptural diagram illustrating extracting meaningful substrings into fields. Headline verbatim two lines: \"用正则\" then \"把数据提出来\". \"正则\" and key emphasis orange, rest deep navy. Supporting text verbatim: \"提关键词 · 拆文件名 · 取字段\". Small code pill verbatim \"regexec() → regmatches()\". Right illustration: a long floating cream paper strip with exact string \"随访_华东_202409.xlsx\", with 华东 highlighted in teal and 202409 highlighted in orange. These two highlighted portions visually detach as neat paper tiles, connected by two elegant paper ribbons or thin curved arrows to a clean small two-column data table below. Table column headers verbatim \"地区\" and \"年月\", with three rows: \"华东\" and \"202409\"; \"华北\" and \"202410\"; \"华南\" and \"202411\". Teal accents for the region column and orange accents for the date column. Small matching capture parentheses surrounding the two highlighted chunks imply capture groups; avoid complicated full regex strings. The illustration must clearly communicate pulling pieces OUT OF text and arranging into columns, not just searching or filtering files. Keep the information sparse and coherent with no extra labels. Readable at 900×383, important content inside 6 percent safe margins, full bleed. No robot, humans, magnifying glass, watermark, mockup frame, or excessive decorative symbols. Sophisticated print magazine cover, never a UI screenshot.",
+      "note": "内置 imagegen；1800×766；逐篇阅读正文后制作，文字与内容已核验。"
     },
     {
       "id": "20260927-batch-read-without-for",
       "title": "一百个 Excel 怎么一次读进来",
-      "image": "images/20260927-batch-read-without-for.jpg",
+      "image": "images/20260927-batch-read-without-for-imagegen-v1.png",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。生活感横图。钩子「一百份一次收齐」。散落文件夹+红叉 vs 收进同一文件筐+绿勾。暖橙+青绿。无代码墙、无水印。",
-      "note": "automation fill 2026-10-07"
+      "prompt": "Use case: ads-marketing. Create a polished Chinese editorial cover for an R programming article. Output exact 1800×766 pixels, ultrawide aspect ratio approximately 2.35:1, full bleed. Article is about reading one hundred Excel files with readxl and purrr map, combining them with list_rbind and keeping a source-file column. Main text verbatim on two lines: \"100 个 Excel\" and \"一次读进来\". Small supporting text verbatim: \"批量读取 · 合并表格 · 保留来源\". Small code label \"map() → list_rbind()\". Design a confident, elegant, highly legible editorial composition with large dark navy Chinese typography on warm off-white, a huge green 100 as part of the headline, and a beautiful dimensional paper illustration of many green spreadsheet cards flowing together into one organized larger table, whose source column has distinct colored row markers to express provenance. Restrained emerald green, cream and deep navy palette, subtle paper grain and soft shadows, sophisticated print magazine feel. Text occupies roughly left half and metaphor illustration right half with balanced generous whitespace, all crucial material inside 7 percent safe margins. Readable at 900×383. No people, no robots, no stock photo, no visual clutter, no extra slogans, no watermarks, no mockup border. This is a finished flat cover graphic.",
+      "note": "内置 imagegen；1800×766；逐篇阅读正文后制作，文字与内容已核验。"
     },
     {
       "id": "20260921-regex-real-world",
       "title": "啥是正则表达式？先会认文本形状",
-      "image": "images/20260921-regex-real-world.jpg",
+      "image": "images/20260921-regex-real-world-imagegen-v1.png",
       "active": true,
-      "prompt": "LAYOUT MASK：白空、只画黑带；黑带内四周留 margin。生活感横图。钩子「先会认形状」。参差纸条上透明模板框住同形状标签。暖橙+青绿。无代码墙、无水印。",
-      "note": "automation fill 2026-10-07"
+      "prompt": "Create a finished Chinese editorial cover, ultrawide 2.35:1, target 1800×766 pixels. Use case ads-marketing for an R programming article teaching regular expressions as matching text shapes, with filename filtering as the visual example. Elegant print magazine design: warm ivory paper grain background, very large dark navy Chinese serif typography, cobalt blue accent, tactile dimensional paper cards, soft studio shadows, spacious precise composition. Left 48 percent is headline, right 52 percent explanatory illustration. Headline verbatim two lines: \"啥是正则表达式？\" then \"先认文本形状\". First line can be smaller to fit, second line bold blue focal point. Supporting text verbatim: \"认形状 · 筛文件 · 改文本\". Small pill label \"pattern → grepl()\". On the right show a beautiful layered fan of filename paper strips passing through a translucent blue rectangular matching frame. Two selected strips have blue highlights and neat check marks: \"随访_华东_202409.xlsx\" and \"随访_华北_202410.xlsx\". Two unselected quieter gray strips below: \"readme.txt\" and \"随访_backup.csv\". Blue highlight the prefix 随访_ and suffix .xlsx of matched files. Show a small blue floating rule card with only \"^  .*  $\" clearly printed as syntax symbols. This communicates recognizing the shape of names, NOT extracting individual fields. No robot, no magnifying glass cliché, no humans, no additional copy, no watermark, no border. All headline text readable at half resolution, important content within 6 percent margins. Premium editorial cover with sculptural paper depth, not a screenshot or busy instructional chart.",
+      "note": "内置 imagegen；1800×766；逐篇阅读正文后制作，文字与内容已核验。"
     },
     {
       "id": "20260921-r-save-five-methods",
@@ -105,5 +105,5 @@
       "note": "doubao keep 3008x1280 2026-10-07"
     }
   ],
-  "updatedAt": "2026-10-07T19:00:37+08:00"
+  "updatedAt": "2026-10-08T02:09:42.423Z"
 }
