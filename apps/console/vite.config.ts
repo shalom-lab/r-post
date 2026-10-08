@@ -13,7 +13,7 @@ export default defineConfig({
       const dist = fileURLToPath(new URL("../../dist/", import.meta.url));
       const appShell = readFileSync(`${dist}/index.html`);
       // Pages has no server-side rewrite: serve the app at each static route.
-      for (const route of ["articles", "topics", "settings", "queue", "covers"]) {
+      for (const route of ["articles", "topics", "settings", "covers"]) {
         mkdirSync(`${dist}/${route}`, { recursive: true });
         writeFileSync(`${dist}/${route}/index.html`, appShell);
       }

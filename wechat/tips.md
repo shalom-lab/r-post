@@ -49,7 +49,7 @@
 
 ## 网页 GitHub Token
 
-只验证身份、改排期，不是中控钥匙，也不是微信密钥。中控在本机时用 `npm run wechat:draft`，不要点网页上传。
+只验证阅读身份，不是中控钥匙，也不是微信密钥。排期改 `wechat/queue.json`，上传用 `npm run wechat:draft`（或 Actions），不走网页。
 
 ## 不要放进仓库
 

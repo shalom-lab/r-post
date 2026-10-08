@@ -9,7 +9,7 @@
 3. **写作**：按 `prompt-rules/` 写正文；默认可直接写入 `content/posts/`。不必先建 `.drafts/` 或另开「预览过闸」步骤；用户说改就直接改线上文。
 4. **Post-content 检查（必做，不可删）**：按 `prompt-rules/post-content-check.md` 逐项过（去 AI 味（按 qu-ai-wei）、人话标题、白话用词、无必要不建中间变量、场景是否常用等）。未通过先改到过，再推；通过后写入 `content/posts/YYYYMMDD-ascii-slug/YYYYMMDD-中文标题.qmd`。
 5. **自动化**：QMD 写入仓库并合入后，由 `render.yml` 渲染 Markdown、嵌图、更新 `content/index.json`；Pages 负责上站。
-6. **公众号排期（可选）**：人在网页主页把成稿加入 `wechat/queue.json`，在排期页调整顺序后上传草稿。不写进选题或文章清单。
+6. **公众号排期（可选）**：直接改 `wechat/queue.json` 定待传顺序，再 `npm run wechat:draft`（或 Actions）上传草稿。网页只读展示，不写排期。不写进选题或文章清单。
 
 卡点在前面：选题、大纲、成稿、**Post-content 检查**、QMD 能否定稿入库。入库之后不要再人工重复渲染流程。
 
@@ -53,14 +53,14 @@
 - 允许的个人账号在 `apps/console/src/access-policy.ts` 配置，空列表拒绝所有账号；访问者不能通过连接页修改白名单。
 - 使用 Token 调用 GitHub `/user` 验证身份，不以公开仓库可读作为账号授权依据。
 - 未验证时不挂载文章页面、不请求文章清单或正文；验证失败保持关闭，清除或更换 Token 后重新验证。
-- 正文继续读取静态文件，不携带 Token，不通过 GitHub Contents API 动态读取。排期文件除外：加入/移出/排序通过 Contents API 写 `wechat/queue.json`。
+- 正文继续读取静态文件，不携带 Token，不通过 GitHub Contents API 动态读取或改写仓库内容。
 - 此机制控制网页显示；公开仓库和静态文件的直接链接仍可访问，不提供内容保密。
 
 ## 公众号排期
 
 - 源文件：`wechat/queue.json` 只记待传 `id` 和顺序；`wechat/wechat_draft.json` 只追加本流水线 `draft/add` 成功的稿，不收录后台手建草稿。失败不写。
-- 网页主页加入/移出；`/queue` 调整顺序。保存通过 GitHub Contents API 提交，不改 `content/index.json`。
+- 排期在仓库里直接改 `wechat/queue.json`（网页不再提供加入/移出/排序/上传）。
 - 上传草稿读已渲染 Markdown（不重新跑 Quarto），经 `markmuse-wechat` 转 HTML；正文会去掉标题下的 `RPost` 和日期行。主题 CSS 在 `wechat/custom-md-css/`，由 `wechat/config.json` 的 `theme` 选用（`all` 则每个主题各传一期，标题前加主题名）。再向 token 中控取 `access_token`，按顺序每两篇调用一次微信 `draft/add`。末尾剩一篇则单独一期。
 - 中控账号名、作者写在 `wechat/config.json`。只要 `TOKEN_CENTER_URL` / `TOKEN_CENTER_API_KEY`（`.env` 或 Actions secret）去中控拿 token。新建草稿走微信固定 `draft/add`，不必再配 URL。群发/发布尚未做。见 `wechat/tips.md`。
-- 本地：复制 `wechat/env.example` 为 `wechat/.env`，中控可跑在本机，然后 `npm run wechat:draft`。中控只监听本机时不要走网页上的上传按钮。
+- 本地：复制 `wechat/env.example` 为 `wechat/.env`，中控可跑在本机，然后 `npm run wechat:draft`。
 - 定时群发不在本仓库处理。不把微信密钥放进前端或 `VITE_*`。

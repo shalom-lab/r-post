@@ -40,7 +40,7 @@ AGENTS.md                  # 人机共用操作说明
 - **默认**：`render.yml` 在 QMD 变更后渲染、嵌图、更新清单；`pages.yml` 部署只读站。
 - **封面**：Cursor Automation `RPost-cover` 在 `master` push 或定时跑；先同步清单，再只给未启用封面补图；有变更时**直接 commit/push 到 `master`**（不要开 PR）。细则见 `cover/AGENTS.md`。
 - 选题和写作通过对话完成，直接改仓库文件。
-- 公众号：主页选定后写入 `wechat/queue.json`。目前只上传草稿（`npm run wechat:draft`），不涉及群发/发布。中控变量见 `wechat/env.example`。
+- 公众号：直接改 `wechat/queue.json` 排期，再 `npm run wechat:draft` 上传草稿（不涉及群发/发布）。中控变量见 `wechat/env.example`。网页只读，不写排期。
 
 网页阅读需要 Token，并验证其对应账号是否在 `apps/console/src/access-policy.ts` 白名单内。通过后读取静态文章。此门槛不保护公开仓库或静态文件直链。浏览器配置字段：`gh-repo-rpost`、`gh-token-rpost`。
 

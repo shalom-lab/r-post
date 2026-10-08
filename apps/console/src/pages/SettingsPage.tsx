@@ -37,7 +37,7 @@ export default function SettingsPage() {
       <header>
         <span className="eyebrow">连接</span>
         <h1>GitHub 连接</h1>
-        <p>阅读需要获准账号的有效 GitHub Token。Token 只保存在当前浏览器。查看文章只做身份验证；改公众号排期还需要这个仓库的 Contents 写权限，触发上传草稿还需要 Actions 权限。</p>
+        <p>阅读需要获准账号的有效 GitHub Token。Token 只保存在当前浏览器，只用于验证身份；网页只展示文章与封面，不改仓库内容。公众号排期改 <code>wechat/queue.json</code>，上传用 <code>npm run wechat:draft</code>。</p>
       </header>
       <div className="connection-panel">
         <label>
