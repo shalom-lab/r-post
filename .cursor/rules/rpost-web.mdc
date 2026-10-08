@@ -1,0 +1,10 @@
+---
+description: Console/web changes — commit and push when done
+alwaysApply: true
+---
+
+# RPost web
+
+- Scope: `apps/console/`（及为前端服务的 `scripts/sync-public.mjs`、相关静态同步）。
+- 改完 web 并验证（至少 `npm run lint -w apps/console`；有构建相关改动再 `npm run build -w apps/console`）后，**直接 commit + `git push origin master`**，不必再问「要不要提交」。
+- 提交只含本次 web 相关文件；不要顺手塞进封面草稿、未跟踪的 `cover-*.png` 等无关文件。
