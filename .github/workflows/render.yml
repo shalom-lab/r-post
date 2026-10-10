@@ -40,6 +40,8 @@ jobs:
             any::broom
             any::boot
             any::unpivotr
+            any::forcats
+            any::lubridate
 
       - uses: quarto-dev/quarto-actions/setup@v2
 
