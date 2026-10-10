@@ -111,13 +111,22 @@ export default function ArticlePreview({
   return (
     <div className="article-preview">
       <header className="article-toolbar">
-        <div className="article-meta">
-          <span className="article-number">{article.date || article.id}</span>
-          {article.category && <span>{article.category}</span>}
-          {showOpenPage && (
-            <Link className="article-open-page" to={`/article/${article.id}`}>
-              整页打开
-            </Link>
+        <div className="article-toolbar-main">
+          <div className="article-meta">
+            <span className="article-number">{article.date || article.id}</span>
+            {article.category && <span>{article.category}</span>}
+            {showOpenPage && (
+              <Link className="article-open-page" to={`/article/${article.id}`}>
+                整页打开
+              </Link>
+            )}
+          </div>
+          {article.tags.length > 0 && (
+            <div className="article-tags" aria-label="标签">
+              {article.tags.map((tag) => (
+                <span className="article-tag" key={tag}>#{tag}</span>
+              ))}
+            </div>
           )}
         </div>
         <div className="view-toggle" role="tablist" aria-label="源稿与渲染">
