@@ -1,6 +1,22 @@
 {
   "covers": [
     {
+      "id": "20261010-factor-level-order",
+      "title": "R语言画图分组乱序了：「中」跑到「轻」前面",
+      "image": null,
+      "active": false,
+      "prompt": null,
+      "note": "待制作"
+    },
+    {
+      "id": "20261010-date-mixed-formats",
+      "title": "R语言日期格式搅一块：别再一种一种试 as.Date",
+      "image": null,
+      "active": false,
+      "prompt": null,
+      "note": "待制作"
+    },
+    {
       "id": "20261007-renv-lockfile",
       "title": "R语言师兄脚本换台电脑就挂：用 renv 锁住包版本",
       "image": "images/20261007-renv-lockfile-imagegen-v1.png",
@@ -105,5 +121,5 @@
       "note": "doubao keep 3008x1280 2026-10-07"
     }
   ],
-  "updatedAt": "2026-10-08T05:00:49.876Z"
+  "updatedAt": "2026-10-10T03:52:41.533Z"
 }

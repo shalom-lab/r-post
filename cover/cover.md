@@ -2,7 +2,31 @@
 
 > 由 `cover/cover.json` 生成；改清单后运行 `node scripts/update-cover-md.mjs`。
 >
-> 合计 **13** 篇 · 已启用 **13** · 待制作（inactive）**0**
+> 合计 **15** 篇 · 已启用 **13** · 待制作（inactive）**2**
+
+## R语言画图分组乱序了：「中」跑到「轻」前面
+
+- id：`20261010-factor-level-order`
+- 状态：**inactive**
+- 文件：（无）
+
+_尚无封面图。_
+
+- prompt：_（未记录）_
+
+> 待制作
+
+## R语言日期格式搅一块：别再一种一种试 as.Date
+
+- id：`20261010-date-mixed-formats`
+- 状态：**inactive**
+- 文件：（无）
+
+_尚无封面图。_
+
+- prompt：_（未记录）_
+
+> 待制作
 
 ## R语言师兄脚本换台电脑就挂：用 renv 锁住包版本
 
