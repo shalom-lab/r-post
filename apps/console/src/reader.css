@@ -30,8 +30,9 @@
 .library-detail .article-preview{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding:0}
 .library-detail .article-toolbar{flex-shrink:0;margin:0;padding:14px 18px;border-bottom:1px solid #dde3dc}
 .library-detail .content-card{flex:1;min-height:0;overflow-x:hidden;overflow-y:auto;margin:0;padding:18px 22px 28px;border:0;border-radius:0;box-shadow:none;background:#fff}
-.article-open-page{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;border:1px solid #c5d4cb;background:#fff;color:#245f4a;text-decoration:none}
-.article-open-page:hover{background:#edf3ee;border-color:#a9c0b2}
+.article-open-page{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:4px;border:0;background:transparent;color:#5a6a61;text-decoration:none;opacity:.85}
+.article-open-page:hover{color:#245f4a;background:#edf3ee;opacity:1}
+.article-open-page svg{width:12px;height:12px}
 .library-pane .article-list.compact .article-card.cat-r-plot{background:#f3f7f4}
 .library-pane .article-list.compact .article-card.cat-r-stats{background:#f4f6fb}
 .library-pane .article-list.compact .article-card.cat-r-base{background:#faf6f1}
