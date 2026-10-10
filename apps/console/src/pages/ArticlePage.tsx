@@ -34,7 +34,8 @@ export default function ArticlePage() {
   const { id: rawId } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const wantMd = searchParams.get("view") === "md";
+  const view = searchParams.get("view");
+  const wantQmd = view === "qmd";
   const legacyTarget = rawId ? LEGACY_ARTICLE_REDIRECTS[rawId] : undefined;
   const id = legacyTarget || rawId;
 
@@ -96,10 +97,11 @@ export default function ArticlePage() {
 
   useEffect(() => {
     if (!article) return;
-    if (wantMd && !hasMd) {
+    // 旧书签 ?view=md：有 MD 时收成默认 URL；无 MD 时去掉无效参数
+    if (view === "md") {
       navigate(`/article/${article.id}`, { replace: true });
     }
-  }, [article, wantMd, hasMd, navigate]);
+  }, [article, view, navigate]);
 
   useEffect(() => {
     if (!article) return;
@@ -130,7 +132,8 @@ export default function ArticlePage() {
   }
   if (!article) return <p className="reader-state">正在加载文章…</p>;
 
-  const showMd = wantMd && hasMd;
+  // 有渲染稿时默认看 MD；?view=qmd 才看源稿
+  const showMd = hasMd && !wantQmd;
 
   return (
     <article className="reader-article">
@@ -143,18 +146,10 @@ export default function ArticlePage() {
           {article.category && <span>{article.category}</span>}
         </div>
         <div className="view-toggle" role="tablist" aria-label="源稿与渲染">
-          <Link
-            className={`view-tab${!showMd ? " active" : ""}`}
-            to={`/article/${article.id}`}
-            role="tab"
-            aria-selected={!showMd}
-          >
-            QMD
-          </Link>
           {hasMd ? (
             <Link
               className={`view-tab${showMd ? " active" : ""}`}
-              to={`/article/${article.id}?view=md`}
+              to={`/article/${article.id}`}
               role="tab"
               aria-selected={showMd}
             >
@@ -165,6 +160,14 @@ export default function ArticlePage() {
               MD
             </span>
           )}
+          <Link
+            className={`view-tab${!showMd ? " active" : ""}`}
+            to={`/article/${article.id}?view=qmd`}
+            role="tab"
+            aria-selected={!showMd}
+          >
+            QMD
+          </Link>
         </div>
       </header>
 
