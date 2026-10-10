@@ -2,9 +2,22 @@ import { useEffect, useMemo, useState } from "react";
 import { CONTENT_INDEX_CACHE_KEY, fetchIndex } from "../lib/content";
 import { COVER_INDEX_CACHE_KEY, coverImageUrl, fetchCovers, type CoverItem } from "../lib/covers";
 import { CACHE_UPDATED } from "../lib/local-cache";
+import { showToast } from "../lib/toast";
 
 async function copyText(text: string) {
   await navigator.clipboard.writeText(text);
+}
+
+/** 给 AGENT 的批量补封面提示：按当前待补充列表动态生成。 */
+function pendingCoverBrief(items: CoverItem[]): string {
+  const lines = items.map((item, index) => `${index + 1}. \`${item.id}\`　${item.title}`);
+  return [
+    "请按照 cover/AGENTS.md 里的要求，为下列文章制作封面：",
+    "",
+    ...lines,
+    "",
+    "逐篇先读正文再出图；合格后写入 cover/images/ 并更新 cover/cover.json（active: true）。",
+  ].join("\n");
 }
 
 function formatRatio(width: number, height: number): string {
@@ -176,18 +189,44 @@ export default function CoverPage() {
     });
   }, [covers]);
 
-  const pending = ordered.filter(needsCover).length;
+  const pendingItems = useMemo(() => ordered.filter(needsCover), [ordered]);
+  const pending = pendingItems.length;
   const ready = ordered.length - pending;
+  const [copiedBrief, setCopiedBrief] = useState(false);
+
+  async function copyPendingBrief() {
+    if (!pendingItems.length) return;
+    try {
+      await copyText(pendingCoverBrief(pendingItems));
+      setCopiedBrief(true);
+      showToast(`已复制 ${pendingItems.length} 篇待补充封面提示`, "ok");
+      window.setTimeout(() => setCopiedBrief(false), 1500);
+    } catch {
+      showToast("复制失败", "error");
+    }
+  }
 
   return (
     <section className="cover-page">
-      <header>
-        <span className="eyebrow">公众号</span>
-        <h1>封面预览</h1>
-        <p>
-          对照文章清单与 <code>cover/cover.json</code>。无图或未启用的显示「待补充」；有图可点放大，按钮复制 id / 标题。
-          {ordered.length > 0 && ` 合计 ${ordered.length} · 已有 ${ready} · 待补充 ${pending}。`}
-        </p>
+      <header className="cover-page-header">
+        <div className="cover-page-header-text">
+          <span className="eyebrow">公众号</span>
+          <h1>封面预览</h1>
+          <p>
+            对照文章清单与 <code>cover/cover.json</code>。无图或未启用的显示「待补充」；有图可点放大，按钮复制 id / 标题。
+            {ordered.length > 0 && ` 合计 ${ordered.length} · 已有 ${ready} · 待补充 ${pending}。`}
+          </p>
+        </div>
+        {pending > 0 && (
+          <button
+            type="button"
+            className="cover-copy-pending"
+            onClick={() => void copyPendingBrief()}
+            title="复制给 AGENT 的批量补封面说明"
+          >
+            {copiedBrief ? "已复制" : `复制待补充（${pending}）`}
+          </button>
+        )}
       </header>
 
       {loading && <p className="reader-state">正在加载封面…</p>}
