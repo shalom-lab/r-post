@@ -1,6 +1,23 @@
 {
   "articles": [
     {
+      "id": "20261010-ggplot-bar-errorbar",
+      "slug": "20261010-ggplot-bar-errorbar",
+      "title": "R语言分组柱状图怎么加误差线：一步一张图",
+      "description": "三组治疗均值±SE（汇总表或原始行先算），ggplot2 从最简柱图加上误差线、再并排分组，收成发表能贴的图。误差线是 SE 还是 CI 要说清，别当成显著性标志。",
+      "date": "2026-10-10",
+      "category": "R 作图",
+      "categorySlug": "r-plot",
+      "tags": [
+        "ggplot2",
+        "geom_col",
+        "geom_errorbar",
+        "误差线"
+      ],
+      "qmd": "posts/20261010-ggplot-bar-errorbar/20261010-R语言分组柱状图怎么加误差线：一步一张图.qmd",
+      "md": "posts/20261010-ggplot-bar-errorbar/20261010-R语言分组柱状图怎么加误差线：一步一张图.md"
+    },
+    {
       "id": "20261010-factor-level-order",
       "slug": "20261010-factor-level-order",
       "title": "R语言画图分组乱序了：「中」跑到「轻」前面",
@@ -258,5 +275,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-10-10T05:08:54.095Z"
+  "updatedAt": "2026-10-10T08:39:36.926Z"
 }

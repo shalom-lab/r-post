@@ -1,0 +1,164 @@
+---
+title: "R语言分组柱状图怎么加误差线：一步一张图"
+description: "三组治疗均值±SE（汇总表或原始行先算），ggplot2 从最简柱图加上误差线、再并排分组，收成发表能贴的图。误差线是 SE 还是 CI 要说清，别当成显著性标志。"
+author: "RPost"
+date: "2026-10-10"
+category: "R 作图"
+category-slug: "r-plot"
+tags: ["ggplot2", "geom_col", "geom_errorbar", "误差线"]
+format: gfm
+execute:
+  echo: true
+  warning: false
+  message: false
+fig-width: 5.5
+fig-height: 3.5
+---
+
+三组治疗（对照、低剂量、高剂量），手里要画的是各组某量表得分的**均值 ± SE**。有人已经算好汇总表，有人还是原始一行一人——两种都常见。下面用同一份模拟数据，从最简柱图一步加到误差线、并排分组，最后收成能贴进报告的样子。
+
+主路径是 `ggplot2`。base 的 `barplot` 也能凑合出柱，但误差线和分组并排更别扭，文末点一下即可。
+
+## 先算出均值和 SE
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+set.seed(42)
+raw <- expand.grid(
+  arm = factor(c("对照", "低剂量", "高剂量"), levels = c("对照", "低剂量", "高剂量")),
+  sex = factor(c("女", "男"), levels = c("女", "男")),
+  id = 1:20
+)
+raw$score <- with(raw, 48 +
+  c(对照 = 0, 低剂量 = 4, 高剂量 = 9)[as.character(arm)] +
+  c(女 = 0, 男 = 1.5)[as.character(sex)] +
+  rnorm(nrow(raw), 0, 6))
+
+summ_arm <- raw |>
+  summarise(
+    n = n(),
+    mean = mean(score),
+    se = sd(score) / sqrt(n),
+    .by = arm
+  )
+summ_arm
+```
+
+`se = sd / sqrt(n)` 是标准误。若你手里已是汇总表（`arm` / `mean` / `se` 几列），跳过这段，直接画。
+
+图上误差线画的是 **mean ± SE**。若要 95% CI，大样本近似可换成 `mean ± 1.96 * se`（或用 `qt` 按自由度算），但图注和正文必须写清是 SE 还是 CI——两者长短不一样，读图的人会按你写的理解。
+
+## 最简柱图：三组均值
+
+先不管误差，只把均值立成柱：
+
+```{r}
+ggplot(summ_arm, aes(arm, mean)) +
+  geom_col(fill = "#4C78A8", width = 0.65, color = "white", linewidth = 0.35) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), limits = c(0, NA)) +
+  theme_bw(base_size = 12) +
+  labs(x = "治疗组", y = "均值得分", title = "三组均值（尚无误差线）")
+```
+
+`geom_col` 用已算好的 `mean` 当柱高（`geom_bar` 默认是计数，这里不适用）。柱图纵轴从 0 起，避免夸大组间差。白底 `theme_bw`，单色克制蓝。
+
+## 给柱子加上误差线
+
+在上一张上多一层 `geom_errorbar`，`ymin` / `ymax` 写成均值减/加 SE：
+
+```{r}
+ggplot(summ_arm, aes(arm, mean)) +
+  geom_col(fill = "#4C78A8", width = 0.65, color = "white", linewidth = 0.35) +
+  geom_errorbar(
+    aes(ymin = mean - se, ymax = mean + se),
+    width = 0.18, linewidth = 0.45
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), limits = c(0, NA)) +
+  theme_bw(base_size = 12) +
+  labs(x = "治疗组", y = "均值得分", title = "三组均值 ± SE")
+```
+
+相对上一张，多出来的就是顶上那截短横+竖线。`width` 控制横帽长短，太宽像帽子、太窄像一根针，0.15～0.2 通常够用。
+
+有误差线**不等于**组间显著。显著性要另做检验或在图上按规则加标注；这里只表达「均值附近的不确定度」。
+
+## 男女并排：分组柱 + 误差线
+
+实际报告里常还要按性别（或中心、时点）拆开比。先按 `arm + sex` 汇总，再用 `position_dodge` 并排：
+
+```{r}
+summ <- raw |>
+  summarise(
+    n = n(),
+    mean = mean(score),
+    se = sd(score) / sqrt(n),
+    .by = c(arm, sex)
+  )
+
+pd <- position_dodge(width = 0.72)
+
+ggplot(summ, aes(arm, mean, fill = sex)) +
+  geom_col(position = pd, width = 0.65, color = "white", linewidth = 0.35) +
+  geom_errorbar(
+    aes(ymin = mean - se, ymax = mean + se),
+    position = pd, width = 0.15, linewidth = 0.45
+  ) +
+  scale_fill_manual(values = c("女" = "#4C78A8", "男" = "#F58518")) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.08)), limits = c(0, NA)) +
+  theme_bw(base_size = 12) +
+  labs(x = "治疗组", y = "均值得分", fill = "性别", title = "按性别并排")
+```
+
+相对上一张：多了 `fill = sex`，柱和误差线都挂上同一个 `position_dodge`。两处 dodge 宽度要一致，否则误差线会对不齐柱顶——这是这类图最常见的错位来源。
+
+配色两色即可：蓝 / 橙对比清楚，也比默认彩虹盘克制。
+
+## 收成能贴进报告的样子
+
+同一套数据，把图例、网格、图注收干净：
+
+```{r}
+#| fig-width: 6
+#| fig-height: 3.8
+ggplot(summ, aes(arm, mean, fill = sex)) +
+  geom_col(position = pd, width = 0.65, color = "white", linewidth = 0.35) +
+  geom_errorbar(
+    aes(ymin = mean - se, ymax = mean + se),
+    position = pd, width = 0.15, linewidth = 0.5
+  ) +
+  scale_fill_manual(values = c("女" = "#4C78A8", "男" = "#F58518")) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)), limits = c(0, NA)) +
+  theme_bw(base_size = 12) +
+  theme(
+    legend.position = "top",
+    legend.justification = "left",
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 12)
+  ) +
+  labs(
+    x = "治疗组",
+    y = "均值得分（± SE）",
+    fill = NULL,
+    title = "各组均值得分（按性别）",
+    caption = "误差线：均值 ± SE（非 95% CI）"
+  )
+```
+
+相对上一张多做的事：图例放到上方、去掉竖向主网格、纵轴标题写明 ± SE、`caption` 写清误差线定义、略加图高以免挤。需要柱顶写数字时用 `geom_text(aes(label = round(mean, 1)), position = pd, vjust = -0.4, size = 3)`，误差线已经够长时往往更挤，这篇不加。
+
+## base 的 barplot：能出柱，误差线别扭
+
+```{r}
+#| eval: false
+barplot(summ_arm$mean, names.arg = summ_arm$arm, col = "#4C78A8", ylim = c(0, 70))
+# 误差线要自己算中点 x，再 arrows() / segments() 往上叠；分组并排更绕
+```
+
+单组均值柱，base 够用。一要误差线、二要按第二因素并排，坐标对位和图例都得手写，维护成本明显高于 `geom_col` + `geom_errorbar` + `position_dodge`。所以主路径放在 ggplot2。
+
+## 小结
+
+流程就四步：汇总 mean/se → `geom_col` → `geom_errorbar` → 需要第二因素时再 `position_dodge`（柱和误差线共用）。纵轴从 0 起；图注写明 SE 还是 CI；有误差线不代表检验显著。
