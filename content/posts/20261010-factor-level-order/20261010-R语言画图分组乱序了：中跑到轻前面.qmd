@@ -35,7 +35,8 @@ levels(dat$severity_f)
 
 ```{r}
 ggplot(dat, aes(severity_f)) +
-  geom_bar() +
+  geom_bar(fill = "#4C78A8", color = "white", linewidth = 0.35) +
+  theme_bw() +
   labs(x = "病情", y = "人数", title = "默认 factor：中在最前")
 ```
 
@@ -50,7 +51,8 @@ dat$severity_ord <- factor(dat$severity, levels = c("轻", "中", "重"))
 levels(dat$severity_ord)
 
 ggplot(dat, aes(severity_ord)) +
-  geom_bar() +
+  geom_bar(fill = "#4C78A8", color = "white", linewidth = 0.35) +
+  theme_bw() +
   labs(x = "病情", y = "人数", title = "levels 手定：轻→中→重")
 ```
 
@@ -71,7 +73,8 @@ levels(fct_relevel(dat$severity_f, "轻", "中", "重"))
 levels(fct_infreq(dat$severity_f))
 
 ggplot(dat, aes(fct_infreq(severity_f))) +
-  geom_bar() +
+  geom_bar(fill = "#4C78A8", color = "white", linewidth = 0.35) +
+  theme_bw() +
   labs(x = "病情", y = "人数", title = "按人数多少排序")
 ```
 
