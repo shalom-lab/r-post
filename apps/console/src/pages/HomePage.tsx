@@ -1,10 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import ArticlePreview from "../components/ArticlePreview";
 import { CONTENT_INDEX_CACHE_KEY, type Article, fetchIndex } from "../lib/content";
 import { CACHE_UPDATED } from "../lib/local-cache";
 
 const PAGE_SIZE = 12;
+
+function categoryClass(slug: string | undefined): string {
+  const key = String(slug || "").trim();
+  if (!key) return "cat-other";
+  return `cat-${key}`;
+}
 
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -116,8 +122,12 @@ export default function HomePage() {
         <div className="article-list compact">
           {pageItems.map((article) => {
             const active = article.id === selectedId;
+            const cat = categoryClass(article.categorySlug || article.category);
             return (
-              <div className={`article-card${active ? " active" : ""}`} key={article.id}>
+              <div
+                className={`article-card ${cat}${active ? " active" : ""}`}
+                key={article.id}
+              >
                 <button
                   type="button"
                   className="article-card-main"
@@ -167,16 +177,6 @@ export default function HomePage() {
         ) : (
           <p className="reader-state">从左侧点一篇文章预览。</p>
         )}
-        <p className="library-detail-hint">
-          {selectedId ? (
-            <>
-              细看可
-              <Link to={`/article/${selectedId}`}>整页打开</Link>
-            </>
-          ) : (
-            "左侧点选后在此预览 MD / QMD"
-          )}
-        </p>
       </section>
     </div>
   );

@@ -116,8 +116,21 @@ export default function ArticlePreview({
             <span className="article-number">{article.date || article.id}</span>
             {article.category && <span>{article.category}</span>}
             {showOpenPage && (
-              <Link className="article-open-page" to={`/article/${article.id}`}>
-                整页打开
+              <Link
+                className="article-open-page"
+                to={`/article/${article.id}`}
+                title="整页打开"
+                aria-label="整页打开"
+              >
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path
+                    d="M6.5 3H3.5A1.5 1.5 0 0 0 2 4.5v8A1.5 1.5 0 0 0 3.5 14h8A1.5 1.5 0 0 0 13 12.5V9.5M9 2h5v5M14 2 7.5 8.5"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </Link>
             )}
           </div>
