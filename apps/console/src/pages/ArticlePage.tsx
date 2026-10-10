@@ -10,6 +10,7 @@ import {
   fetchIndex,
 } from "../lib/content";
 import { CACHE_UPDATED } from "../lib/local-cache";
+import "../../../../wechat/custom-md-css/default.css";
 
 /** Old serial article ids → new YYYYMMDD-slug folder ids (keep old links alive). */
 const LEGACY_ARTICLE_REDIRECTS: Record<string, string> = {
@@ -163,7 +164,7 @@ export default function ArticlePage() {
 
       <section className="content-card" aria-label={showMd ? "已渲染 Markdown" : "原始 QMD"}>
         {showMd ? (
-          <div className="article-body">
+          <div id="markmuse" className="article-md">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
           </div>
         ) : (

@@ -4,8 +4,13 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 // GitHub project Pages: https://shalom-lab.github.io/r-post/
+const repoRoot = fileURLToPath(new URL("../..", import.meta.url));
+
 export default defineConfig({
   base: "/r-post/",
+  server: {
+    fs: { allow: [repoRoot] },
+  },
   plugins: [react(), {
     name: "pages-route-entries",
     apply: "build",
