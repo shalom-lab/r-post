@@ -1,6 +1,40 @@
 {
   "articles": [
     {
+      "id": "20261010-factor-level-order",
+      "slug": "20261010-factor-level-order",
+      "title": "R语言画图分组乱序了：「中」跑到「轻」前面",
+      "description": "病情轻/中/重直接 factor 再画图，轴上顺序按默认排序，「中」会跑到「轻」前面。levels= 或 forcats 手定后再画，对照水平也一样处理。",
+      "date": "2026-10-10",
+      "category": "R 作图",
+      "categorySlug": "r-plot",
+      "tags": [
+        "factor",
+        "forcats",
+        "levels",
+        "ggplot2"
+      ],
+      "qmd": "posts/20261010-factor-level-order/20261010-R语言画图分组乱序了：中跑到轻前面.qmd",
+      "md": "posts/20261010-factor-level-order/20261010-R语言画图分组乱序了：中跑到轻前面.md"
+    },
+    {
+      "id": "20261010-date-mixed-formats",
+      "slug": "20261010-date-mixed-formats",
+      "title": "R语言日期格式搅一块：别再一种一种试 as.Date",
+      "description": "随访日期列混着斜杠、横杠、日月顺序。一种 format 试下来会漏或错；用 lubridate 多 order 解析，再抽查失败行。",
+      "date": "2026-10-10",
+      "category": "R tidyverse",
+      "categorySlug": "r-tidyverse",
+      "tags": [
+        "日期",
+        "lubridate",
+        "parse_date_time",
+        "as.Date"
+      ],
+      "qmd": "posts/20261010-date-mixed-formats/20261010-R语言日期格式搅一块：别再一种一种试as.Date.qmd",
+      "md": "posts/20261010-date-mixed-formats/20261010-R语言日期格式搅一块：别再一种一种试as.Date.md"
+    },
+    {
       "id": "20261007-renv-lockfile",
       "slug": "20261007-renv-lockfile",
       "title": "R语言师兄脚本换台电脑就挂：用 renv 锁住包版本",
@@ -223,5 +257,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-10-07T02:09:30.514Z"
+  "updatedAt": "2026-10-10T01:03:54.660Z"
 }

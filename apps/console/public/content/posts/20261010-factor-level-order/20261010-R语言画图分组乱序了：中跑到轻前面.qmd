@@ -1,0 +1,107 @@
+---
+title: "R语言画图分组乱序了：「中」跑到「轻」前面"
+description: "病情轻/中/重直接 factor 再画图，轴上顺序按默认排序，「中」会跑到「轻」前面。levels= 或 forcats 手定后再画，对照水平也一样处理。"
+author: "RPost"
+date: "2026-10-10"
+category: "R 作图"
+category-slug: "r-plot"
+tags: ["factor", "forcats", "levels", "ggplot2"]
+format: gfm
+execute:
+  echo: true
+  warning: false
+  message: false
+fig-width: 5
+fig-height: 3.2
+---
+
+病情分成轻、中、重，想画一张人数柱状图。数据读进来是字符，随手 `factor()` 再丢给 ggplot，横轴上「中」却排在「轻」前面——读图的人会愣一下。
+
+## 默认 factor：图上顺序不是轻→中→重
+
+```{r}
+library(ggplot2)
+
+dat <- data.frame(
+  severity = c("中", "轻", "重", "轻", "中", "重", "轻", "中", "轻")
+)
+dat$severity_f <- factor(dat$severity)
+levels(dat$severity_f)
+```
+
+默认水平按当前排序规则排字符，不是业务上的轻重。中文里常见结果就是「中」「轻」「重」——「中」跑到最前。
+
+直接画：
+
+```{r}
+ggplot(dat, aes(severity_f)) +
+  geom_bar() +
+  labs(x = "病情", y = "人数", title = "默认 factor：中在最前")
+```
+
+柱子从左到右是中→轻→重。图能出，顺序不对。
+
+## 手定 levels 后再画
+
+作图前把水平写成你要的顺序：
+
+```{r}
+dat$severity_ord <- factor(dat$severity, levels = c("轻", "中", "重"))
+levels(dat$severity_ord)
+
+ggplot(dat, aes(severity_ord)) +
+  geom_bar() +
+  labs(x = "病情", y = "人数", title = "levels 手定：轻→中→重")
+```
+
+同一份人数，轴上变成轻→中→重。差别只在 factor 的 `levels`，不在 `geom_bar`。
+
+## forcats：改顺序不必重写整列标签
+
+已经是 factor、只想调水平顺序时，可以用 `forcats::fct_relevel()`：
+
+```{r}
+library(forcats)
+levels(fct_relevel(dat$severity_f, "轻", "中", "重"))
+```
+
+按出现次数从高到低排（谁人多谁靠前）用 `fct_infreq()`：
+
+```{r}
+levels(fct_infreq(dat$severity_f))
+
+ggplot(dat, aes(fct_infreq(severity_f))) +
+  geom_bar() +
+  labs(x = "病情", y = "人数", title = "按人数多少排序")
+```
+
+作图场景里：业务有固定档位（轻中重、一月到十二月）→ `levels=` 或 `fct_relevel`；只想看谁最多 → `fct_infreq`。
+
+## 回归里的对照水平，也是 levels 第一档
+
+作图要的是「好看的轴顺序」；回归要的是「谁当参照」。`lm` 等模型里，factor 的**第一个水平**是对照。
+
+```{r}
+set.seed(1)
+reg <- data.frame(
+  severity = factor(
+    sample(c("轻", "中", "重"), 30, replace = TRUE),
+    levels = c("轻", "中", "重")
+  ),
+  days = rpois(30, 5)
+)
+coef(lm(days ~ severity, data = reg))
+```
+
+系数名是 `severity中`、`severity重`，对照是「轻」。若希望以「中」为对照，把「中」放到第一位：
+
+```{r}
+reg$severity_mid <- fct_relevel(reg$severity, "中")
+coef(lm(days ~ severity_mid, data = reg))
+```
+
+同一列标签，作图顺序和回归对照可以分开处理：图用轻→中→重，模型再 `fct_relevel` 出参照。
+
+## 小结
+
+`factor(x)` 的默认顺序按字符排，不是轻中重、也不是时间先后。画图前用 `levels = c("轻", "中", "重")` 或 `fct_relevel` 定轴；按人数排用 `fct_infreq`。回归对照水平是 levels 里的第一个，需要时再单独 `fct_relevel`。
