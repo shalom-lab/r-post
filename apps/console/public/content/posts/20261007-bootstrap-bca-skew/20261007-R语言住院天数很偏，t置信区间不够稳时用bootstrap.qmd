@@ -5,17 +5,19 @@ author: "RPost"
 date: "2026-10-07"
 category: "R 统计"
 category-slug: "r-stats"
-tags: ["bootstrap", "BCa", "置信区间", "偏态"]
+tags: ["bootstrap", "BCa", "置信区间", "偏态", "ggplot2"]
 format: gfm
 execute:
   echo: true
   warning: false
   message: false
+fig-width: 5
+fig-height: 3.2
 ---
 
 一组住院天数：多数人住几天，少数人住几十天。均值仍有人要报，但分布明显右偏。`t.test()` 给出的均值置信区间，默认当抽样分布近似对称。偏得厉害时，这个近似会歪。
 
-依赖：`boot`。下文 bootstrap 重复次数固定为 **1999**。
+依赖：`boot`、`ggplot2`。下文 bootstrap 重复次数固定为 **1999**。
 
 ## 右偏的住院天数
 
@@ -29,7 +31,16 @@ mean(los)
 median(los)
 ```
 
-均值约 7.0，中位数 4，最大 29。均值被长住院往右拉。
+均值约 7.0，中位数 4，最大 29。均值被长住院往右拉。直方图更直观：
+
+```{r}
+library(ggplot2)
+ggplot(data.frame(los), aes(los)) +
+  geom_histogram(binwidth = 2, boundary = 0, fill = "#4C78A8", color = "white") +
+  labs(x = "住院天数", y = "人数")
+```
+
+峰挤在左侧，右边拖到接近 30——典型右偏。
 
 ## 先看 t 置信区间
 
@@ -55,6 +66,21 @@ boot.ci(boot_mean, type = "bca", conf = 0.95)
 ```
 
 BCa 大约从 5.29 到 9.69。和 t 区间比，两端都往右移了一截：右偏样本里，均值的抽样分布也常右偏，BCa 按重抽样形状改边界，t 区间仍按对称近似切。
+
+把 1999 个重抽样均值画出来，虚线标 t 区间两端、实线标 BCa，对照位置：
+
+```{r}
+ci_t <- as.numeric(t.test(los)$conf.int)
+ci_bca <- boot.ci(boot_mean, type = "bca", conf = 0.95)$bca[4:5]
+
+ggplot(data.frame(m = as.numeric(boot_mean$t)), aes(m)) +
+  geom_histogram(bins = 30, fill = "#4C78A8", color = "white") +
+  geom_vline(xintercept = ci_t, linetype = 2, linewidth = 0.6) +
+  geom_vline(xintercept = ci_bca, linetype = 1, linewidth = 0.6) +
+  labs(x = "bootstrap 均值", y = "次数")
+```
+
+重抽样均值分布略往右拖；BCa 两端相对虚线都偏右一截。这是区间边界怎么切的对照，不是覆盖率仿真。
 
 只报均值、且分布明显偏时，优先看 BCa；`boot.ci(..., type = "perc")` 是百分位法，校正更少，偏态下一般不如 BCa。
 

@@ -97,7 +97,8 @@
         "bootstrap",
         "BCa",
         "置信区间",
-        "偏态"
+        "偏态",
+        "ggplot2"
       ],
       "qmd": "posts/20261007-bootstrap-bca-skew/20261007-R语言住院天数很偏，t置信区间不够稳时用bootstrap.qmd",
       "md": "posts/20261007-bootstrap-bca-skew/20261007-R语言住院天数很偏，t置信区间不够稳时用bootstrap.md"
@@ -257,5 +258,5 @@
       "md": "posts/20260921-r-save-five-methods/20260921-分析做到一半如何存临时数据.md"
     }
   ],
-  "updatedAt": "2026-10-10T01:03:54.660Z"
+  "updatedAt": "2026-10-10T04:22:16.752Z"
 }
