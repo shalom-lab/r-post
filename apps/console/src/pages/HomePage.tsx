@@ -1,14 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import ArticlePreview from "../components/ArticlePreview";
 import { CONTENT_INDEX_CACHE_KEY, type Article, fetchIndex } from "../lib/content";
 import { CACHE_UPDATED } from "../lib/local-cache";
 
+const PAGE_SIZE = 12;
+
 export default function HomePage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [articles, setArticles] = useState<Article[]>([]);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const selectedId = searchParams.get("id") || "";
 
   useEffect(() => {
     let cancelled = false;
@@ -57,50 +64,117 @@ export default function HomePage() {
     });
   }, [articles, category, query]);
 
+  const pageCount = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+  const safePage = Math.min(page, pageCount);
+  const pageItems = visible.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  useEffect(() => {
+    setPage(1);
+  }, [query, category]);
+
+  useEffect(() => {
+    if (page > pageCount) setPage(pageCount);
+  }, [page, pageCount]);
+
+  useEffect(() => {
+    if (loading || error || !visible.length) return;
+    if (selectedId && visible.some((item) => item.id === selectedId)) return;
+    setSearchParams({ id: visible[0].id }, { replace: true });
+  }, [loading, error, visible, selectedId, setSearchParams]);
+
+  function selectArticle(id: string) {
+    setSearchParams({ id }, { replace: true });
+  }
+
   return (
-    <>
-      <section className="library-tools" aria-label="文章筛选">
-        <input
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="搜索标题、内容或标签…"
-          aria-label="搜索文章"
-        />
-        <select
-          value={category}
-          onChange={(event) => setCategory(event.target.value)}
-          aria-label="按分类筛选"
-        >
-          <option value="">全部分类</option>
-          {categories.map(([slug, name]) => <option key={slug} value={slug}>{name}</option>)}
-        </select>
-      </section>
+    <div className="library-split">
+      <aside className="library-pane" aria-label="文章列表">
+        <section className="library-tools" aria-label="文章筛选">
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="搜索标题、内容或标签…"
+            aria-label="搜索文章"
+          />
+          <select
+            value={category}
+            onChange={(event) => setCategory(event.target.value)}
+            aria-label="按分类筛选"
+          >
+            <option value="">全部分类</option>
+            {categories.map(([slug, name]) => <option key={slug} value={slug}>{name}</option>)}
+          </select>
+        </section>
 
-      {loading && <p className="reader-state">正在加载文章…</p>}
-      {error && <p className="reader-state error">{error}</p>}
-      {!loading && !error && !visible.length && (
-        <p className="reader-state">没有匹配的文章。</p>
-      )}
+        {loading && <p className="reader-state">正在加载文章…</p>}
+        {error && <p className="reader-state error">{error}</p>}
+        {!loading && !error && !visible.length && (
+          <p className="reader-state">没有匹配的文章。</p>
+        )}
 
-      <div className="article-list">
-        {visible.map((article) => (
-          <div className="article-card" key={article.id}>
-            <Link className="article-card-main" to={`/article/${article.id}`}>
-              <span className="article-number">{article.date || article.id}</span>
-              <div>
-                <h2>{article.title}</h2>
-                <p>{article.description}</p>
-                <div className="article-meta">
-                  {article.category && <span>{article.category}</span>}
-                  {article.md ? <span className="source-badge soft">已渲染 MD</span> : <span className="source-muted">仅 QMD</span>}
-                  {article.tags.slice(0, 3).map((tag) => <span key={tag}>#{tag}</span>)}
-                </div>
+        <div className="article-list compact">
+          {pageItems.map((article) => {
+            const active = article.id === selectedId;
+            return (
+              <div className={`article-card${active ? " active" : ""}`} key={article.id}>
+                <button
+                  type="button"
+                  className="article-card-main"
+                  onClick={() => selectArticle(article.id)}
+                >
+                  <span className="article-number">{article.date || article.id}</span>
+                  <div>
+                    <h2>{article.title}</h2>
+                    <p>{article.description}</p>
+                    <div className="article-meta">
+                      {article.category && <span>{article.category}</span>}
+                      {article.md
+                        ? <span className="source-badge soft">已渲染 MD</span>
+                        : <span className="source-muted">仅 QMD</span>}
+                    </div>
+                  </div>
+                </button>
               </div>
-            </Link>
-          </div>
-        ))}
-      </div>
-    </>
+            );
+          })}
+        </div>
+
+        {visible.length > PAGE_SIZE && (
+          <nav className="library-pager" aria-label="文章翻页">
+            <button
+              type="button"
+              disabled={safePage <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+            >
+              上一页
+            </button>
+            <span>{safePage} / {pageCount}</span>
+            <button
+              type="button"
+              disabled={safePage >= pageCount}
+              onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+            >
+              下一页
+            </button>
+          </nav>
+        )}
+      </aside>
+
+      <section className="library-detail" aria-label="文章预览">
+        {selectedId ? (
+          <ArticlePreview articleId={selectedId} showOpenPage />
+        ) : (
+          <p className="reader-state">从左侧点一篇文章预览。</p>
+        )}
+        {selectedId && (
+          <p className="library-detail-hint">
+            需要细看可
+            <Link to={`/article/${selectedId}`}>整页打开</Link>
+            （原文章页仍保留）。
+          </p>
+        )}
+      </section>
+    </div>
   );
 }
