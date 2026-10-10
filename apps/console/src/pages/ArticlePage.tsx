@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import {
@@ -22,6 +22,12 @@ const LEGACY_ARTICLE_REDIRECTS: Record<string, string> = {
 
 function withoutFrontmatter(markdown: string) {
   return markdown.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, "");
+}
+
+/** Quarto 嵌图是 data:image；react-markdown 默认只放行 http(s) 等，会把图 src 清掉。 */
+function articleUrlTransform(url: string) {
+  if (/^data:image\/[a-z0-9.+-]+;base64,/i.test(url)) return url;
+  return defaultUrlTransform(url);
 }
 
 export default function ArticlePage() {
@@ -165,7 +171,9 @@ export default function ArticlePage() {
       <section className="content-card" aria-label={showMd ? "已渲染 Markdown" : "原始 QMD"}>
         {showMd ? (
           <div id="markmuse" className="article-md">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} urlTransform={articleUrlTransform}>
+              {markdown}
+            </ReactMarkdown>
           </div>
         ) : (
           <pre className="qmd-source">
