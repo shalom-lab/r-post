@@ -167,13 +167,16 @@ export default function HomePage() {
         ) : (
           <p className="reader-state">从左侧点一篇文章预览。</p>
         )}
-        {selectedId && (
-          <p className="library-detail-hint">
-            需要细看可
-            <Link to={`/article/${selectedId}`}>整页打开</Link>
-            （原文章页仍保留）。
-          </p>
-        )}
+        <p className="library-detail-hint">
+          {selectedId ? (
+            <>
+              细看可
+              <Link to={`/article/${selectedId}`}>整页打开</Link>
+            </>
+          ) : (
+            "左侧点选后在此预览 MD / QMD"
+          )}
+        </p>
       </section>
     </div>
   );
