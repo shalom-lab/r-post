@@ -220,11 +220,21 @@ export default function CoverPage() {
         {pending > 0 && (
           <button
             type="button"
-            className="cover-copy-pending"
+            className={`cover-copy-pending${copiedBrief ? " copied" : ""}`}
             onClick={() => void copyPendingBrief()}
-            title="复制给 AGENT 的批量补封面说明"
+            title={`复制待补充封面提示（${pending}）`}
+            aria-label={`复制待补充封面提示，共 ${pending} 篇`}
           >
-            {copiedBrief ? "已复制" : `复制待补充（${pending}）`}
+            {copiedBrief ? (
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5 6.5 11.5 12.5 4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <rect x="5" y="5" width="8" height="8" rx="1.2" stroke="currentColor" strokeWidth="1.4" />
+                <path d="M3.5 10.5V3.5A1 1 0 0 1 4.5 2.5h7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+              </svg>
+            )}
           </button>
         )}
       </header>
